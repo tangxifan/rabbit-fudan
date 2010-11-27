@@ -1,4 +1,4 @@
-#Introduction to Rabbit
+#summary Introduction to Rabbit
 
 = Introduction to Rabbit =
 
