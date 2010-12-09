@@ -1,0 +1,4 @@
+svn checkout https://rabbit-fudan.googlecode.com/svn/trunk/ rabbit-fudan --username zxhmike
+touch file.to.add
+svn add file.to.add
+avn ci
