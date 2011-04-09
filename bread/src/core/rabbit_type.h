@@ -25,6 +25,25 @@
  */
 #define DEBUG 1
 
+/*
+ *Set a co-efficient for the flexible usage of bread board
+ *In most cases, we won't fully utlize the routing resources
+ *of the given bread board. Thus it is reasonable to leave some 
+ *resource available to cope with unexpected problems.
+ */
+#define FLEX_RATIO 0.2
+
+/*
+ *For each unit for placement, pin_location should be 
+ *pointed out. When the unit is a specific node, the 
+ *pin_location will be NONE.Assume the IC block is 
+ *a rectangle of which pins are distibuted on each side. 
+ */
+enum e_pin_location
+{NONE = -1, TOP = 0, LEFT = 1, RIGHT = 2; BOTTOM = 3};
+
+
+
 
 
 
