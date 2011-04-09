@@ -54,8 +54,8 @@ t_bb_node;
  */
 typedef struct s_bb_array
 {
-	t_bb_node **bb_node; //bb_node[0..num_set]
-	int width;
-	int length;
+  t_bb_node **bb_node; //bb_node[0..num_set]
+  int width;
+  int length;
 }
 t_bb_array;

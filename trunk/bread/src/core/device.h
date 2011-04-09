@@ -13,13 +13,29 @@
  */
 
 /*
- *For each unit for placement, pin_location should be 
- *pointed out. When the unit is a specific node, the 
- *pin_location will be NONE.Assume the IC block is 
- *a rectangle of which pins are distibuted on each side. 
+ *When the GEDA file has been read in, 
+ *use the following struct to store netlist
+ *information
  */
-enum e_pin_location
-{NONE = -1, TOP = 0, LEFT = 1, RIGHT = 2; BOTTOM = 3};
+typedef strcut s_net_info
+{
+  enum e_pin_location pin_loc;
+  int pin_offset;
+  char *dev_name;
+}
+t_net_info;
+
+/*
+ *The node will be convert to SPEC node when placing
+ *To be awared, the node exclude the nodes of IC blocks
+ */
+typedef struct s_rb_node
+{
+  int index;
+  int crit_num;
+  t_net_info *net_list;
+}
+t_rb_node;
 
 /*
  *Pins of certain devices need more detailed 
@@ -38,20 +54,20 @@ enum e_pin_location
  *                bottom
  *Number 0..4 is the offset of pins' location.
  */
-typedef struct s_pin
+typedef struct s_dev_pin
 {
   int index;
-  enum e_pin_location pin_loc;
-  int pin_offset;
+  enum e_pin_location loc;
+  int offset;
 }
-t_pin;
+t_dev_pin;
 
 /*
  *IC blocks is a comparatively universal struct
  *IC chips, MOSFETs, BJTs, Diodes and other
  *sort of devices could be defined as IC blocks.
  */
-typedef struct s_icblock
+typedef struct s_icdev
 {
   char *name;
   int dev_index;
@@ -60,12 +76,12 @@ typedef struct s_icblock
   int area;
   int pin_num;
   /*For IC chips or MOSFET, BJT only*/
-  t_pin *pin_list;//pin_list[0..num_list]
+  t_dev_pin *pinls//pinls[0..num_list]
   /*For scalable devie such as resistance and capacitance*/
   int max_length;
   int min_length;
 }
-t_icblock;
+t_icdev;
 
 
 
