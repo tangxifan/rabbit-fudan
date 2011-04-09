@@ -23,10 +23,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 /* internal functions */
 unsigned int 
-hash_get_hash (char* key)
+hash_get_hash (const char* key)
 {
 	int sum = 0;
-	char *ptr;
+	const char *ptr;
 	
 	for (ptr = key; (*ptr) != '\0'; ptr++)
 		sum += (int)(*ptr);
