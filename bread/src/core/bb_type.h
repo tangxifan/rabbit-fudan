@@ -36,18 +36,28 @@ typedef struct s_bb_node
   int  loc_y;
   //Inner list reveals what nodes are connected to current node
   //inside the breadboard.
-  t_bb_node *inner_list; //inner_list[0..num_set]
+  t_bb_node *innerlst; //inner_list[0..num_set]
   //If block_avail is true, this node could be occupied by
   //IC blocks. Or the node could be placed with a IC block.
   boolean block_avail;
   enum e_bb_state node_state;
-  //These are only defined for blank node.
-  //Initial value is 1 which means the same size as normal
-  //nodes.
-  int  blank_width = 1;
-  int  blank_height = 1;
+  //We should label this bb node belong to which column
+  int column;
 }
 t_bb_node;
+
+/*
+ *A breadboard is composed of several columns.
+ */
+typedef struct s_bb_column
+{
+  int width_capacity;
+  int height;
+  int width;
+  int start_x;
+  int start_y;
+}
+t_bb_column;
 
 /*
  *A breadboard is a double-dimension array.
@@ -56,6 +66,8 @@ typedef struct s_bb_array
 {
   t_bb_node **bb_node; //bb_node[0..num_set]
   int width;
-  int length;
+  int height;
+  int no_column;
+  t_bb_column* columns;
 }
 t_bb_array;

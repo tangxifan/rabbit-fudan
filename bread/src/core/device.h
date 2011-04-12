@@ -71,7 +71,7 @@ typedef struct s_icdev
 {
   char *name;
   int dev_index;
-  int length;
+  int height;
   int width;
   int area;
   int pin_num;
