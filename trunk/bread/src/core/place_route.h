@@ -55,6 +55,7 @@ t_pr_pin;
 typedef struct s_pr_marco
 {
   /*For Place*/
+  int name;
   enum e_pr_type type;
   enum e_pr_status status;
   enum e_pr_start start;
