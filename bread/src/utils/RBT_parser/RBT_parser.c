@@ -23,9 +23,71 @@ You should have received a copy of the GNU General Public License along with thi
 
 #include "RBT_parser.h"
 
-#define MAX_DEVICE_LENGTH 100
-#define MAX_FILENAME_LENGTH 1000
-#define BUF_SIZE 200
+/*
+ * XML Unitlity: getdoc
+ * From official LibXML tutorial
+ */
+xmlDocPtr
+getdoc (char *docname)
+{
+	xmlDocPtr doc;
+	doc = xmlParseFile(docname);
+	if (doc == NULL )
+		return NULL;
+	return doc;
+}
+
+/*
+ * XML Utility: getnode
+ * From official LibXML tutorial
+ */
+xmlXPathObjectPtr
+getnodeset (xmlDocPtr doc, xmlChar *xpath)
+{
+	xmlXPathContextPtr context;
+	xmlXPathObjectPtr result;
+
+	context = xmlXPathNewContext(doc);
+	if (context == NULL)
+		return NULL;
+
+	result = xmlXPathEvalExpression(xpath, context);
+	xmlXPathFreeContext(context);
+	if (result == NULL) 
+		return NULL;
+
+	if (xmlXPathNodeSetIsEmpty (result->nodesetval)){
+		xmlXPathFreeObject(result);
+		return NULL;
+	}
+
+	return result;
+}
+
+
+/*
+ * Get XML node contents
+ * UNFINISHED
+ */
+
+/*
+ * chop of '\n' at the end of a string
+ * return 0 if '\n' found and chopped,
+ * -1 if not found.
+ */
+int
+chomp (char* str_in)
+{
+	if (strlen (str_in) < 2)
+		return -1;
+
+	if ('\n' != str_in[strlen (str_in) -2]){
+		return -2;
+	}
+
+	str_in[strlen (str_in) -2] = '\0';
+	return 0;
+}
 
 char*
 RBT_find_device_file (char* list_file, char* device_name)
@@ -39,40 +101,21 @@ RBT_find_device_file (char* list_file, char* device_name)
 		return NULL;
 	}
 
-	if (NULL == (device = malloc (sizeof (char) * MAX_DEVICE_LENGTH))){
-		free (device);
-		fclose (input_file);
-		return NULL;
-	}
-
-	if (NULL == (file = malloc (sizeof (char) * MAX_FILENAME_LENGTH))){
-		free (device);
-		fclose (input_file);
-		return NULL;
-	}
-
 	if (NULL == (buf = malloc (sizeof (char) * MAX_FILENAME_LENGTH))){
-		free (device);
 		free (buf);
 		fclose (input_file);
 		return NULL;
 	}
 
 	while (NULL != fgets (buf, BUF_SIZE, input_file)){
-		printf ("%s", buf);
 		device = strtok (buf, "*");
 		file = strtok (NULL, "*");
-		printf ("%s!!!%s\n", device, file);
 		if (!strcmp (device_name, device)){
-			free (device);
-			free (buf);
 			fclose (input_file);
 			return file;
 		}
 	}
 
-	free (device);
-	free (file);
 	free (buf);
 	fclose (input_file);
 	return NULL;
