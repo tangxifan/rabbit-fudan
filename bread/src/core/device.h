@@ -17,7 +17,7 @@
  *use the following struct to store netlist
  *information
  */
-typedef strcut s_net_info
+typedef struct s_net_info
 {
   enum e_pin_location pin_loc;
   int pin_offset;
@@ -76,7 +76,7 @@ typedef struct s_icdev
   int area;
   int pin_num;
   /*For IC chips or MOSFET, BJT only*/
-  t_dev_pin *pinls//pinls[0..num_list]
+  t_dev_pin *pinls;//pinls[0..num_list]
   /*For scalable devie such as resistance and capacitance*/
   int max_length;
   int min_length;
