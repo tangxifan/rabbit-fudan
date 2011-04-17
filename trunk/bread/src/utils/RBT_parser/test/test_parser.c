@@ -14,7 +14,5 @@ int main()
 		return -2;
 	}
 
-	printf ("Device filename: %s\n", filename);
-
 	return 0;
 }
