@@ -68,12 +68,12 @@ set_unstart_marco(IN int nmarco,
 }
 
 void
-set_unpoint_pins(IN t_pr_marco* marco)
+set_unpoint_marco(IN t_pr_marco* marco)
 {
   int ipin=0;
   for (ipin=0;ipin<(marco->pinnum);++ipin)
   {
-    marco->(pins+ipin)->wstatus=UNPOINT;
+    marco->(pins+ipin)->nets->spwidth=UNPOINT;
   }
   return 1;
 }
