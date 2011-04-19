@@ -42,6 +42,14 @@
 enum e_pin_location
 {NONE = -1, TOP = 0, LEFT = 1, RIGHT = 2, BOTTOM = 3};
 
+typedef struct s_bb_xyloc
+{
+  int name;
+  int x;
+  int y;
+}
+t_bb_xyloc;
+
 
 
 

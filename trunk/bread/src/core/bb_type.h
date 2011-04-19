@@ -11,15 +11,20 @@
  *NORMAL_NODE represents ordinary nodes.
  */
 enum e_bb_type
-{ BLANK,BIAS_NODE,NORMAL_NODE};
+{BLANK,BIAS_NODE,NORMAL_NODE};
 
 /*
  *When a breadboard(bb) node is set as occupied,
  *the node should not be placed any IC devices
  *during next steps in routing.
+ *Add a new status,COVERED, which means the bb_node
+ *is unavailable because covered. But the status,COVERED
+ *is different from OCCUPIED, because the node has none
+ *connections to other nodes, which reveal that it remains
+ *routable if the blockage is removed.
  */
-enum e_bb_state
-{FREE,OCCUPIED};
+enum e_bb_status
+{FREE,OCCUPIED,COVERED};
 /*
  *bb_node is the basic unit for breadboard structure.
  *Breadboard can be considered as an array of nodes
@@ -40,7 +45,7 @@ typedef struct s_bb_node
   //If block_avail is true, this node could be occupied by
   //IC blocks. Or the node could be placed with a IC block.
   boolean block_avail;
-  enum e_bb_state node_state;
+  enum e_bb_status status;
   //We should label this bb node belong to which column
   int column;
 }
@@ -51,22 +56,28 @@ t_bb_node;
  */
 typedef struct s_bb_column
 {
-  int width_capacity;
+  int width_capacity;;
   int height;
   int width;
-  int start_x;
-  int start_y;
+  /*For place*/
+  int usedwidth;
+  int left;
+  int right;
 }
 t_bb_column;
 
 /*
  *A breadboard is a double-dimension array.
+ *reserve ratio: the ratio of bread board routing 
+ *               resources reserved for special 
+ *               virtual nets.
  */
 typedef struct s_bb_array
 {
   t_bb_node **bb_node; //bb_node[0..num_set]
   int width;
   int height;
+  float reserve_ratio;
   int no_column;
   t_bb_column* columns;
 }

@@ -8,279 +8,6 @@
 #include <device.h>
 
 /*
- *Check the given vnet and find out the number
- *of connected pins.
- */
-int 
-check_vnet_match_pin(IN t_vnet *vnet,
-                     IN t_pr_marco *marco
-                    )
-{
-  int ipin=0;
-  int pinno=vnet->numpin;
-  int noconn=0;
-  for (ipin=0;ipin<pinno;++ipin)
-  {
-    if (marco==vnet->(pins+ipin)->parent)
-    {
-      noconn++;
-      vnet->(pins+ipin)->wstatus=POINTED;
-    }
-  }
-  return noconn;
-}
-
-/*
- *With the given pr_pin and pr_marco, we try to 
- *check whether these two are directly
- *connected through a metal wire.
- *The number of connected wires are returned.
- */
-int
-check_pin_direct_connect(IN t_pr_pin   *src,
-                         IN t_pr_marco *marco
-                        )
-{
-  int noconn=0;
-  noconn+=check_vnet_match_pin(src->nets,marco);
-  return noconn;
-}
-
-/*
- *Calculate the directed connection criticality
- *between two given marcos.
- */
-int 
-find_direct_attract(IN t_pr_marco *src,
-                   IN t_pr_marco *des
-                  )
-{
-  int dir_att=0;
-  int pinno=src->pinnum;
-  int ipin=0;
-  t_pr_pin* pintmp=NULL;
-  for(ipin=0;ipin<pinno;++ipin)
-  {
-     pintmp=src->pins+ipin;
-     dir_att+=check_pin_direct_connect(pintmp,des);
-  }
- return dir_att;
-}
-
-/*
- *Check whether the pin belongs a certain type of block
- */
-boolean
-check_parent_type(IN t_pr_pin *src,
-                  IN e_pr_type tcomp
-                 )
-{
-  e_pr_type gottype=src->parent->type;
-  if (gottype==tcomp)
-  {return TRUE;}
-  return FALSE;
-}
-
-/*
- *To calculate the direct attractness
- *for indirect connections.
- *Notice that the input pin should be eliminated 
- *during search desitination.
- */
-int
-cal_indirect_attract(IN t_pr_pin* pin,
-                     IN t_pr_marco *des
-                    )
-{
-  int indir_att=0;
-  int ipin=0;
-  t_pr_marco* marco=pin->parent;
-  t_pr_pin *pintmp=NULL;
-  
-  for(ipin=0;ipin<pinno;++ipin)
-  {  
-    pintmp=marco->pins+ipin;
-    if (pintmp!=pin)
-    {indir_att+=check_pin_direct_connect(pintmp,des);}
-  }
-  return indir_att;
-}
-
-/*
- *Find out the indirect connections with the 
- *given vnet and target pr_marco 
- */
-int 
-find_vnets_indirect(IN t_vnet *net,
-                    IN t_pr_marco *des
-                   )
-{
-  int indir_att=0;
-  int pinno=net->numpin;
-  int ipin=0;
-  t_pr_pin *pintmp=NULL;
-  
-  for(ipin=0;ipin<pinno;++ipin)
-  {
-    pintmp=net->pins+ipin;
-    if((!check_parent_type(pintmp,ICBLOCK))&&(!check_parent_type(pintmp,GND))&&(!check_parent_type(pintmp,VDD)))
-    {indir_att+=cal_indirect_attract(pintmp,des);}
-  }
-  return indir_att;
-}
-
-/*
- *Calculate the indirect connection criticality
- *between two given marcos.
- *The indirect connection means there exits only
- *one medium between two given marcos.
- *More than medium exist won't be counted in.
- */
-int
-find_indirect_attract(IN t_pr_marco *src,
-                     IN t_pr_marco *des
-                    )
-{
-  int indir_att=0;
-  int pinno=src->pinnum;
-  int ipin=0;
-
-  t_pr_pin* pintmp=NULL;
-
-  for(ipin=0;ipin<pinno;++ipin)
-  {
-    pintmp=src_pins+ipin;
-    indir_att+=find_vnets_indirect(pintmp->nets,des);
-  }
-  return indir_att;
-}
-
-/*
- *To get the closeness between two IC blocks, the direct
- *attractness and indirect attractness should be worked out.
- */
-int 
-find_closeness(IN t_pr_marco *src,
-               IN t_pr_marco *des
-              )
-{
-  int closeness=find_indirect_attract(src,des)
-                +find_direct_attract(src,des);
-  set_unpoint_pins(des);
-  return closeness;
-}
-
-/*
- *Calculate the vnets qualified.
- *I. The vnet is a special vnet
- *II.The vnet has not been appeared in the list
-     vspnets
- */
-int
-cal_width_parent_spvnet(IN t_pr_pin* inpin,
-                        IN int nspvnet,
-                        IN t_vnet* vspnets
-                       )
-{
-  int blkwidth=0;
-  t_pr_marco* parent=inpin->parent;
-  
-  int ipin=0;
-  int pinno=parent->pinnum; 
-  t_pr_pin* pintmp=NULL;
-  
-  for(ipin=0;ipin<pinno;++ipin)
-  {
-    pintmp=parent->pins+ipin;
-    if ((pintmp!=inpin)&&(SPECIAL==pintmp->nets->type)&&(UNCOUNT==pintmp->nets->width_status))
-    {
-      blkwidth++;
-      pintmp->nets->width_status==COUNTED;
-    }
-  }
-  return blkwidth;
-}
-
-/*
- *Complete the work below.
- * Then block has connected to another vnet 
- * with a resistance or capacitance or diode.
- */
-int
-cal_width_pin_parents(IN t_pr_pin* pintmp,
-                      IN int nspvnet,
-                      IN t_vnet* vspnets
-                      )
-{
-  int blkwidth=0;
-  
-  t_vnet* nettmp=pintmp->nets;
-  int pinno=nets->numpin;
-  int ipin=0;
-  t_pr_pin* pintmp=NULL;
-
-  for (ipin=0;ipin<pinno;++ipin)
-  {
-    pintmp=nettmp->pins+ipin;
-    if((!check_parent_type(pintmp,ICBLOCK))&&(!check_parent_type(pintmp,GND))&&(!check_parent_type(pintmp,VDD)))
-    {blkwidth+=cal_width_parent_spvnet(pintmp,nspvnet,vspnets);}
-  }
-  return blkwidth;
-}
-
-/*
- *In placement, we should decide the block
- *width of each IC block.
- *Rules are set in increasing block width,
- *I. Then block has connected to another marco 
- *   with a resistance or capacitance or diode.
- *II. Some pins of the block contain too many 
- *    connections which make it impossible to
- *    route on the bread board. We try to splite
- *    it into several nodes thus increase the block
- *    width.
- * III.Then block has connected to another vnet 
- *     with a resistance or capacitance or diode.
- */
-int 
-cal_block_width(IN t_pr_marco* marco,
-                IN int nblk,
-                IN t_pr_marco* icblks
-                IN int nspvnet,
-                IN t_vnet* vspnets,
-                IN int wcapacity
-               )
-{
-  int blkwd=marco->device->width;
-  int pinno=marco->pinnum;
-  int ipin=0;
-  int iblk;
-  int wextra=0;
- 
-  t_pr_pin* pintmp=NULL;  
-  t_pr_marco* des=NULL;
-
-  for (ipin=0;ipin<pinno;++ipin)
-  {
-    pintmp=marco->pins+ipin;
-    wextra=int((pintmp->nets->numpin-1)/(wcapacity-1));
-    blkwd+=wextra;
-    blkwd+=cal_width_pin_parents(pintmp,nspvnet,vspnets);
-    for(iblk=0;iblk<nblk;++iblk)
-    {
-      des=icblks+iblk;
-      if(des!=marco)&&(UNPLACED==des->status)
-      {
-        find_indirect_attract(marco,des);
-        blkwd+=count_pointed_pins(des);
-        set_unpoint_pins(des);
-      }
-    }
-  }
-  return blkwd;
-}
-
-/*
  *Create a array for storing ic blocks.
  *First, select these qualified ic blocks,
  *Then put them into the array.
@@ -319,168 +46,159 @@ create_icblk_array(INOUT int* nblk,
   return 1;
 }
 
-/*
- *Try to figure out the cost of input block
- */
-float
-find_starter_cost(IN t_pr_marco* blk)
-{
-  float cost=0.0;
-  
-  int conn=0;
-  int ipin=0;
-  int jpin=0;
-  int pinnoi=0;
-  int pinnoj=0
-  t_pr_pin* pintmpi=NULL;
-  t_pr_pin* pintmpj=NULL;
-  
-  pinnoi=blk->pinnum;
-  for(ipin=0;ipin<pinnoi;++ipin)
-  {
-    pintmpi=blk->pins+ipin;
-    npinnoj=pintmpi->nets->numpin;
-    for(jpin=0;jpin<npinnoj;++jpin)
-    {
-      pintmpj=pintmpi->nets->pins+jpin;
-      if (pintmpk->parent!=blk)
-      {conn++;}
-    }
-  }
-  cost=conn/pinno;
-  return cost;
-}
 
 /*
- *To initialize the placement, we should 
- *choose a starter block.
- *The chosen block satisfy the following conditions.
- *I. The block have the most connections excluding
- *   those are traced to its own pins.
- *II.We try to calculate the place cost with the 
- *   equation below.
- *   Place_Cost=NumConnections/NumPins
- */
-t_pr_marco*
-find_starter_block(IN int nblk,
-                   IN t_pr_marco* blks
-                  )
-{
-  t_pr_marco* blkchn=NULL;
-   
-  int iblk=0;
-  float cost=0.0;
-  float max_cost=0.0;
-
-  t_pr_marco* blktmp=NULL;
-
-  for(iblk=0;iblk<nblk;++iblk)
-  {
-    blktmp=blks+iblk;
-    if ((UNPLACED==blktmp->status)&&(UNSTART==blktmp->start))
-    {
-      cost=find_starter_cost(blktmp);
-      if(cost>max_cost)
-      {
-        max_cost=cost;
-        blkchn=blktmp;
-      }
-    }
-  }
-  return blkchn; 
-}
-
-/*
- *Find a matched IC block during placement
- *Notice that these placed IC blocks are not
- *taken into account.
+ *When the placement, the finishing work include
+ *I. Update the pr_marcos from these icblks because 
+ *   icblks are part of the copy of pr_marcos.
+ *II. Free the icblks.
  */
 void
-find_match_block(INOUT t_pr_marco* blkmatch,
-                 IN int nblk,
-                 IN t_pr_marco* icblks
-                 )
+update_marco_free_icblks(IN int nmarco,
+                         INOUT t_pr_marco* pr_marco,
+                         IN int nblk,
+                         IN t_pr_marco* icblks
+                         )
 {
-  int iblk=0;
-  int jblk=0;
-  int max_close=0;
-  int close=0;
-  t_pr_marco* blkchn=NULL;
-  for(iblk=0;iblk<nblk;++iblk)
-  {
-    if (UNPLACED==(icblks+iblk)->status)
-    {
-      close=0;
-      for(jblk=0;jblk<nblk;++jblk)
-      {
-        if (PLACED==(icblks+jblk)->status)
-        {close+=find_closeness(icblks+jblk,icblks+iblk);}
-      }
-      if (close>max_close)
-      {
-        blkchn=(icblks+iblk);
-        max_close=close;
-      }
-    }
-  }
-  blkmatch=blkchn;
+  update_pr_marco(nmarco,pr_marco,nblk,icblks);
+  free_icblks(nblk,icblks);
 }
 
-/*
- *Do the climbing placement.
- */
-void
-climbing_place(IN int icolumn,
-               IN int bb_pwidth,
-               IN int* blkwd,
-               IN int nblk,
-               INOUT t_pr_marco* icblks,
-               IN int nspvnet,
-               IN t_vnet* vspnets,
-               IN int wcapacity
-               )
+void 
+update_pr_marco(IN int nmarco,
+                INOUT t_pr_marco* pr_marco,
+                IN int nblk,
+                IN t_pr_marco* icblks
+                )
 {
+  int imarco=0;
   int iblk=0;
-  int widthtmp=0;
-  int minwid=0;
-  t_pr_marco* blkchn=NULL;
-  boolean overflag=TRUE;
-
-  minwid=cal_block_width((iblk+icblks),
-                          nblk,
-                          icblks,
-                          nspvnet,
-                          vspnets,
-                          wcapacity
-                         );
-  
-  while(1)
+  for (imarco=0;imarco<nmarco;++imarco)
   {
-    for(iblk=0;iblk<nblk;++iblk)
+    if (ICBLOCK==(pr_marco+imarco)->type)
     {
-      if (UNPLACED==(iblk+icblks)->status)
+      for(iblk=0;iblk<nblk;++iblk)
       {
-        widthtmp=cal_block_width((iblk+icblks),
-                                 nblk,
-                                 icblks,
-                                 nspvnet,
-                                 vspnets,
-                                 wcapacity
-                                 );
-        if (minwid>widthtmp)
-        {minwid=widthtmp;blkchn=(iblk+icblks);}
+        if ((pr_marco+imarco)->name==(icblks+iblk)->name)
+        {pr_marco[imarco]=icblks[iblk];}
       }
     }
-    if ((minwid+(*blkwd))<bb_pwidth)
-    {
-      blkchn->status=PLACED;
-      blkchn->placed_column=icolumn;
-      blkchn->place_width=minwid;
-      (*blkwd)+=minwid;
-      overflag=FALSE;
-    }
-    if (TRUE==overflag)
-    {break;}
   }
   return 1;
 }
+
+void
+free_icblks(IN int nblk,
+            IN t_pr_marco* icblks
+           )
+{
+  int iblk;
+  for(iblk=0;iblk<nblk;++iblk)
+  {free(icblks+iblk);}
+  return 1;
+}
+
+/*
+ *Check whether unable to find the start block
+ *when all blocks has been labeled as STARTED
+ */
+void
+check_start_error(IN int nblk,
+                  IN t_pr_marco* blks
+                  IN int nvnet,
+                  IN t_vnet* vnets
+                 )
+{
+  int iblk=0;
+  int inet=0;
+  boolean status_err=TRUE;
+  for (iblk=0;iblk<nblk;++iblk)
+  {
+    if (UNSTART==(blks+iblk)->sstart)
+    {status_err=FALSE;}
+  }
+  for(inet=0;inet<nvnet;++inet)
+  {
+    if (UNSTART==(vnets+inet)->sstart)
+    {status_err=FALSE;}
+  }
+  if (TRUE==status_err)
+  {
+    printf("Fail to find the proper IC block or virtual net to start placement!\n");
+    abort();
+    exit(1);
+  }
+}
+
+/*
+ *Check whether all the ic blocks have been placed.
+ *This sub is quote during placement. If the ic blocks
+ *have been placed, the placement will be over.
+ */
+boolean
+check_place_over(IN int nblk,
+                 IN t_pr_marco* icblks
+                )
+{
+  int iblk=0;
+  boolean place_over=TRUE;
+  for (iblk=0;iblk<nblk;++iblk)
+  {
+    if (UNPLACED==(blks+iblk)->start)
+    {place_over=FALSE;return place_over;}
+  }
+  return place_over;
+}
+
+/*
+ *Check whether all the ic blocks have been placed.
+ *This sub is quote after placement. If the ic blocks
+ *have not been placed, which means the bread board is 
+ *incapable of contain so many IC blocks, the program will
+ *end and hint users to change parameters of software or the 
+ *size of bread board.
+ */
+void
+check_all_placed(IN int nblk,
+                 IN t_pr_marco* icblks,
+                 IN int nvnet,
+                 IN t_vnet* vnets
+                )
+{
+  int iblk=0;
+  int inet=0;
+  boolean place_overflow=TRUE;
+  for (iblk=0;iblk<nblk;++iblk)
+  {
+    if (UNPLACED==(blks+iblk)->status)
+    {place_overflow=FALSE;}
+  }
+  
+  for (inet=0;inet<nvnet;++inet)
+  {
+    if (UNPLACED==(vnets+inet)->status)
+    {place_overflow=FALSE;}
+  }
+
+  if (FALSE==place_overflow)
+  {
+    printf("Error:Unable to place all the IC blocks on the limit size of breadboard!\n");
+    printf("Please modify software settings or alter the size of breadboard.\n");
+    abort();
+    exit(1);
+  }
+  return 1;
+}
+
+void
+clear_left_right_place_info(t_place_info* place_info);
+{
+  place_info->left->flag=TRUE;
+  place_info->left->mnext=NULL;
+  place_info->left->vnext=NULL;
+  place_info->right->flag=TRUE;
+  place_info->right->mnext=NULL;
+  place_info->right->vnext=NULL;
+  return 1;
+}
+
