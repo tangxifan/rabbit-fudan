@@ -33,6 +33,8 @@
  */
 #define FLEX_RATIO 0.2
 
+#define UNKNOWN -1
+
 /*
  *For each unit for placement, pin_location should be 
  *pointed out. When the unit is a specific node, the 
@@ -40,15 +42,15 @@
  *a rectangle of which pins are distibuted on each side. 
  */
 enum e_pin_location
-{NONE = -1, TOP = 0, LEFT = 1, RIGHT = 2, BOTTOM = 3};
+{NONE = -1, TOP = 0, LEFT = 1, RIGHT = 2; BOTTOM = 3};
 
-typedef struct s_bb_xyloc
+typedef struct s_location
 {
   int name;
   int x;
   int y;
 }
-t_bb_xyloc;
+t_location;
 
 
 

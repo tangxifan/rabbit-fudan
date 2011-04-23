@@ -4,7 +4,7 @@
 
 /*******************New struct for place and route***********************/
 enum e_pr_type
-{RESISTOR,CAPACITANCE,ICBLOCK,VDD,GND,DIODE,OTHER};
+{RESISTOR,CAPACITANCE,ICBLOCK,VDD,GND,DIODE};
 
 /*
  *This status flag is used during placemnt
@@ -56,8 +56,11 @@ typedef struct s_vnet
   float pcost;
   int pcolumn;
   int pwidth;
-  int loc_x;
-  int loc_y;
+  /*For route*/
+  int locnum;
+  t_location *locations;
+  int bbnum;
+  t_bb_node *bb_nodes;
   /*For struct*/
   t_pr_node next;  
 }
@@ -71,8 +74,10 @@ typedef struct s_pr_pin
   /*For Route*/
   enum e_pin_location loc;
   int offset;
-  int loc_x;
-  int loc_y;
+  t_location location;
+  /*For route*/
+  int nexloc;
+  t_location exlocs*
   /*For struct*/
   t_pr_marco *parent;
   t_pr_pin *next;
@@ -99,14 +104,19 @@ typedef struct s_pr_marco
   /*For Route*/
   int priority;
   int detail_offset;
-  int loc_x;
-  int loc_y;
+  t_location location;
   int pcolumn;
   /*For struct*/
   t_pr_node next;
 }
 t_pr_marco;
 
+/*
+ *If the flag is TRUE, the pr node store a marco
+ *and the vnet pointer is NULL.
+ *If the flag is FALSE, the pr node store a vnet
+ *and the marco pointer is NULL.
+ */
 typedef struct s_pr_node
 {
   boolean flag;
@@ -115,6 +125,10 @@ typedef struct s_pr_node
 }
 t_pr_node;
 
+/*
+ *The place information struct is used during
+ *placement for storing placement information.
+ */
 typedef struct s_place_info
 {
   int bb_pwidth;

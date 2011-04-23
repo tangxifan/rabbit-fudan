@@ -8,68 +8,6 @@
 #include <device.h>
 
 /*
- *Estimate the basic width for a virtual net
- *which is a special net.
- */
-int
-find_vnet_basic_width(IN t_vnet* vnet,
-                      IN int wcapacity)
-{
-  int wbasic=0;
-  int npin=vnet->numpin;
-  if (npin>2*(wcapacity-1))
-  {
-    wbasic=1;
-    npin-=(2*wcapacity-3);
-    while(1)
-    {
-      if (npin<(2*wcapacity-3))
-      {break;}
-      else
-      {
-        wbasic++;
-        npin-=(2*wcapacity-4);
-      }
-    }
-  }
-  else
-  {wbasic=1;}
-  return wbasic;
-}
-
-/*
- *Estimate the basic width for a virtual net
- *which is attached to a IC block.
- */
-int
-find_mnet_basic_width(IN t_vnet* vnet,
-                      IN int wcapacity)
-{
-  int wbasic=0;
-  int npin=vnet->numpin;
-  if (npin>(wcapacity-1))
-  {
-    wbasic=1;
-    npin-=(wcapacity-2);
-    while(1)
-    {
-      if (npin<(wcapacity-2))
-      {break;}
-      else
-      {
-        wbasic++;
-        npin-=(wcapacity-2);
-      }
-
-    }
-  }
-  else
-  {wbasic=1;}
-  return wbasic;
-}
-
-
-/*
  *Spot the start vnet
  */
 t_vnet* 
@@ -223,8 +161,9 @@ find_vnet_pwidth(IN t_vnet* vnet,
     if ((!check_parent_type(vpin,ICBLOCK))&&(!check_parent_type(vpin,GND))&&(!check_parent_type(vpin,VDD)))
     {
       pwidth++;
-      if (check_pwidth_status(vpin->parent,vnet))
-      {pwidth--;}
+      /*Currently the optimization is neglected*/
+    //if (check_pwidth_status(vpin->parent,vnet))
+    //{pwidth--;}
       if (minl>vpin->parent->dev->min_length)
       {minl=vpin->parent->dev->min_length;}
     }
@@ -235,22 +174,30 @@ find_vnet_pwidth(IN t_vnet* vnet,
   return pwidth;  
 }
 
+
 /*
  *Estimate the place width for IC block.
  */
 int
-find_blk_pwidth(IN t_pr_marco* blk,
+find_blk_pwidth(IN int nblk,
+                IN t_pr_marco* blks,
+                IN t_pr_marco* blk,
                 IN int wcapacity
                )
 {
   int pwidth=blk->dev->width;
   int ipin=0;
-  int jpin=0;
+  int iblk=0;
   t_vnet* mnet=NULL;
   for (ipin=0;ipin<blk->pinnum;++ipin)
   {
     mnet=(blk->pins+ipin)->nets;
     pwidth+=find_mnet_basic_width(mnet,wcapacity)-1;
+  }
+  for (iblk=0;iblk<nblk;++iblk)
+  {
+    if (blk!=blks+iblk)
+    {pwidth+=cal_mm_close_in_vv(blk,blks+iblk);}
   }
   return pwidth;
 }
@@ -302,7 +249,7 @@ find_starter(IN int nblk,
     }
     else
     {
-      pwidth=find_blk_pwidth(blkcd,wcapacity);
+      pwidth=find_blk_pwidth(nblk,blks,blkcd,wcapacity);
       if (bb_pwidth<pwidth)
       {blkcd->sstart=STARTED;}
       else
@@ -564,7 +511,7 @@ find_match(IN int nblk,
   netmatch=find_match_vnet(nblk,blks,nvnet,vnets);
   blkmatch=find_match_blk(nblk,blks,nvnet,vnets);
   netpw=find_vnet_pwidth(netmatch,wcapacity);
-  blkpw=find_blk_pwidth(blkmatch,wcapacity);
+  blkpw=find_blk_pwidth(nblk,blks,blkmatch,wcapacity);
   if (((place_info->cur_width+netpw)>place_info->bb_pwidth)&&((place_info->cur_width+blkpw)>place_info->bb_pwidth))
   {return FALSE;}
   if ((netmatch->pcost*netpw)>(blkmatch->pcost*blkpw))
