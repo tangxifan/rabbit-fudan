@@ -65,11 +65,11 @@ find_starterblk_cost(IN t_pr_marco* blk)
   pinnoi=blk->pinnum;
   for(ipin=0;ipin<pinnoi;++ipin)
   {
-    pintmpi=blk->pins+ipin;
+    pintmpi=(*(blk->pins+ipin));
     npinnoj=pintmpi->nets->numpin;
     for(jpin=0;jpin<npinnoj;++jpin)
     {
-      pintmpj=pintmpi->nets->pins+jpin;
+      pintmpj=pintmpi->nets->(*(pins+jpin));
       if (pintmpk->parent!=blk)
       {conn++;}
     }
@@ -131,11 +131,11 @@ check_pwidth_status(IN t_pr_marco* marco,
   int ipin=0;
   for (ipin=0;ipin<pinnum;++ipin)
   {
-    if (POINTED==(marco->pins+ipin)->nets->spwidth)
+    if (POINTED==(*(marco->pins+ipin))->nets->spwidth)
     {return TRUE;}
-    else if (marco->pins+ipin)->nets!=vnet)
+    else if (*(marco->pins+ipin))->nets!=vnet)
     {
-      (marco->pins+ipin)->nets->spwidth=POINTED;
+      (*(marco->pins+ipin))->nets->spwidth=POINTED;
       return FALSE;
     }
   }
@@ -157,7 +157,7 @@ find_vnet_pwidth(IN t_vnet* vnet,
   
   for (ipin=0;ipin<npin;++ipin)
   {
-    vpin=vnet->pins+ipin;
+    vpin=(*(vnet->pins+ipin));
     if ((!check_parent_type(vpin,ICBLOCK))&&(!check_parent_type(vpin,GND))&&(!check_parent_type(vpin,VDD)))
     {
       pwidth++;
@@ -169,7 +169,7 @@ find_vnet_pwidth(IN t_vnet* vnet,
     }
   }
   for (ipin=0;ipin<npin;++ipin)
-  {set_unpoint_marco((vnet->pins+ipin)->parent);}
+  {set_unpoint_marco((*(vnet->pins+ipin))->parent);}
 //pwidth+=minl;
   return pwidth;  
 }
@@ -191,7 +191,7 @@ find_blk_pwidth(IN int nblk,
   t_vnet* mnet=NULL;
   for (ipin=0;ipin<blk->pinnum;++ipin)
   {
-    mnet=(blk->pins+ipin)->nets;
+    mnet=(*(blk->pins+ipin))->nets;
     pwidth+=find_mnet_basic_width(mnet,wcapacity)-1;
   }
   for (iblk=0;iblk<nblk;++iblk)

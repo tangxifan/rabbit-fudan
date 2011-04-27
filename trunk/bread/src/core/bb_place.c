@@ -201,9 +201,9 @@ detail_place_blk(INOUT t_pr_marco* blk,
   wcapacity=bb_array->(columns+column)->width_capacity;
   for (ipin=0;ipin<blk->pinnum;++ipin)
   {
-    if ((blk->pins+ipin)->offset<int(blk->device->width/2+1))
+    if ((*(blk->pins+ipin))->offset<int(blk->device->width/2+1))
     {
-      blkvnet=(blk->pins+ipin)->nets;
+      blkvnet=(*(blk->pins+ipin))->nets;
       blkvnet->locnum=find_mnet_basic_width(blkvnet,wcapacity);
       blkvnet->locations=(t_location*)malloc(blkvnet->locnum*sizeof(t_location));
       blkoff+=find_mnet_basic_width(blkvnet,wcapacity)-1;
