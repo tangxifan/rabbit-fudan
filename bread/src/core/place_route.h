@@ -3,8 +3,15 @@
  */
 
 /*******************New struct for place and route***********************/
+/*
+ *There are four sorts in the type.
+ *RCD:resistor, capacitance and diode. These are
+ *    all two-port device.
+ *ICBLOCK: Multi-port device are catagoried as ICBLOCK
+ *         which will be heavily considered in placement.
+ */
 enum e_pr_type
-{RESISTOR,CAPACITANCE,ICBLOCK,VDD,GND,DIODE};
+{RCD,ICBLOCK,VDD,GND};
 
 /*
  *This status flag is used during placemnt
@@ -30,6 +37,9 @@ enum e_vnet_type
 enum e_pr_start
 {STARTED,UNSTART};
 
+enum e_route_status
+{ROUTED,UNROUTE};
+
 /*
  *In calculating block place width from indirect 
  *attractions, this status is used. In some cases,
@@ -48,7 +58,7 @@ typedef struct s_vnet
   /*General*/
   enum e_vnet_type type;
   int numpin;
-  t_pr_pin *pins;
+  t_pr_pin **pins;
   /*For place*/
   enum e_pr_status status;
   enum e_pr_start sstart;
@@ -60,7 +70,8 @@ typedef struct s_vnet
   int locnum;
   t_location *locations;
   int bbnum;
-  t_bb_node *bb_nodes;
+  t_bb_node **bb_nodes;
+  enum e_route_status rstatus;
   /*For struct*/
   t_pr_node next;  
 }
@@ -74,10 +85,9 @@ typedef struct s_pr_pin
   /*For Route*/
   enum e_pin_location loc;
   int offset;
-  t_location location;
+  t_location* location;
   /*For route*/
-  int nexloc;
-  t_location exlocs*
+  t_location* exloc;
   /*For struct*/
   t_pr_marco *parent;
   t_pr_pin *next;
@@ -95,7 +105,7 @@ typedef struct s_pr_marco
   t_icdev *device;
   enum e_pr_type type;
   int pinnum;
-  t_pin *pins;
+  t_pr_pin **pins;
   /*For Place*/
   float pcost;
   int pwidth;
@@ -104,8 +114,9 @@ typedef struct s_pr_marco
   /*For Route*/
   int priority;
   int detail_offset;
-  t_location location;
+  t_location* location;
   int pcolumn;
+  enum e_route_status rstatus;
   /*For struct*/
   t_pr_node next;
 }

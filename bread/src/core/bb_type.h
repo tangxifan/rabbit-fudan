@@ -1,3 +1,7 @@
+#define BEND_COST 1.5
+#define OCCP_COST 1
+#define FLY_WIRE_COST  5
+
 /*
  *These types below are used for breadboard structs.
  */
@@ -17,14 +21,13 @@ enum e_bb_type
  *When a breadboard(bb) node is set as occupied,
  *the node should not be placed any IC devices
  *during next steps in routing.
- *Add a new status,COVERED, which means the bb_node
- *is unavailable because covered. But the status,COVERED
- *is different from OCCUPIED, because the node has none
- *connections to other nodes, which reveal that it remains
- *routable if the blockage is removed.
  */
 enum e_bb_status
-{FREE,OCCUPIED,COVERED};
+{FREE,OCCUPIED};
+
+enum e_route_status
+{ROUTABLE,UNROUTABLE};
+
 /*
  *bb_node is the basic unit for breadboard structure.
  *Breadboard can be considered as an array of nodes
@@ -36,38 +39,63 @@ enum e_bb_status
 typedef struct s_bb_node
 {
   int bb_index;
-  enum e_bb_type bb_type;
-  t_location location;
-  //Inner list reveals what nodes are connected to current node
-  //inside the breadboard.
-  t_bb_node *inners; //inner_list[0..num_set]
-  t_pr_pin *pin;
-  //If block_avail is true, this node could be occupied by
-  //IC blocks. Or the node could be placed with a IC block.
-  boolean block_avail;
-  enum e_bb_status status;
-  //We should label this bb node belong to which column
+  enum e_bb_type type;
+  /*We should label this bb node belong to which column.
+   *If the node does not belong to any column.
+   *The no. of column should be set as -1.
+   */
   int column;
+  t_location* location;
+  /*Inner list reveals what nodes are connected to current node
+   *inside the breadboard.
+   */
+  int ninner;
+  t_bb_node **inners; //inner_list[0..num_set]
+  /*Provide this bb node is routed by which pin of which virtual net*/
+  t_pr_pin *pin;
+  t_vnet *net;
+  t_location* wired;
+  enum e_bb_status status;
+  e_route_status rstatus;
+  /*the route cost for this node.*/
+  float rcost;
 }
 t_bb_node;
 
 /*
  *A breadboard is composed of several columns.
+ *base: The base location of the column on breadboard.
+ *      With the determined height and width, we could 
+ *      spot the column on the breadboard.
+ *left: Left means the block or virtual net that has 
+ *      placed on the left part of the column.
+ *      left is an integer which in fact is the name
+ *      of a certain t_pr_marco or t_vnet.
+ *right:It is similar defined as the left.
  */
 typedef struct s_bb_column
 {
-  int width_capacity;
+  t_location* base;
   int height;
   int width;
+  int width_capacity;
   /*For place*/
   int usedwidth;
   int left;
   int right;
+  /*For route*/
+  /*Only one blank area is permitted in a column*/
+  int blank_start;
+  int blank_end;
 }
 t_bb_column;
 
 /*
  *A breadboard is a double-dimension array.
+ *columns: A column is defined as the main part of
+ *         the bread board for routing resources.
+ *         Notice that the VDD and GND are exclude 
+ *         from column.
  *reserve ratio: the ratio of bread board routing 
  *               resources reserved for special 
  *               virtual nets.
