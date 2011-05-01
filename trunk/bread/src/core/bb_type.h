@@ -25,9 +25,17 @@ enum e_bb_type
 enum e_bb_status
 {FREE,OCCUPIED};
 
+/*
+ *When a bb node is set as UNROUTABLE, it may not be occupied.
+ *But, when a bb node is set as OCCUPIED, it must be UNROUTABLE.
+ *When a bb node is FREE but UNROUTABLE, it means the bb nodes
+ *in the vertical line are routed with a virtual net.
+ */
 enum e_route_status
 {ROUTABLE,UNROUTABLE};
 
+enum e_bias_type
+{NONE,VDD,GND};
 /*
  *bb_node is the basic unit for breadboard structure.
  *Breadboard can be considered as an array of nodes
@@ -56,7 +64,8 @@ typedef struct s_bb_node
   t_vnet *net;
   t_location* wired;
   enum e_bb_status status;
-  e_route_status rstatus;
+  enum e_route_status rstatus;
+  enum e_bias_type bias_type;
   /*the route cost for this node.*/
   float rcost;
 }
@@ -91,6 +100,20 @@ typedef struct s_bb_column
 t_bb_column;
 
 /*
+ *Height: The bias height should be 1.
+ */
+typedef struct s_bb_bias
+{
+  t_location* base;
+  int height;
+  int width;
+  int former_column;
+  int next_column;
+  enum e_bias_type type;
+}
+t_bb_bias;
+
+/*
  *A breadboard is a double-dimension array.
  *columns: A column is defined as the main part of
  *         the bread board for routing resources.
@@ -108,5 +131,7 @@ typedef struct s_bb_array
   float reserve_ratio;
   int no_column;
   t_bb_column* columns;
+  int nbias;
+  t_bb_bias* biases;
 }
 t_bb_array;

@@ -83,47 +83,7 @@ alloc_bb_place(IN int nblk,
   return 1;
 }
 
-boolean
-detail_place(IN int nvnet,
-             IN t_vnet* vnets,
-             IN int nmarco,
-             INOUT t_pr_marco* pr_marco,
-             INOUT t_bb_array* bb_array
-            )
-{
-  int icol=0;
-  int left=0;
-  int right=0;
-  int ioff=0;
-  t_pr_marco* blk=NULL;
-  t_vnet* vnet=NULL;
-  while (icol<bb_array->no_column)
-  {
-    left=bb_array->(columns+icol)->left;
-    right=bb_array->(columns+icol)->right;
-    blk=find_blk_with_name(ioff,icol,nmarco,pr_marco); 
-    vnet=find_vnet_with_name(ioff,icol,nvnet,vnets);
-    for (ioff=left;ioff<(right+1);++ioff)
-    {
-      if ((NULL==blk)&&(NULL==vnet))
-      {
-        printf("Error: Fail to find the blk or vnet with given name(name:%d)\n",ioff);
-        return FALSE;
-      }
-      else if ((NULL!=blk)&&(NULL!=vnet)) 
-      {
-        printf("Error: Exist both blk and vnet with the shared name(name:%d)\n",ioff);
-        return FALSE;
-      }
-      else if (NULL!=blk)
-      {detail_place_blk(blk,icol,left,nmarco,pr_marco,nvnet,vnets,bb_array);}
-      else if (NULL!=vnet)
-      {detail_place_vnet(vnet,icol,left,nmarco,pr_marco,nvnet,vnets,bb_array);}
-    }
-    icol++;
-  }
-  return TRUE;
-}
+
   
 t_pr_marco*
 find_blk_with_name(IN int name,
@@ -204,8 +164,7 @@ detail_place_blk(INOUT t_pr_marco* blk,
     if ((*(blk->pins+ipin))->offset<int(blk->device->width/2+1))
     {
       blkvnet=(*(blk->pins+ipin))->nets;
-      blkvnet->locnum=find_mnet_basic_width(blkvnet,wcapacity);
-      blkvnet->locations=(t_location*)malloc(blkvnet->locnum*sizeof(t_location));
+      /*Leave the normal virtual net to routing.*/
       blkoff+=find_mnet_basic_width(blkvnet,wcapacity)-1;
     }
   }
@@ -213,6 +172,11 @@ detail_place_blk(INOUT t_pr_marco* blk,
   return 1;
 }
 
+/*
+ *Notice that detail placement of the virtual net
+ *is only for special virtual net.
+ *Normal virtual net is considered in routing.
+ */
 void
 detail_place_vnet(INOUT t_vnet* vnet,
                   IN int column,
@@ -330,4 +294,46 @@ detail_place_big_vnet(IN int vnetoff,
     }
   }
   return 0;
+}
+
+boolean
+detail_place(IN int nvnet,
+             IN t_vnet* vnets,
+             IN int nmarco,
+             INOUT t_pr_marco* pr_marco,
+             INOUT t_bb_array* bb_array
+            )
+{
+  int icol=0;
+  int left=0;
+  int right=0;
+  int ioff=0;
+  t_pr_marco* blk=NULL;
+  t_vnet* vnet=NULL;
+  while (icol<bb_array->no_column)
+  {
+    left=bb_array->(columns+icol)->left;
+    right=bb_array->(columns+icol)->right;
+    blk=find_blk_with_name(ioff,icol,nmarco,pr_marco); 
+    vnet=find_vnet_with_name(ioff,icol,nvnet,vnets);
+    for (ioff=left;ioff<(right+1);++ioff)
+    {
+      if ((NULL==blk)&&(NULL==vnet))
+      {
+        printf("Error: Fail to find the blk or vnet with given name(name:%d)\n",ioff);
+        return FALSE;
+      }
+      else if ((NULL!=blk)&&(NULL!=vnet)) 
+      {
+        printf("Error: Exist both blk and vnet with the shared name(name:%d)\n",ioff);
+        return FALSE;
+      }
+      else if (NULL!=blk)
+      {detail_place_blk(blk,icol,left,nmarco,pr_marco,nvnet,vnets,bb_array);}
+      else if (NULL!=vnet)
+      {detail_place_vnet(vnet,icol,left,nmarco,pr_marco,nvnet,vnets,bb_array);}
+    }
+    icol++;
+  }
+  return TRUE;
 }

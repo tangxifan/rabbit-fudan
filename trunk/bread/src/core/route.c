@@ -21,7 +21,9 @@ try_route(IN int nvnet,
   float mincost=try_route_marco_on_bb(marcos,bb_array);
   t_pr_marco* mchn=marcos;
   set_route_vnets_on_bb(nvnet,vnets,bb_array);
+  update_bb_array_route_cost(bb_array);
   set_route_icblks_on_bb(nmarco,marcos,bb_array);
+  update_bb_array_route_cost(bb_array);
   while(1)
   {
     for (imarco=0;imarco<nmarco;++imarco)
@@ -40,6 +42,8 @@ try_route(IN int nvnet,
     update_bb_array_route_cost(bb_array);
     if (check_all_routed(nvnet,vnets,nmarco,marcos))
     {break;}
-  } 
+  }
+  try_route_bias(nvnet,vnets,nmarco,marcos,bb_array);
+  
   return TRUE;  
 }
