@@ -10,20 +10,6 @@
 
 
 
-
-void 
-alter_route_cost(IN t_bb_node* bb_node)
-{
-  int in=0;
-  if (OCUPPIED==bb_node->status)
-  {
-    for (in=0;in<bb_node->ninner;++in)
-    {*(bb_node->(inners+in))->rcost+=bb_node->rcost/ninner;}
-  }
-  return 1;
-}
-
-
 float
 cal_route_path_cost(IN t_location* src,
                     IN t_location* des,
@@ -52,6 +38,7 @@ find_vnet_bbs(IN int* nbbs,
   int xend=ix+bb_array->(columns+column)->width;
   int yend=iy+bb_array->(columns+column)->height;
   int ibb=0;
+  int icol=0;
   t_location* bbs=NULL;
 
   (*nbbs)=0;
@@ -63,6 +50,7 @@ find_vnet_bbs(IN int* nbbs,
       {(*nbbs)++;}
     }
   }
+
   
   bbs=(t_location*)my_malloc((*nbbs)*sizeof(t_location));
   for (ix=xstart;ix<xend;++ix)
@@ -71,8 +59,8 @@ find_vnet_bbs(IN int* nbbs,
     {
       if ((vnet==bb_array->bb_node[ix][iy].net)&&(FREE==bb_array->bb_node[ix][iy].status))
       {
-       set_location_value(bbs+ibb,ix,iy);
-       ibb++;
+        set_location_value(bbs+ibb,ix,iy);
+        ibb++;
       }
     }
   }
@@ -124,30 +112,53 @@ try_right_route_pin_on_bb(IN t_pr_pin* spin,
                          )
 {
   float rcost=0.0;
+  float tmpcost=0.0;
   t_location* rloc=spin->location;
+  t_location* tmploc;
+  t_location* nearloc;
   int ix=spin->location->x;
   int iy=spin->location->y;
-  int itop=bb_array->(columns+spin->parent->pcolumn)->base->x
-          +bb_array->(columns+spin->parent->pcolumn)->width;
   int max_len=pin->parent->device->max_length;
-//int itop=ix+pin->parent->device->max_length+1;
-  /*Search the left side for a routable bb node*/
+  int itop=max_len+ix;
+  int iend=bb_array->(columns+spin->parent->pcolumn)->base->x
+          +bb_array->(columns+spin->parent->pcolumn)->width;
+  if (itop>iend)
+  {itop=iend;}
+
+  /*Search the right side for a routable bb node*/
   while(ix<itop)
   {
+    tmpcost=0.0;
     if (ROUTABLE==bb_array->bb_node[ix][iy]->rstatus)
     {
-      set_location_value(dloc,ix,iy);
-      break;
+      set_location_value(tmploc,ix,iy);
     }
-    if ((ix-spin->location->x-max_len)>0)
-    {rcost=UNKNOWN;return rcost;}
+    else if (bb_array->bb_node[ix][iy]->net==spin->nets)
+    {
+      set_location_value(tmploc,ix,iy);
+      (*nearloc)=find_near_node_on_bb(tmploc,bb_array);
+      if (UNKNOWN==nearloc->y)
+      {ix++;continue;}
+    }
+    else
+    {ix++;continue;}
+    tmpcost+=find_manhattan_distance(rloc,tmploc);
+    tmpcost+=find_manhattan_distance(tmploc,dpin->location);
+    tmpcost+=get_bb_node_route_cost(rloc,bb_array);
+    tmpcost+=get_bb_node_route_cost(tmploc,bb_array);
+    tmpcost+=get_bb_node_route_cost(dpin->location,bb_array);
+    if (rcost=0.0)
+    {
+      rcost=tmpcost;
+      (*dloc)=tmploc;
+    }
+    else if (rcost>tmpcost)
+    { 
+      rcost=tmpcost;
+      (*dloc)=tmploc;
+    }
     ix++;
   }
-  rcost+=find_manhattan_distance(rloc,dloc);
-  rcost+=find_manhattan_distance(dloc,dpin->location);
-  rcost+=get_bb_node_route_cost(rloc,bb_array);
-  rcost+=get_bb_node_route_cost(dloc,bb_array);
-  rcost+=get_bb_node_route_cost(dpin->location,bb_array);
   return rcost; 
 }
 
@@ -158,30 +169,54 @@ try_left_route_pin_on_bb(IN t_pr_pin* spin,
                          IN t_bb_array* bb_array
                          )
 {
-  float rcost=0.0;
+  float rcost=UNKNOWN;
+  float tmpcost=0.0;
   t_location* rloc=spin->location;
+  t_location* tmploc;
+  t_location* nearloc;
   int ix=spin->location->x;
   int iy=spin->location->y;
-  int itop=bb_array->(columns+spin->parent->pcolumn)->base->x-1;
   int max_len=pin->parent->device->max_length;
+  int itop=ix-max_len;
+  int iend=bb_array->(columns+spin->parent->pcolumn)->base->x
+  if (itop<iend)
+  {itop=iend;}
+ 
 //int itop=ix+pin->parent->device->max_length+1;
   /*Search the left side for a routable bb node*/
   while(ix>itop)
   {
+    tmpcost=0.0;
     if (ROUTABLE==bb_array->bb_node[ix][iy]->rstatus)
     {
-      set_location_value(dloc,ix,iy);
-      break;
+      set_location_value(tmploc,ix,iy);
     }
-    if ((spin->location->x-ix-max_len)>0)
-    {rcost=UNKNOWN;return rcost;}
+    else if (bb_array->bb_node[ix][iy]->net==spin->nets)
+    {
+      set_location_value(tmploc,ix,iy);
+      (*nearloc)=find_near_node_on_bb(tmploc,bb_array);
+      if (UNKNOWN==nearloc->y)
+      {ix--;continue;}
+    }
+    else
+    {ix--;continue;}
+    tmpcost+=find_manhattan_distance(rloc,tmploc);
+    tmpcost+=find_manhattan_distance(tmploc,dpin->location);
+    tmpcost+=get_bb_node_route_cost(rloc,bb_array);
+    tmpcost+=get_bb_node_route_cost(tmploc,bb_array);
+    tmpcost+=get_bb_node_route_cost(dpin->location,bb_array);
+    if (UNKNOWN==rcost)
+    {
+      rcost=tmpcost;
+      (*dloc)=(*tmploc);
+    }
+    else if (rcost>tmpcost)
+    { 
+      rcost=tmpcost;
+      (*dloc)=(*tmploc);
+    }
     ix--;
   }
-  rcost+=find_manhattan_distance(rloc,dloc);
-  rcost+=find_manhattan_distance(dloc,dpin->location);
-  rcost+=get_bb_node_route_cost(rloc,bb_array);
-  rcost+=get_bb_node_route_cost(dloc,bb_array);
-  rcost+=get_bb_node_route_cost(dpin->location,bb_array);
   return rcost; 
 }
 
@@ -227,4 +262,54 @@ try_route_marco_pin_on_bb(IN t_pr_pin* src,
   } 
 }
 
+float
+try_left_find_node(IN t_pr_pin* pin,
+                   IN t_location* leftloc,
+                   IN t_bb_array* bb_array
+                  )
+{
+  int ix=pin->parent->location->x;
+  int itop=bb_array->(columns+pin->parent->pcolumn)->base->x;
+  t_location* loc=NULL;
+  float cost=0.0;
+  while (ix>itop)
+  {
+    set_location_value(loc,ix,pin->location->y);
+    if (FALSE==check_bb_node_unroutable(loc,bb_array))
+    {
+      set_location_value(leftloc,ix,pin->location->y);
+      cost=find_manhattan_distance(leftloc,loc)
+          +get_bb_node_route_cost(leftloc,bb_array)
+          +get_bb_node_route_cost(loc,bb_array);
+    }
+    ix--;
+  }
+  return cost;
+}
 
+float
+try_right_find_node(IN t_pr_pin* pin,
+                    IN t_location* rightloc,
+                    IN t_bb_array* bb_array
+                   )
+{
+  int ix=pin->parent->location->x
+        +pin->parent->device->width;
+  int itop=bb_array->(columns+pin->parent->pcolumn)->base->x
+          +bb_array->(columns+pin->parent->pcolumn)->width;
+  t_location* loc=NULL;
+  float cost=0.0;
+  while (ix<itop)
+  {
+    set_location_value(loc,ix,pin->location->y);
+    if (FALSE==check_bb_node_unroutable(loc,bb_array))
+    {
+      set_location_value(rightloc,ix,pin->location->y);
+      cost=find_manhattan_distance(rightloc,loc)
+          +get_bb_node_route_cost(rightloc,bb_array)
+          +get_bb_node_route_cost(loc,bb_array);
+    }
+    ix++;
+  }
+  return cost;
+}
