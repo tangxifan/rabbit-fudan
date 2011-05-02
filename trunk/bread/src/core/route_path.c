@@ -129,11 +129,12 @@ try_right_route_pin_on_bb(IN t_pr_pin* spin,
   while(ix<itop)
   {
     tmpcost=0.0;
-    if (ROUTABLE==bb_array->bb_node[ix][iy]->rstatus)
+    set_location_value(tmploc,ix,iy);
+    if (!check_bb_node_unroutable(tmploc,bb_array))
     {
       set_location_value(tmploc,ix,iy);
     }
-    else if (bb_array->bb_node[ix][iy]->net==spin->nets)
+    else if (check_bb_node_vnet(tmploc,spin->nets,bb_array)&&(!check_bb_node_occupied(tmploc,bb_array)))
     {
       set_location_value(tmploc,ix,iy);
       (*nearloc)=find_near_node_on_bb(tmploc,bb_array);
@@ -187,11 +188,12 @@ try_left_route_pin_on_bb(IN t_pr_pin* spin,
   while(ix>itop)
   {
     tmpcost=0.0;
-    if (ROUTABLE==bb_array->bb_node[ix][iy]->rstatus)
+    set_location_value(tmploc,ix,iy);
+    if (!check_bb_node_unroutable(tmploc,bb_array))
     {
       set_location_value(tmploc,ix,iy);
     }
-    else if (bb_array->bb_node[ix][iy]->net==spin->nets)
+    else if (check_bb_node_vnet(tmploc,spin->nets,bb_array)&&(!check_bb_node_occupied(tmploc,bb_array)))
     {
       set_location_value(tmploc,ix,iy);
       (*nearloc)=find_near_node_on_bb(tmploc,bb_array);
