@@ -42,7 +42,7 @@
  *a rectangle of which pins are distibuted on each side. 
  */
 enum e_pin_location
-{NONE = -1, TOP = 0, LEFT = 1, RIGHT = 2; BOTTOM = 3};
+{NONE = -1, TOP = 0, LEFT = 1, RIGHT = 2, BOTTOM = 3};
 
 typedef struct s_location
 {
