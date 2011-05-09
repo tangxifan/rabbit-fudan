@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <rabbit_types.h>
+#include <rabbit_type.h>
 #include <util.h>
 #include <bb_type.h>
 #include <place_route.h>

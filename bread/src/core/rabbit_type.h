@@ -35,6 +35,9 @@
 
 #define UNKNOWN -1
 
+#define MAX_FILENAME_LENGTH 500
+#define BUF_SIZE 500
+
 /*
  *For each unit for placement, pin_location should be 
  *pointed out. When the unit is a specific node, the 
