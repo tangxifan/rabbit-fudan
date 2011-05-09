@@ -76,7 +76,7 @@ typedef struct s_icdev
   int area;
   int pin_num;
   /*For IC chips or MOSFET, BJT only*/
-  t_dev_pin *pinls//pinls[0..num_list]
+  t_dev_pin *pinls;//pinls[0..num_list]
   /*For scalable devie such as resistance and capacitance*/
   int max_length;
   int min_length;

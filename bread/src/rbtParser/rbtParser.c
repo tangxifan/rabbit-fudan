@@ -1,5 +1,5 @@
 /*
-RBT_paser.c
+rbtPaser.c
 
 Mike Zou <zxhmike@gmail.com>
 
@@ -21,7 +21,7 @@ You should have received a copy of the GNU General Public License along with thi
 #include <stdio.h>
 #include <string.h>
 
-#include "RBT_parser.h"
+#include "rbtParser.h"
 
 /*
  * XML Unitlity: getdoc
@@ -64,11 +64,38 @@ getnodeset (xmlDocPtr doc, xmlChar *xpath)
 	return result;
 }
 
-
-/*
- * Get XML node contents
- * UNFINISHED
+/**
+ * function rbtParseNetlist
+ * Parse the Fritzing netlist xml
  */
+int
+rbtParseNetlist (char* docname)
+{
+	xmlDocPtr doc;
+	xmlChar *xpath = (xmlChar*) "//net";
+	xmlNodeSetPtr nodeset;
+	xmlXPathObjectPtr result;
+	int i;
+		
+	if (NULL == doc = getdoc(docname))
+		return -1;
+
+	result = getnodeset (doc, xpath);
+	if (result == NULL)
+		return -2;
+	nodeset = result->nodesetval;
+
+	for (i=0; i < nodeset->nodeNr; i++) {
+		printf("%s\n",
+			xmlGetProp(nodeset->nodeTab[i],(xmlChar*) "id"));
+	}
+
+	xmlXPathFreeObject (result);
+	xmlFreeDoc(doc);
+	xmlCleanupParser();
+	return (1);
+
+}
 
 /*
  * chop of '\n' at the end of a string
@@ -89,6 +116,9 @@ chomp (char* str_in)
 	return 0;
 }
 
+/**
+ * Find the xml part describtion file accoring to the device name
+ */
 char*
 RBT_find_device_file (char* list_file, char* device_name)
 {
@@ -119,9 +149,4 @@ RBT_find_device_file (char* list_file, char* device_name)
 	free (buf);
 	fclose (input_file);
 	return NULL;
-}
-
-t_net_info*
-RBT_parse_netlist (char* filename){
-	return NULL;	
 }
