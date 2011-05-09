@@ -6,4 +6,4 @@ test_main:test_main.c bb_place.o place_crit.o place_route.o place_util.o route_b
 
 clean:
 	rm -f test_main
-	rm -f ../*.o
+	rm -f *.o
