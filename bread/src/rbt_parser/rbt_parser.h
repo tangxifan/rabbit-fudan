@@ -16,6 +16,7 @@ You should have received a copy of the GNU General Public License along with thi
 */
 
 #include "rabbit_type.h"
+#include "place_route.h"
 #include "device.h"
 
 /* Read the device list "device.lst" to find out

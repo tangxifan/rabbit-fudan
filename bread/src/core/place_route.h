@@ -10,6 +10,14 @@
  *ICBLOCK: Multi-port device are catagoried as ICBLOCK
  *         which will be heavily considered in placement.
  */
+
+/* prototypes */
+typedef struct s_vnet t_vnet;
+typedef struct s_pr_pin t_pr_pin;
+typedef struct s_pr_marco t_pr_marco;
+typedef struct s_pr_node t_pr_node;
+typedef struct s_place_info t_place_info;
+
 enum e_pr_type
 {RCD,ICBLOCK,VDD,GND};
 
@@ -52,7 +60,7 @@ enum e_route_status
 enum e_pwidth_status
 {POINTED,UNPOINT};
 
-typedef struct s_vnet
+struct s_vnet
 {
   int name;
   /*General*/
@@ -75,9 +83,8 @@ typedef struct s_vnet
   /*For struct*/
   t_pr_node next;  
 }
-t_vnet;
 
-typedef struct s_pr_pin
+struct s_pr_pin
 {
   /*For Place*/
   int numnet;
@@ -92,13 +99,12 @@ typedef struct s_pr_pin
   t_pr_marco *parent;
   t_pr_pin *next;
 }
-t_pr_pin;
 
 /*
  *detail_offset: the offset of a IC BLOCK in its
  *               place area.(count from left edge)
  */
-typedef struct s_pr_marco
+struct s_pr_marco
 {
   /*General*/
   int name;
@@ -120,7 +126,6 @@ typedef struct s_pr_marco
   /*For struct*/
   t_pr_node next;
 }
-t_pr_marco;
 
 /*
  *If the flag is TRUE, the pr node store a marco
@@ -128,19 +133,18 @@ t_pr_marco;
  *If the flag is FALSE, the pr node store a vnet
  *and the marco pointer is NULL.
  */
-typedef struct s_pr_node
+struct s_pr_node
 {
   boolean flag;
   t_pr_marco* mnext;
   t_vnet* vnext;
 }
-t_pr_node;
 
 /*
  *The place information struct is used during
  *placement for storing placement information.
  */
-typedef struct s_place_info
+struct s_place_info
 {
   int bb_pwidth;
   int cur_width;
@@ -148,4 +152,3 @@ typedef struct s_place_info
   s_pr_node left;
   s_pr_node right;
 }
-t_place_info;

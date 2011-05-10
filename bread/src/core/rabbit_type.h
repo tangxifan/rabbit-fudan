@@ -17,8 +17,10 @@
 #define OUT
 #define INOUT
 
-#define TRUE 1
-#define FALSE 0
+typedef enum e_boolean{
+	FALSE = 0,
+	TRUE
+}boolean;
 
 /*
  *DEBUG is defined for lauching debug mode.
@@ -54,15 +56,3 @@ typedef struct s_location
   int y;
 }
 t_location;
-
-
-
-
-
-
-
-
-
-
-
-

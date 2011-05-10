@@ -25,6 +25,13 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 /*
+ * Global Variables
+ */
+
+t_vnet *rbt_vnets;
+t_vnet *rbt_vnet_ptr;
+
+/*
  * XML Unitlity: getdoc
  * From official LibXML tutorial
  */
@@ -64,15 +71,47 @@ getnodeset (xmlDocPtr doc, xmlChar *xpath)
 
 	return result;
 }
+/*
+ * function rbt_parse_connector
+ * parse the <connector> </connector> tag within <net> </net>
+ */
+int
+rbt_parse_connector (xmlNodePtr connector, xmlChar *pin_id)
+{
+	xmlNodePtr cur;
+	xmlChar *label;
+	xmlChar *title;
+	xmlChar *id;
+
+	for (cur = connector->xmlChildrenNode; cur != NULL; cur = cur->next){
+		if ( !xmlStrcmp ((cur->name), (const xmlChar*) "part" )){
+			label = xmlGetProp (cur, (const xmlChar*) "label");
+			title = xmlGetProp (cur, (const xmlChar*) "title");
+			id = xmlGetProp (cur, (const xmlChar*) "id");
+		}
+	}
+	
+	return 0;
+
+}
 
 /**
  * function rbt_parse_net
  * parse the <net> </net> tag in a netlist
  */
 int
-rbt_parse_net(xmlNodePtr net)
+rbt_parse_net (xmlNodePtr net)
 {
-	
+	xmlNodePtr cur;
+	xmlChar* pin_id;
+
+	for (cur = net->xmlChildrenNode; cur != NULL; cur = cur->next){
+		if ( !xmlStrcmp ((cur->name), (const xmlChar*) "connector")){
+			pin_id = xmlGetProp (cur, (const xmlChar*) "name");
+			rbt_parse_connector (cur, pin_id);	
+			xmlFree (pin_id);
+		}
+	}
 	return 0;
 }
 
@@ -97,6 +136,12 @@ rbt_parse_netlist (char* docname)
 		return -2;
 
 	nodeset = result->nodesetval;
+
+	/* Initialize rbt_vnets */
+	rbt_vnets = (t_vnet*) malloc(nodeset->nodeNr * sizeof(t_vnet));
+	if (rbt_vnets == NULL)
+		return -3;
+	rbt_vnet_ptr = rbt_vnets;
 
 	for (i=0; i < nodeset->nodeNr; i++) {
 		rbt_parse_net (nodeset->nodeTab[i]);
