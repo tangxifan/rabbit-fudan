@@ -44,7 +44,7 @@ enum e_bias_type
  *For each bb_node, the location should be given with
  *x and y.
  */
-typedef struct s_bb_node
+struct s_bb_node
 {
   int bb_index;
   enum e_bb_type type;
@@ -68,8 +68,7 @@ typedef struct s_bb_node
   enum e_bias_type bias_type;
   /*the route cost for this node.*/
   float rcost;
-}
-t_bb_node;
+};
 
 /*
  *A breadboard is composed of several columns.
@@ -82,7 +81,7 @@ t_bb_node;
  *      of a certain t_pr_marco or t_vnet.
  *right:It is similar defined as the left.
  */
-typedef struct s_bb_column
+struct s_bb_column
 {
   t_location* base;
   int height;
@@ -96,13 +95,12 @@ typedef struct s_bb_column
   /*Only one blank area is permitted in a column*/
   int blank_start;
   int blank_end;
-}
-t_bb_column;
+};
 
 /*
  *Height: The bias height should be 1.
  */
-typedef struct s_bb_bias
+struct s_bb_bias
 {
   t_location* base;
   int height;
@@ -110,8 +108,7 @@ typedef struct s_bb_bias
   int former_column;
   int next_column;
   enum e_bias_type type;
-}
-t_bb_bias;
+};
 
 /*
  *A breadboard is a double-dimension array.
@@ -123,7 +120,7 @@ t_bb_bias;
  *               resources reserved for special 
  *               virtual nets.
  */
-typedef struct s_bb_array
+struct s_bb_array
 {
   t_bb_node **bb_node; //bb_node[0..num_set]
   int width;
@@ -133,5 +130,4 @@ typedef struct s_bb_array
   t_bb_column* columns;
   int nbias;
   t_bb_bias* biases;
-}
-t_bb_array;
+};

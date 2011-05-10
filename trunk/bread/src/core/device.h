@@ -17,25 +17,23 @@
  *use the following struct to store netlist
  *information
  */
-typedef struct s_net_info
+struct s_net_info
 {
   enum e_pin_location pin_loc;
   int pin_offset;
   char *dev_name;
-}
-t_net_info;
+};
 
 /*
  *The node will be convert to SPEC node when placing
  *To be awared, the node exclude the nodes of IC blocks
  */
-typedef struct s_rb_node
+struct s_rb_node
 {
   int index;
   int crit_num;
   t_net_info *net_list;
-}
-t_rb_node;
+};
 
 /*
  *Pins of certain devices need more detailed 
@@ -54,20 +52,19 @@ t_rb_node;
  *                bottom
  *Number 0..4 is the offset of pins' location.
  */
-typedef struct s_dev_pin
+struct s_dev_pin
 {
   int index;
   enum e_pin_location loc;
   int offset;
-}
-t_dev_pin;
+};
 
 /*
  *IC blocks is a comparatively universal struct
  *IC chips, MOSFETs, BJTs, Diodes and other
  *sort of devices could be defined as IC blocks.
  */
-typedef struct s_icdev
+struct s_icdev
 {
   char *name;
   int dev_index;
@@ -80,8 +77,7 @@ typedef struct s_icdev
   /*For scalable devie such as resistance and capacitance*/
   int max_length;
   int min_length;
-}
-t_icdev;
+};
 
 
 
