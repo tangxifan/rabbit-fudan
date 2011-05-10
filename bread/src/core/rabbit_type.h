@@ -49,10 +49,25 @@ typedef enum e_boolean{
 enum e_pin_location
 {NONE = -1, TOP = 0, LEFT = 1, RIGHT = 2, BOTTOM = 3};
 
-typedef struct s_location
+/* prototypes of structures*/
+typedef struct s_vnet t_vnet;
+typedef struct s_pr_pin t_pr_pin;
+typedef struct s_pr_marco t_pr_marco;
+typedef struct s_pr_node t_pr_node;
+typedef struct s_place_info t_place_info;
+typedef struct s_location t_location;
+typedef struct s_bb_node t_bb_node;
+typedef struct s_bb_column t_bb_column;
+typedef struct s_bb_bias t_bb_bias;
+typedef struct s_bb_array t_bb_array;
+typedef struct s_net_info t_net_info;
+typedef struct s_rb_node t_rb_node;
+typedef struct s_dev_pin t_dev_pin;
+typedef struct s_icdev t_icdev;
+
+struct s_location
 {
   int name;
   int x;
   int y;
-}
-t_location;
+};

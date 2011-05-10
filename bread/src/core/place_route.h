@@ -11,12 +11,6 @@
  *         which will be heavily considered in placement.
  */
 
-/* prototypes */
-typedef struct s_vnet t_vnet;
-typedef struct s_pr_pin t_pr_pin;
-typedef struct s_pr_marco t_pr_marco;
-typedef struct s_pr_node t_pr_node;
-typedef struct s_place_info t_place_info;
 
 enum e_pr_type
 {RCD,ICBLOCK,VDD,GND};
@@ -81,8 +75,8 @@ struct s_vnet
   t_bb_node **bb_nodes;
   enum e_route_status rstatus;
   /*For struct*/
-  t_pr_node next;  
-}
+  struct s_pr_node *next;  
+};
 
 struct s_pr_pin
 {
@@ -98,7 +92,7 @@ struct s_pr_pin
   /*For struct*/
   t_pr_marco *parent;
   t_pr_pin *next;
-}
+};
 
 /*
  *detail_offset: the offset of a IC BLOCK in its
@@ -124,8 +118,8 @@ struct s_pr_marco
   int pcolumn;
   enum e_route_status rstatus;
   /*For struct*/
-  t_pr_node next;
-}
+  struct s_pr_node *next;
+};
 
 /*
  *If the flag is TRUE, the pr node store a marco
@@ -138,7 +132,7 @@ struct s_pr_node
   boolean flag;
   t_pr_marco* mnext;
   t_vnet* vnext;
-}
+};
 
 /*
  *The place information struct is used during
@@ -149,6 +143,6 @@ struct s_place_info
   int bb_pwidth;
   int cur_width;
   int column;
-  s_pr_node left;
-  s_pr_node right;
-}
+  t_pr_node left;
+  t_pr_node right;
+};
