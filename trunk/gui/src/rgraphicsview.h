@@ -15,28 +15,45 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Rabbit.  If not, see <http://www.gnu.org/licenses/>.
 
-********************************************************************
-
-$Revision: 1 $:
-$Author: running_teeth@sina.com $:
-$Date: 2011-04-03 21:17:33 +0800 (Sun, 3 Apr 2011) $
-
 ********************************************************************/
 
-#ifndef UNITVIEW_H
-#define UNITVIEW_H
+#ifndef RGRAPHICSVIEW_H
+#define RGRAPHICSVIEW_H
 
 #include <QGraphicsView>
+#include <QObject>
+#include <QList>
+#include <QFile>
 
-class UnitView : public QGraphicsView
+#include "unit.h"
+
+class RGraphicsView : public QGraphicsView
 {
     Q_OBJECT
 
 public:
-    UnitView(QWidget *parent = 0);
+    RGraphicsView(QWidget *parent = 0);
+
+    void drawBackground(QPainter *painter, const QRectF &rect);
+
+    bool readFile(const QString &fileName);
+    void updateItemShow();
+
+public slots:
+    void setShowResistor(bool showResistor);
+    void setShowCapacitor(bool showCapacitor);
+    void setShowTransistor(bool showTransistor);
+    void setShowIC(bool showIC);
+    void setHideSelected(bool hideSelected);
 
 protected:
     void wheelEvent(QWheelEvent *event);
+
+private:
+    QList<Unit *> m_unitList;
+    QList<QGraphicsEllipseItem> m_dots;
+    QList<ElectronicPart *> m_partList;
+    struct Show *m_show;
 };
 
-#endif // UNITVIEW_H
+#endif // RGRAPHICSVIEW_H

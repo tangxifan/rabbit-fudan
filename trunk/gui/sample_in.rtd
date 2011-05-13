@@ -1,9 +1,0 @@
-R1	resistor	x5	x14
-R2	resistor	b6	b13
-R3	resistor	c7	c14
-R4	resistor	d9	e14
-R5	resistor	e30	y45
-R6	resistor	f32	y49
-C1	capacitor	i10	i13
-C2	capacitor	j1	j3
-Q1	transistor	h30	i31	j35

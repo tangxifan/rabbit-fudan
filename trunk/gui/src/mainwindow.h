@@ -15,12 +15,6 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Rabbit.  If not, see <http://www.gnu.org/licenses/>.
 
-********************************************************************
-
-$Revision: 1 $:
-$Author: running_teeth@sina.com $:
-$Date: 2011-04-03 21:17:33 +0800 (Sun, 3 Apr 2011) $
-
 ********************************************************************/
 
 #ifndef MAINWINDOW_H
@@ -28,11 +22,9 @@ $Date: 2011-04-03 21:17:33 +0800 (Sun, 3 Apr 2011) $
 
 #include <QMainWindow>
 #include <QApplication>
-#include "unititem.h"
-#include "unitview.h"
+#include <QAction>
 
-class QAction;
-class QGraphicsScene;
+class RGraphicsView;
 
 class MainWindow : public QMainWindow
 {
@@ -42,42 +34,36 @@ public:
     MainWindow(QWidget *parent = 0);
 
 private slots:
-    void open();
+    void openNetlist();
+    void importRouted();
     void zoomIn();
     void zoomOut();
     void updateActions();
 
 private:
-
-
     void createActions();
     void createMenus();
     void createToolBars();
+    void createDockWindows();
 
-    bool loadFile(const QString &fileName);
-    bool readFile(const QString &fileName);
-    void processLine(QString &line);
-
-    void loadUnitLib();
-
-    void generateUnitItem();
-    void addUnitItem(UnitItem *unit);
-
-    QPointF bbCToPos(QString bbCoord);
+    bool autoRoute(const QString &fileName);
 
     QMenu *fileMenu;
     QMenu *viewMenu;
     QToolBar *fileToolBar;
     QToolBar *viewToolBar;
-    QAction *openAction;
+    QAction *openNetlistAction;
+    QAction *importRoutedAction;
     QAction *exitAction;
     QAction *zoomInAction;
     QAction *zoomOutAction;
+    QAction *showResistorAction;
+    QAction *showCapacitorAction;
+    QAction *showTransistorAction;
+    QAction *showICAction;
+    QAction *hideSelectedAction;
 
-    QGraphicsScene *scene;
-    UnitView *view;
-    QMap<QString, QVector<int> > unitTypePin;
-    QVector<UnitItem *> units;
+    RGraphicsView *m_view;
 };
 
 #endif // MAINWINDOW_H

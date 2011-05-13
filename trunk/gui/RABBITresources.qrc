@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/zoomout.png</file>
+        <file>images/document-open.svg</file>
+        <file>images/logo.png</file>
+        <file>images/zoomin.png</file>
+        <file>resistor.svg</file>
+    </qresource>
+</RCC>
