@@ -20,16 +20,18 @@ You should have received a copy of the GNU General Public License along with thi
 #include <libxml/parser.h>
 #include <libxml/xpath.h>
 #include <string.h>
+#include <search.h>
 
 #include "rbt_parser.h"
+#define MAX_DEVICE_NUMBER 100
+#define MAX_DEVICE_NAME 50
 
 
-/*
- * Global Variables
- */
+t_vnet **rbt_vnets;
+int rbt_vnets_length;
 
-t_vnet *rbt_vnets;
-t_vnet *rbt_vnet_ptr;
+t_icdev **rbt_devices;
+int rbt_devices_length;
 
 /*
  * XML Unitlity: getdoc
@@ -71,6 +73,7 @@ getnodeset (xmlDocPtr doc, xmlChar *xpath)
 
 	return result;
 }
+
 /*
  * function rbt_parse_connector
  * parse the <connector> </connector> tag within <net> </net>
@@ -88,6 +91,11 @@ rbt_parse_connector (xmlNodePtr connector, xmlChar *pin_id)
 			label = xmlGetProp (cur, (const xmlChar*) "label");
 			title = xmlGetProp (cur, (const xmlChar*) "title");
 			id = xmlGetProp (cur, (const xmlChar*) "id");
+			/* DEBUG */
+			printf ("%s %s %s %s\n", label, title, id, pin_id);
+			xmlFree (label);
+			xmlFree (title);
+			xmlFree (id);
 		}
 	}
 	
@@ -116,6 +124,139 @@ rbt_parse_net (xmlNodePtr net)
 }
 
 /**
+ * function rbt_find_device
+ * find a device in a t_icdev array
+ */
+t_icdev*
+rbt_find_device (t_icdev** devs, int length, char* device_name)
+{
+	int count;
+
+	for (count = 0; count < length; count++){
+		if ( !strcmp (devs[count]->name, device_name) )
+			return devs[count];
+	}
+
+	return NULL;
+}
+
+/*
+ * function rbt_config_device
+ * fill the parameters in the t_icdev
+ */
+int
+rbt_config_device (t_icdev* cur, char *device_name)
+{
+	/* DEBUG: not fully implemented */
+	cur->name = malloc (sizeof (char) * ( strlen (device_name) +1));
+	if (cur->name == NULL) return -1;
+	strcpy (cur->name, device_name);
+
+	return 0;
+}
+
+/*
+ * function rbt_ins_device
+ * insert a device into a t_icdev array
+ */
+int
+rbt_ins_device (t_icdev** dev, int *length, char *device_name)
+{
+	t_icdev *cur;
+	cur = (t_icdev*) malloc (sizeof (t_icdev));
+	if (cur == NULL) return -1;
+
+	dev[*length] = cur;
+	(*length) = (*length) + 1;
+	rbt_config_device (cur, device_name);
+
+	printf ("Device inserted: %s\n", device_name);
+	return 0;
+}
+
+/**
+ * function rbt_parse_init
+ * count the device number and init the devices array
+ * init the vnets array
+ */
+int
+rbt_parse_init(char *docname)
+{	
+	xmlDocPtr doc;
+	xmlChar *xpath = (xmlChar*) "//part";
+	xmlNodeSetPtr nodeset;
+	xmlXPathObjectPtr result;
+	int device_count;
+	ENTRY entry0;
+	char *temp_string;
+	
+	int i;
+		
+	if (NULL == (doc = getdoc(docname)))
+		return -1;
+
+	result = getnodeset (doc, xpath);
+	if (result == NULL)
+		return -2;
+
+	nodeset = result->nodesetval;
+
+	if (!hcreate(53))
+		return -3;
+
+	device_count = 0;
+	for (i=0; i < nodeset->nodeNr; i++) {
+		/* hash them and count how many devices */
+		/* write to device_count */
+		entry0.key = (char*) xmlGetProp (nodeset->nodeTab[i], (xmlChar*) "title");
+		if (NULL == hsearch (entry0, FIND)){
+			hsearch (entry0, ENTER);
+			device_count++;
+		}
+		xmlFree (entry0.key);
+	}
+
+	printf ("device count: %d\n", device_count);
+
+	/* Init rbt_devices */
+	rbt_devices = (t_icdev**) malloc(device_count * sizeof(t_icdev*));
+	if (rbt_devices == NULL)
+		return -4;
+
+	/* Second parse, create devices array*/
+	rbt_devices_length = 0;
+
+	for (i=0; i < nodeset->nodeNr; i++) {
+		temp_string = (char*) xmlGetProp (nodeset->nodeTab[i], (xmlChar*) "title");
+		if (NULL == rbt_find_device (rbt_devices, rbt_devices_length, temp_string)){
+			rbt_ins_device (rbt_devices, &rbt_devices_length, temp_string);
+		}
+		xmlFree (temp_string);
+	}
+
+	/* For things in hash, build devices */
+
+	/* Initialize rbt_vnets */
+	rbt_vnets = (t_vnet**) malloc(nodeset->nodeNr * sizeof(t_vnet*));
+	if (rbt_vnets == NULL)
+		return -5;
+
+	/* Third parse. Fill in rbt_vnets */
+	for (i=0; i < nodeset->nodeNr; i++) {
+			
+	}
+
+	xmlXPathFreeObject (result);
+	xmlFreeDoc(doc);
+	xmlCleanupParser();
+	
+
+	/* Destroy hash */
+	hdestroy();
+	return 0;
+}
+
+/**
  * function rbt_parse_netlist
  * Parse the Fritzing netlist xml
  */
@@ -137,11 +278,7 @@ rbt_parse_netlist (char* docname)
 
 	nodeset = result->nodesetval;
 
-	/* Initialize rbt_vnets */
-	rbt_vnets = (t_vnet*) malloc(nodeset->nodeNr * sizeof(t_vnet));
-	if (rbt_vnets == NULL)
-		return -3;
-	rbt_vnet_ptr = rbt_vnets;
+	if (rbt_parse_init(docname)) return -3;
 
 	for (i=0; i < nodeset->nodeNr; i++) {
 		rbt_parse_net (nodeset->nodeTab[i]);
