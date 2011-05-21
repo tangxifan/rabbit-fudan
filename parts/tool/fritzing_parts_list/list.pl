@@ -42,7 +42,9 @@ for (@files){
 
 	while (<FILE>){
 		if (/\s*\<title\>(.*)\<\/title\>/){
-			print OUT $1, "*", $filename, "\n";
+			my $title = $1;
+			$title =~ s/ Ω/Ω/g;
+			print OUT $title, "*", $filename, "\n";
 			print "$filename\n";
 			$count++;
 			last;
