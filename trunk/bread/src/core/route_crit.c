@@ -1,12 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <rabbit_types.h>
-#include <util.h>
+#include <rabbit_type.h>
 #include <bb_type.h>
 #include <place_route.h>
 #include <device.h>
-#include <setup_rabbit.h>
 
 
 /*
@@ -24,19 +22,19 @@
  *Ensure the block in set in the middle of the column
  *and the block does not placed on a BLANK node.
  */
-void
+int
 determine_block_base_on_bb(IN t_pr_marco* blk,
                            IN t_bb_array* bb_array
                           )
 {
   int column=blk->pcolumn;
-  int bbheight=bb_array->(columns+column)->height;
+  int bbheight=bb_array->columns[column].height;
  
-  blk->location.y=bb_array->(columns+column)->base->y
-                 +int((bbheigth-blk->device->height)/2);
+  blk->location->y=bb_array->columns[column].base->y
+                 +(int)((bbheight-blk->device->height)/2);
 
-  if (blk->location.y>bb_array->(columns+column)->blank_start)
-  {blk->location.y=bb_array->(columns+column)->blank_start;}
+  if (blk->location->y>bb_array->columns[column].blank_start)
+  {blk->location->y=bb_array->columns[column].blank_start;}
 
   if (bbheight<blk->device->height)
   {
@@ -58,7 +56,7 @@ determine_block_base_on_bb(IN t_pr_marco* blk,
  *II. Set the bread board nodes route information to 
  *    confirm the routed pins on it.
  */
-void
+int
 determine_pins_of_blk_on_bb(IN t_pr_marco* blk,
                             IN t_bb_array* bb_array
                            )
@@ -76,7 +74,7 @@ determine_pins_of_blk_on_bb(IN t_pr_marco* blk,
     if (BOTTOM==curpin->loc)
     {
       curpin->location->x=blk->location->x+curpin->offset;
-      curpin->location->y=blk->location->y+blk->height+1;
+      curpin->location->y=blk->location->y+blk->device->height+1;
     }
     if (LEFT==curpin->loc)
     {
@@ -85,7 +83,7 @@ determine_pins_of_blk_on_bb(IN t_pr_marco* blk,
     }
     if (RIGHT==curpin->loc)
     {
-      curpin->location->x=blk->location->x+blk->width+1;
+      curpin->location->x=blk->location->x+blk->device->width+1;
       curpin->location->y=blk->location->y+curpin->offset;
     }
     /*Check whether the location of pin on bread board have been occupied*/
@@ -112,7 +110,7 @@ determine_pins_of_blk_on_bb(IN t_pr_marco* blk,
  *Set all the bread board nodes that are covered 
  *by the block as occupied.
  */
-void
+int
 determine_bb_node_covered_by_blk(IN t_pr_marco* blk,
                                  IN t_bb_array* bb_array
                                 )
@@ -140,7 +138,7 @@ determine_bb_node_covered_by_blk(IN t_pr_marco* blk,
  *II. Route each pin of the block on the bread board.
  *III.Set the bread board nodes covered by the block.
  */
-void
+int
 route_blk_on_bb(IN t_pr_marco* blk,
                 IN t_bb_array* bb_array
                )
@@ -155,7 +153,7 @@ route_blk_on_bb(IN t_pr_marco* blk,
   return 1;
 }
 
-void
+int
 set_route_icblks_on_bb(IN int nblk,
                        IN t_pr_marco* blks,
                        IN t_bb_array* bb_array
@@ -182,7 +180,7 @@ set_route_icblks_on_bb(IN int nblk,
  *   the error will be reported.
  *II.Set wire connections for the virtual net.
  */
-void
+int
 route_special_vnet_on_bb(IN t_vnet* vnet,
                          IN t_bb_array* bb_array
                         )
@@ -190,8 +188,8 @@ route_special_vnet_on_bb(IN t_vnet* vnet,
   int column=vnet->pcolumn;
   int iloc=0;
   int iy=0;
-  int ystart=bb_array->(columns+column)->base->y;
-  int yend=bb_array->(columns+column)->base->y+bb_array->(columns+column)->height;
+  int ystart=bb_array->columns[column].base->y;
+  int yend=bb_array->columns[column].base->y+bb_array->columns[column].height;
   
   int blankstart=0;
   int blankend=0;
@@ -202,35 +200,35 @@ route_special_vnet_on_bb(IN t_vnet* vnet,
     /*Complete I.*/
     for (iy=ystart;iy<yend;++iy)
     {
-      if (ROUTABLE==bb_array->bb_node[vnet->(location+iloc)->x][iy].rstatus)
+      if (ROUTABLE==bb_array->bb_node[vnet->locations[iloc].x][iy].rstatus)
       {
-        bb_array->bb_node[vnet->(location+iloc)->x][iy].rstatus=UNROUTABLE;
-        bb_array->bb_node[vnet->(location+iloc)->x][iy].net=vnet;
+        bb_array->bb_node[vnet->locations[iloc].x][iy].rstatus=UNROUTABLE;
+        bb_array->bb_node[vnet->locations[iloc].x][iy].net=vnet;
       }
-      else if (BLANK!=bb_array->bb_node[vnet->(location+iloc)->x][iy].type) 
+      else if (BLANK!=bb_array->bb_node[vnet->locations[iloc].x][iy].type) 
       {
-        printf("Error: the bb node[%d][%d] is unroutable when routing virtual net on it!\n",vnet->(location+iloc)->x,iy);
+        printf("Error: the bb node[%d][%d] is unroutable when routing virtual net on it!\n",vnet->locations[iloc].x,iy);
         abort();
         exit(1);
       }
     }
     /*Complete II.*/
-    blankstart=bb_array->(columns+column)->blank_start;
-    blankend=bb_array->(columns+column)->blank_end;
-    set_location_value(&loc,vnet->(location+iloc)->x,blankstart-1);
-    set_location_value(&des,vnet->(location+iloc)->x,blankend+1);
+    blankstart=bb_array->columns[column].blank_start;
+    blankend=bb_array->columns[column].blank_end;
+    set_location_value(&loc,vnet->locations[iloc].x,blankstart-1);
+    set_location_value(&des,vnet->locations[iloc].x,blankend+1);
 
     set_bb_node_occupied(&loc,bb_array);
     set_bb_node_occupied(&des,bb_array);
 
     set_wired_on_bb(&loc,&des,bb_array);
     set_wired_on_bb(&des,&loc,bb_array);
-    if (locnum>iloc+1)
+    if (vnet->locnum>iloc+1)
     {
-      if (OCCUPIED!=bb_array->bb_node[vnet->(location+iloc)->x][blankstart-2].status)
+      if (OCCUPIED!=bb_array->bb_node[vnet->locations[iloc].x][blankstart-2].status)
       {
-        set_location_value(&loc,vnet->(location+iloc)->x,blankstart-2);
-        set_location_value(&des,vnet->(location+iloc+1)->x,blankstart-2);
+        set_location_value(&loc,vnet->locations[iloc].x,blankstart-2);
+        set_location_value(&des,vnet->locations[iloc+1].x,blankstart-2);
 
         set_bb_node_occupied(&loc,bb_array);
         set_bb_node_occupied(&des,bb_array);
@@ -238,10 +236,10 @@ route_special_vnet_on_bb(IN t_vnet* vnet,
         set_wired_on_bb(&loc,&des,bb_array);
         set_wired_on_bb(&des,&loc,bb_array);
       }
-      else if (OCCUPIED!=bb_array->bb_node[vnet->(location+iloc)->x][blankend+2].status)
+      else if (OCCUPIED!=bb_array->bb_node[vnet->locations[iloc].x][blankend+2].status)
       {
-        set_location_value(&loc,vnet->(location+iloc)->x,blankend+2);
-        set_location_value(&des,vnet->(location+iloc+1)->x,blankend+2);
+        set_location_value(&loc,vnet->locations[iloc].x,blankend+2);
+        set_location_value(&des,vnet->locations[iloc+1].x,blankend+2);
 
         set_bb_node_occupied(&loc,bb_array);
         set_bb_node_occupied(&des,bb_array);
@@ -271,7 +269,7 @@ route_special_vnet_on_bb(IN t_vnet* vnet,
  *III.Alloc additional space on bread board
  *    for the virtual net.
  */
-void
+int
 route_normal_vnet_on_bb(IN t_vnet* vnet,
                         IN t_bb_array* bb_array
                        )
@@ -284,7 +282,7 @@ route_normal_vnet_on_bb(IN t_vnet* vnet,
   t_location srcloc;
   t_location desloc;
 
-  int westi=find_mnet_basic_width(vnet,bb_array->(columns+vnet->pcolumn)->width_capacity);
+  int westi=find_mnet_basic_width(vnet,bb_array->columns[vnet->pcolumn].width_capacity);
   /*Complete I. and II.*/
   for (ipin=0;ipin<vnet->numpin;++ipin)
   {
@@ -297,8 +295,8 @@ route_normal_vnet_on_bb(IN t_vnet* vnet,
       else if (2==counter)
       {
         despin=curpin;
-        srcloc=find_top_inner_on_bb(srcpin->location,bb_array);
-        desloc=find_top_inner_on_bb(despin->location,bb_array);
+        find_top_inner_on_bb(srcpin->location,bb_array,&srcloc);
+        find_top_inner_on_bb(despin->location,bb_array,&desloc);
         desloc.y=srcloc.y;
         set_wired_on_bb(&srcloc,&desloc,bb_array);
         set_wired_on_bb(&desloc,&srcloc,bb_array);
@@ -307,8 +305,8 @@ route_normal_vnet_on_bb(IN t_vnet* vnet,
       {
         srcpin=despin;
         despin=curpin;
-        srcloc=find_top_inner_on_bb(srcpin->location,bb_array);
-        desloc=find_top_inner_on_bb(despin->location,bb_array);
+        find_top_inner_on_bb(srcpin->location,bb_array,&srcloc);
+        find_top_inner_on_bb(despin->location,bb_array,&desloc);
         desloc.y=srcloc.y;
         set_wired_on_bb(&srcloc,&desloc,bb_array);
         set_wired_on_bb(&desloc,&srcloc,bb_array);
@@ -323,12 +321,12 @@ route_normal_vnet_on_bb(IN t_vnet* vnet,
   return 1;
 }
 
-void
+int
 alloc_additional_space_for_normal_vnet(IN t_vnet* vnet,
                                        IN t_bb_array* bb_array
                                       )
 {
-  int westi=find_mnet_basic_width(vnet,bb_array->(columns+vnet->pcolumn)->width_capacity);
+  int westi=find_mnet_basic_width(vnet,bb_array->columns[vnet->pcolumn].width_capacity);
   int ipin=0;
   t_pr_pin* curpin=NULL;
   t_location* loclft=NULL;
@@ -359,17 +357,17 @@ alloc_additional_space_for_normal_vnet(IN t_vnet* vnet,
           {mincost=rgtcost;}
         }        
         if (lftcost<mincost)
-        {mincost=lftcost;locchn=loclft;loccur=curpin;}
+        {mincost=lftcost;locchn=loclft;loccur=curpin->location;}
         if (rgtcost<mincost)
-        {mincost=rgtcost;locchn=locrgt;loccur=curpin;}
+        {mincost=rgtcost;locchn=locrgt;loccur=curpin->location;}
       }
       ipin++;
     } 
     /*Alloc the addtional space*/
     set_bb_node_occupied(loccur,bb_array);
     set_bb_node_occupied(locchn,bb_array);
-    (*locsrc)=find_top_inner_on_bb(loccur,bb_array);
-    (*locdes)=find_top_inner_on_bb(locchn,bb_array);
+    find_top_inner_on_bb(loccur,bb_array,locsrc);
+    find_top_inner_on_bb(locchn,bb_array,locdes);
     locdes->y=locsrc->y;
     set_bb_node_unroutable(loccur,bb_array);
     set_bb_node_unroutable(locchn,bb_array);
@@ -384,7 +382,7 @@ alloc_additional_space_for_normal_vnet(IN t_vnet* vnet,
 
 
 
-void
+int
 set_route_vnets_on_bb(IN int nvnet,
                       IN t_vnet* vnets,
                       IN t_bb_array* bb_array
@@ -457,7 +455,7 @@ try_route_marco_on_bb(IN t_pr_marco* marco,
  *bread board and route both pins of the marco. And the update the 
  *route information of the bread board including status and cost.
  */
-void
+int
 finish_route_marco_on_bb(IN t_pr_marco* marco,
                          IN t_bb_array* bb_array
                         )
@@ -514,7 +512,7 @@ finish_route_marco_on_bb(IN t_pr_marco* marco,
 /*
  *Update the route cost of each bb node on the bread board.
  */
-void
+int
 update_bb_array_route_cost(INOUT t_bb_array* bb_array)
 {
   int ix=0;

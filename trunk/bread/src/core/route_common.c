@@ -1,27 +1,26 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <rabbit_types.h>
-#include <util.h>
+#include <rabbit_type.h>
 #include <bb_type.h>
 #include <place_route.h>
 #include <device.h>
-#include <setup_rabbit.h>
 
 
-void 
+
+int
 alter_route_cost(IN t_bb_node* bb_node)
 {
   int in=0;
-  if (OCUPPIED==bb_node->status)
+  if (OCCUPIED==bb_node->status)
   {
     for (in=0;in<bb_node->ninner;++in)
-    {*(bb_node->(inners+in))->rcost+=bb_node->rcost/ninner;}
+    {bb_node->inners[in]->rcost+=bb_node->rcost/bb_node->ninner;}
   }
   return 1;
 }
 
-void
+int
 set_location_value(INOUT t_location* location,
                    IN int locx,
                    IN int locy
@@ -99,7 +98,7 @@ find_manhattan_distance(IN t_location* src,
                         IN t_location* des
                         )
 {
-  return (abs(src.x-des.x)+abs(src.y-des.y));
+  return (abs(src->x-des->x)+abs(src->y-des->y));
 }
 
 float
@@ -110,7 +109,7 @@ get_bb_node_route_cost(IN t_location* src,
   return bb_array->bb_node[src->x][src->y].rcost;
 }
 
-void
+int
 set_bb_node_unroutable(IN t_location* src,
                        IN t_bb_array* bb_array                     
                       )
@@ -119,25 +118,25 @@ set_bb_node_unroutable(IN t_location* src,
   return 1;
 }
 
-void
+int
 set_bb_net_unroutable(IN t_location* src,
                       IN t_bb_array* bb_array       
                      )
 {
  int column=bb_array->bb_node[src->x][src->y].column;
  int iy=0;
- int in=bb_array->bb_node[src->x][src->y]->ninner;
- t_location loc=*(src);
+ int in=bb_array->bb_node[src->x][src->y].ninner;
+ t_location* loc=NULL;
  for (iy=0;iy<in;++iy)
  {
-   loc=(*(bb_array->bb_node[src->x][src->y]->inners+iy))->location;
+   loc=bb_array->bb_node[src->x][src->y].inners[iy]->location;
    if (!check_bb_node_blank(loc,bb_array))
-   {set_bb_node_unroutable(&loc,bb_array);}
+   {set_bb_node_unroutable(loc,bb_array);}
  }
  return 1;
 }
 
-void
+int
 set_bb_node_occupied(IN t_location* src,
                      IN t_bb_array* bb_array                     
                     )
@@ -146,54 +145,54 @@ set_bb_node_occupied(IN t_location* src,
   return 1;
 }
 
-t_location
+int
 find_top_inner_on_bb(IN t_location* src,
-                     IN t_bb_array* bb_array
+                     IN t_bb_array* bb_array,
+                     IN t_location* rtloc
                     )
 {
-   t_location rt;
    int column=bb_array->bb_node[src->x][src->y].column;
    int iy=0;
    int ymin=src->y;
-   int in=bb_array->bb_node[src->x][src->y]->ninner;
-   t_location loc=*(src);
+   int in=bb_array->bb_node[src->x][src->y].ninner;
+   t_location* loc=NULL;
    for (iy=0;iy<in;++iy)
    {
-     loc=(*(bb_array->bb_node[src->x][src->y]->inners+iy))->location;
-     if ((loc.y<ymin)&&(!check_bb_node_occupied(loc,bb_array)))
-     {ymin=loc.y;}
+     loc=bb_array->bb_node[src->x][src->y].inners[iy]->location;
+     if ((loc->y<ymin)&&(!check_bb_node_occupied(loc,bb_array)))
+     {ymin=loc->y;}
    }
-   set_location_value(&rt,src->x,ymin);
-   return rt;
+   set_location_value(rtloc,src->x,ymin);
+   return 1;
 }
 
-t_location
+int
 find_near_node_on_bb(IN t_location* src,
-                     IN t_bb_array* bb_array
+                     IN t_bb_array* bb_array,
+                     IN t_location* rtloc
                     )
 {
-   t_location rt;
    int column=bb_array->bb_node[src->x][src->y].column;
    int iy=0;
    int ymin=UNKNOWN;
-   int in=bb_array->bb_node[src->x][src->y]->ninner;
-   t_location loc=*(src);
+   int in=bb_array->bb_node[src->x][src->y].ninner;
+   t_location* loc=NULL;
    for (iy=0;iy<in;++iy)
    {
-     loc=(*(bb_array->bb_node[src->x][src->y]->inners+iy))->location;
-     if (!check_bb_node_occupied(loc,bb_array)))
+     loc=bb_array->bb_node[src->x][src->y].inners[iy]->location;
+     if (!check_bb_node_occupied(loc,bb_array))
      {     
        if  (UNKNOWN==ymin)
-       {ymin=abs(loc.y-src->y);}
-       else if (abs(loc.y-src->y)<ymin)
-       {ymin=abs(loc.y-src->y);}
+       {ymin=abs(loc->y-src->y);}
+       else if (abs(loc->y-src->y)<ymin)
+       {ymin=abs(loc->y-src->y);}
      }
    }
-   set_location_value(&rt,src->x,ymin);
-   return rt;
+   set_location_value(rtloc,src->x,ymin);
+   return rtloc;
 }
 
-void
+int
 set_wired_on_bb(IN t_location* src,
                 IN t_location* des,
                 IN t_bb_array* bb_array
@@ -214,12 +213,12 @@ check_all_routed(IN int nvnet,
   int inet=0;
   for (inet=0;inet<nvnet;++inet)
   {
-    if (UNROUTED==(vnet+inet)->rstatus)
+    if (UNROUTE==(vnet+inet)->rstatus)
     {return FALSE;}
   }
   for (imarco=0;imarco<nmarco;++imarco)
   {
-    if (UNROUTED==(marcos+imarco)->rstatus)
+    if (UNROUTE==(marcos+imarco)->rstatus)
     {return FALSE;}
   }
   return TRUE;
