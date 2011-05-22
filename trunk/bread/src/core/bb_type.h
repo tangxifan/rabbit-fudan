@@ -31,11 +31,11 @@ enum e_bb_status
  *When a bb node is FREE but UNROUTABLE, it means the bb nodes
  *in the vertical line are routed with a virtual net.
  */
-enum e_route_status
+enum e_bb_route_status
 {ROUTABLE,UNROUTABLE};
 
 enum e_bias_type
-{NONE,VDD,GND};
+{BIAS_NONE,BIAS_VDD,BIAS_GND};
 /*
  *bb_node is the basic unit for breadboard structure.
  *Breadboard can be considered as an array of nodes
@@ -64,7 +64,7 @@ struct s_bb_node
   t_vnet *net;
   t_location* wired;
   enum e_bb_status status;
-  enum e_route_status rstatus;
+  enum e_bb_route_status rstatus;
   enum e_bias_type bias_type;
   /*the route cost for this node.*/
   float rcost;

@@ -40,6 +40,11 @@ typedef enum e_boolean{
 #define MAX_FILENAME_LENGTH 500
 #define BUF_SIZE 500
 
+#define RESISTOR_MAX_LENGTH 10
+#define RESISTOR_MIN_LENGTH 2
+#define CAPASITOR_MAX_LENGTH 5
+#define CAPASITOR_MIN_LENGTH 2
+
 /*
  *For each unit for placement, pin_location should be 
  *pointed out. When the unit is a specific node, the 
@@ -47,7 +52,7 @@ typedef enum e_boolean{
  *a rectangle of which pins are distibuted on each side. 
  */
 enum e_pin_location
-{NONE = -1, TOP = 0, LEFT = 1, RIGHT = 2, BOTTOM = 3};
+{TOP = 0, LEFT = 1, RIGHT = 2, BOTTOM = 3};
 
 /* prototypes of structures*/
 typedef struct s_vnet t_vnet;
