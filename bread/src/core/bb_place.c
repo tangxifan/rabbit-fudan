@@ -2,15 +2,13 @@
 #include <stdlib.h>
 
 #include <rabbit_type.h>
-#include <util.h>
 #include <bb_type.h>
 #include <place_route.h>
 #include <device.h>
-#include <setup_rabbit.h>
 
 
-void
-alloc_vnet_place_bb(IN int poff,
+int
+alloc_vnet_place_bb(IN int name,
                     INOUT int* curloc,
                     IN int blank,
                     IN int column,
@@ -21,7 +19,9 @@ alloc_vnet_place_bb(IN int poff,
   int inet=0;
   for (inet=0;inet<nvnet;++inet)
   {
-    if ((column==(vnets+inet)->pcolumn)&&(name==(vnets+inet)->name)&&(SPECIAL==(vnets+inet)->type))
+    if ((column==(vnets+inet)->pcolumn)
+	   &&(name==(vnets+inet)->name)
+	   &&(SPECIAL==(vnets+inet)->type))
     {
       (vnets+inet)->locations->x=(*curloc);
       (*curloc)=(*curloc)+blank+(vnets+inet)->pwidth;  
@@ -31,8 +31,8 @@ alloc_vnet_place_bb(IN int poff,
   return 0;
 }
 
-void
-alloc_blk_place_bb(IN int poff
+int
+alloc_blk_place_bb(IN int name,
                    INOUT int* curloc,
                    IN int blank,
                    IN int column,
@@ -53,7 +53,7 @@ alloc_blk_place_bb(IN int poff
   return 0;
 }
 
-void
+int
 alloc_bb_place(IN int nblk,
                IN t_pr_marco* blks,
                IN int nvnet,
@@ -69,9 +69,9 @@ alloc_bb_place(IN int nblk,
   int ioff=0;
   while(icol<bb_array->no_column)
   {
-    left=bb_array->(columns+icol)->left;
-    right=bb_array->(columns+icol)->right;
-    blank=(bb_array.width-bb_array->(columns+icol)->usedwidth)/(right-left+1);
+    left=bb_array->columns[icol].left;
+    right=bb_array->columns[icol].right;
+    blank=(bb_array->width-bb_array->columns[icol].usedwidth)/(right-left+1);
     curloc=blank;
     for (ioff=left;ioff<(right+1);++ioff)
     {
@@ -117,7 +117,7 @@ find_vnet_with_name(IN int name,
   return NULL;
 }
 
-void
+int
 detail_place_blk(INOUT t_pr_marco* blk,
                  IN int column,
                  IN int left,
@@ -158,10 +158,10 @@ detail_place_blk(INOUT t_pr_marco* blk,
     {blkoff+=cal_vm_close(lftvnet,blk);}    
   }
   /*Find whether exist qualified big vnets of the blk*/
-  wcapacity=bb_array->(columns+column)->width_capacity;
+  wcapacity=bb_array->columns[column].width_capacity;
   for (ipin=0;ipin<blk->pinnum;++ipin)
   {
-    if ((*(blk->pins+ipin))->offset<int(blk->device->width/2+1))
+    if ((*(blk->pins+ipin))->offset<(int)(blk->device->width/2+1))
     {
       blkvnet=(*(blk->pins+ipin))->nets;
       /*Leave the normal virtual net to routing.*/
@@ -177,7 +177,7 @@ detail_place_blk(INOUT t_pr_marco* blk,
  *is only for special virtual net.
  *Normal virtual net is considered in routing.
  */
-void
+int
 detail_place_vnet(INOUT t_vnet* vnet,
                   IN int column,
                   IN int left,
@@ -218,7 +218,7 @@ detail_place_vnet(INOUT t_vnet* vnet,
     {vnetoff+=cal_vv_close(lftvnet,vnet);}    
   }
   /*Determine the virtual nets are too big to occupy several x*/
-  wcapacity=bb_array->(columns+column)->width_capacity;
+  wcapacity=bb_array->columns[column].width_capacity;
   baswidth=find_vnet_basic_width(vnet,wcapacity);
   if (baswidth>1)
   {detail_place_big_vnet(vnetoff,vnet,wcapacity);}
@@ -227,7 +227,7 @@ detail_place_vnet(INOUT t_vnet* vnet,
   return 1;
 }
 
-void
+int
 detail_place_big_vnet(IN int vnetoff,
                       IN t_vnet* vnet,
                       IN int wcapacity
@@ -238,19 +238,18 @@ detail_place_big_vnet(IN int vnetoff,
   int curoff=vnetoff;
   int remain=total-vnetoff;
   int tmp=0;
-  int 
   while(1)
   { 
     if (0==ioff) {tmp=2;}
     else {tmp=3;} 
     if (vnetoff>(2*wcapacity-tmp)) 
     {
-      vnet->(locations+ioff)->x+=(2*wcapacity-tmp);
+      vnet->locations[ioff].x+=(2*wcapacity-tmp);
       curoff-=(2*wcapacity-tmp);
     }
     else
     {
-      vnet->(locations+ioff)->x+=curoff;
+      vnet->locations[ioff].x+=curoff;
       break;
     }
     ioff++;
@@ -275,7 +274,7 @@ detail_place_big_vnet(IN int vnetoff,
     
     if (curoff>0)
     {
-      vnet->(locations+ioff)->x=vnet->(locations+ioff-1)->x+2*wcapacity-tmp-curoff;
+      vnet->locations[ioff].x=vnet->locations[ioff-1].x+2*wcapacity-tmp-curoff;
       remain-=2*wcapacity-tmp-curoff;
       curoff=0;
     }
@@ -283,12 +282,12 @@ detail_place_big_vnet(IN int vnetoff,
     {
       if (remain>(2*wcapacity-tmp)) 
       {
-        vnet->(locations+ioff)->x=vnet->(locations+ioff-1)->x+(2*wcapacity-tmp);
+        vnet->locations[ioff].x=vnet->locations[ioff-1].x+(2*wcapacity-tmp);
         remain-=(2*wcapacity-tmp);
       }
       else
       {
-        vnet->(locations+ioff)->x=vnet->(locations+ioff-1)->x+remain;
+        vnet->locations[ioff].x=vnet->locations[ioff-1].x+remain;
         break;
       }
     }
@@ -312,8 +311,8 @@ detail_place(IN int nvnet,
   t_vnet* vnet=NULL;
   while (icol<bb_array->no_column)
   {
-    left=bb_array->(columns+icol)->left;
-    right=bb_array->(columns+icol)->right;
+    left=bb_array->columns[icol].left;
+    right=bb_array->columns[icol].right;
     blk=find_blk_with_name(ioff,icol,nmarco,pr_marco); 
     vnet=find_vnet_with_name(ioff,icol,nvnet,vnets);
     for (ioff=left;ioff<(right+1);++ioff)
