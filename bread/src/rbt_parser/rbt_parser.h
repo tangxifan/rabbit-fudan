@@ -24,4 +24,4 @@ You should have received a copy of the GNU General Public License along with thi
 char* rbt_find_device_file (char*, char*);
 
 /* Parse the electronic parts in the netlist. */
-int rbt_parse_netlist (char*);
+int rbt_parse_netlist (char*, char*, char*);

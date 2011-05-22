@@ -33,6 +33,9 @@ int rbt_vnets_length;
 t_icdev **rbt_devices;
 int rbt_devices_length;
 
+char *part_list;
+char *part_dir;
+
 /*
  * XML Unitlity: getdoc
  * From official LibXML tutorial
@@ -73,6 +76,18 @@ getnodeset (xmlDocPtr doc, xmlChar *xpath)
 
 	return result;
 }
+/**
+ * function rbt_ins_macro
+ * insert a macro into a vnets array
+ */
+int
+rbt_ins_macro 
+(t_vnet** vnets, int *length, xmlChar *label, xmlChar *title, xmlChar *id, xmlChar *pin_id)
+{
+	
+	/* DEBUG */
+	return 0;
+}
 
 /*
  * function rbt_parse_connector
@@ -91,8 +106,7 @@ rbt_parse_connector (xmlNodePtr connector, xmlChar *pin_id)
 			label = xmlGetProp (cur, (const xmlChar*) "label");
 			title = xmlGetProp (cur, (const xmlChar*) "title");
 			id = xmlGetProp (cur, (const xmlChar*) "id");
-			/* DEBUG */
-			printf ("%s %s %s %s\n", label, title, id, pin_id);
+			rbt_ins_macro (rbt_vnets, &rbt_vnets_length, label, title, id, pin_id);
 			xmlFree (label);
 			xmlFree (title);
 			xmlFree (id);
@@ -140,6 +154,43 @@ rbt_find_device (t_icdev** devs, int length, char* device_name)
 	return NULL;
 }
 
+/* function rbt_config_ic
+ */
+int
+rbt_config_ic (t_icdev* cur, xmlDocPtr doc)
+{
+	xmlNodeSetPtr nodeset;
+	xmlXPathObjectPtr result;
+	int i;
+
+	result = getnodeset (doc, (xmlChar*)"//connector");
+	if (!result) 
+		return -2;
+	
+	nodeset = result->nodesetval;
+
+	cur->height = 3;
+	cur->width = nodeset->nodeNr / 2;
+	cur->area = cur->height * cur->width;
+	cur->pin_num = nodeset->nodeNr;
+
+	/* Deal with pins */
+	if (NULL == (cur->pinls = (t_dev_pin*)malloc (cur->pin_num * sizeof (t_dev_pin))))
+		return -1;
+
+	for (i=0; i < cur->pin_num; i++){
+		if (i < cur->pin_num / 2){ /* lower level */
+			cur->pinls[i].loc = BOTTOM;
+			cur->pinls[i].offset = i;
+		}else{ /* upper level */
+			cur->pinls[i].loc = TOP;
+			cur->pinls[i].offset = i - (cur->pin_num / 2 + 1);
+		}
+	}
+
+	return 0;	
+}
+
 /*
  * function rbt_config_device
  * fill the parameters in the t_icdev
@@ -147,10 +198,47 @@ rbt_find_device (t_icdev** devs, int length, char* device_name)
 int
 rbt_config_device (t_icdev* cur, char *device_name)
 {
-	/* DEBUG: not fully implemented */
+	char *docname, *filename;
+	xmlDocPtr doc;
+	xmlNodeSetPtr nodeset;
+	xmlXPathObjectPtr result;
+	int i;
+	xmlChar *keyword;
+
 	cur->name = malloc (sizeof (char) * ( strlen (device_name) +1));
 	if (cur->name == NULL) return -1;
 	strcpy (cur->name, device_name);
+	
+	if (NULL == (filename = (char*) malloc (MAX_FILENAME_LENGTH * sizeof(char))))
+		return -1;
+	if (NULL == (docname = (char*) malloc (MAX_FILENAME_LENGTH * sizeof(char))))
+		return -1;
+	
+	if (NULL == (filename = rbt_find_device_file (part_list, device_name)))
+		return -2;
+	strcpy (docname, part_dir);
+	strcat (docname, filename);
+
+	/* Open the fzp file and parse, fill in struct icdev */
+
+	if (NULL == (doc = getdoc(docname)))
+		return -1;
+
+	result = getnodeset (doc, (xmlChar*) "//tag");
+	if (result) {
+		nodeset = result->nodesetval;
+		for (i=0; i < nodeset->nodeNr; i++) {
+			keyword = xmlNodeListGetString(doc, nodeset->nodeTab[i]->xmlChildrenNode, 1);
+			if (!strcmp ((char*)keyword, "IC")){
+				rbt_config_ic (cur, doc);
+			}
+		}
+		xmlXPathFreeObject (result);
+	}
+
+	free (docname);
+	xmlFreeDoc(doc);
+	xmlCleanupParser();
 
 	return 0;
 }
@@ -170,7 +258,6 @@ rbt_ins_device (t_icdev** dev, int *length, char *device_name)
 	(*length) = (*length) + 1;
 	rbt_config_device (cur, device_name);
 
-	printf ("Device inserted: %s\n", device_name);
 	return 0;
 }
 
@@ -216,7 +303,6 @@ rbt_parse_init(char *docname)
 		xmlFree (entry0.key);
 	}
 
-	printf ("device count: %d\n", device_count);
 
 	/* Init rbt_devices */
 	rbt_devices = (t_icdev**) malloc(device_count * sizeof(t_icdev*));
@@ -234,23 +320,16 @@ rbt_parse_init(char *docname)
 		xmlFree (temp_string);
 	}
 
-	/* For things in hash, build devices */
-
 	/* Initialize rbt_vnets */
 	rbt_vnets = (t_vnet**) malloc(nodeset->nodeNr * sizeof(t_vnet*));
 	if (rbt_vnets == NULL)
 		return -5;
 
-	/* Third parse. Fill in rbt_vnets */
-	for (i=0; i < nodeset->nodeNr; i++) {
-			
-	}
 
 	xmlXPathFreeObject (result);
 	xmlFreeDoc(doc);
 	xmlCleanupParser();
 	
-
 	/* Destroy hash */
 	hdestroy();
 	return 0;
@@ -261,7 +340,8 @@ rbt_parse_init(char *docname)
  * Parse the Fritzing netlist xml
  */
 int
-rbt_parse_netlist (char* docname)
+rbt_parse_netlist
+(char* docname, char* in_part_list, char* in_part_dir)
 {
 	xmlDocPtr doc;
 	xmlChar *xpath = (xmlChar*) "//net";
@@ -278,8 +358,18 @@ rbt_parse_netlist (char* docname)
 
 	nodeset = result->nodesetval;
 
+	if (NULL == (part_list = (char*) malloc (sizeof(char) * MAX_FILENAME_LENGTH)))
+		return -1;
+
+	if (NULL == (part_dir = (char*) malloc (sizeof(char) * MAX_FILENAME_LENGTH)))
+		return -1;
+
+	strcpy (part_list, in_part_list);
+	strcpy (part_dir, in_part_dir);
+
 	if (rbt_parse_init(docname)) return -3;
 
+	/* Third parse. Fill in rbt_vnets */
 	for (i=0; i < nodeset->nodeNr; i++) {
 		rbt_parse_net (nodeset->nodeTab[i]);
 	}
@@ -333,6 +423,7 @@ rbt_find_device_file (char* list_file, char* device_name)
 	while (NULL != fgets (buf, BUF_SIZE, input_file)){
 		device = strtok (buf, "*");
 		file = strtok (NULL, "*");
+
 		if (!strcmp (device_name, device)){
 			fclose (input_file);
 			chomp (file);
