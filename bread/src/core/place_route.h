@@ -143,6 +143,6 @@ struct s_place_info
   int bb_pwidth;
   int cur_width;
   int column;
-  t_pr_node left;
-  t_pr_node right;
+  t_pr_node* left;
+  t_pr_node* right;
 };

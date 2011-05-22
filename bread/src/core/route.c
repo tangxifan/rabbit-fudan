@@ -1,12 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <rabbit_types.h>
-#include <util.h>
+#include <rabbit_type.h>
 #include <bb_type.h>
 #include <place_route.h>
 #include <device.h>
-#include <setup_rabbit.h>
 
 boolean
 try_route(IN int nvnet,
@@ -20,6 +18,7 @@ try_route(IN int nvnet,
   float tmpcost=0.0;
   float mincost=try_route_marco_on_bb(marcos,bb_array);
   t_pr_marco* mchn=marcos;
+  t_pr_marco* marco=NULL;
   set_route_vnets_on_bb(nvnet,vnets,bb_array);
   update_bb_array_route_cost(bb_array);
   set_route_icblks_on_bb(nmarco,marcos,bb_array);
@@ -28,6 +27,7 @@ try_route(IN int nvnet,
   {
     for (imarco=0;imarco<nmarco;++imarco)
     {
+      marco=marcos+imarco;
       if ((ICBLOCK!=marco->type)&&(VDD!=marco->type)&&(GND!=marco->type))
       {
         tmpcost=try_route_marco_on_bb(marcos+imarco,bb_array);

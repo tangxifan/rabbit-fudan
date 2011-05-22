@@ -1,8 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <rabbit.h>
-#include <util.h>
+#include <rabbit_type.h>
 #include <bb_type.h>
 #include <place_route.h>
 #include <device.h>
@@ -12,9 +11,9 @@
  *First, select these qualified ic blocks,
  *Then put them into the array.
  */
-void
+int
 create_icblk_array(INOUT int* nblk,
-                   INOUT t_pr_marco* icblks
+                   INOUT t_pr_marco* icblks,
                    IN int nmarco,
                    IN t_pr_marco *marcos
                   )
@@ -46,25 +45,7 @@ create_icblk_array(INOUT int* nblk,
   return 1;
 }
 
-
-/*
- *When the placement, the finishing work include
- *I. Update the pr_marcos from these icblks because 
- *   icblks are part of the copy of pr_marcos.
- *II. Free the icblks.
- */
-void
-update_marco_free_icblks(IN int nmarco,
-                         INOUT t_pr_marco* pr_marco,
-                         IN int nblk,
-                         IN t_pr_marco* icblks
-                         )
-{
-  update_pr_marco(nmarco,pr_marco,nblk,icblks);
-  free_icblks(nblk,icblks);
-}
-
-void 
+int
 update_pr_marco(IN int nmarco,
                 INOUT t_pr_marco* pr_marco,
                 IN int nblk,
@@ -87,7 +68,26 @@ update_pr_marco(IN int nmarco,
   return 1;
 }
 
+/*
+ *When the placement, the finishing work include
+ *I. Update the pr_marcos from these icblks because 
+ *   icblks are part of the copy of pr_marcos.
+ *II. Free the icblks.
+ */
 void
+update_marco_free_icblks(IN int nmarco,
+                         INOUT t_pr_marco* pr_marco,
+                         IN int nblk,
+                         IN t_pr_marco* icblks
+                         )
+{
+  update_pr_marco(nmarco,pr_marco,nblk,icblks);
+  free_icblks(nblk,icblks);
+}
+
+
+
+int
 free_icblks(IN int nblk,
             IN t_pr_marco* icblks
            )
@@ -104,7 +104,7 @@ free_icblks(IN int nblk,
  */
 void
 check_start_error(IN int nblk,
-                  IN t_pr_marco* blks
+                  IN t_pr_marco* blks,
                   IN int nvnet,
                   IN t_vnet* vnets
                  )
@@ -137,14 +137,14 @@ check_start_error(IN int nblk,
  */
 boolean
 check_place_over(IN int nblk,
-                 IN t_pr_marco* icblks
+                 IN t_pr_marco* blks
                 )
 {
   int iblk=0;
   boolean place_over=TRUE;
   for (iblk=0;iblk<nblk;++iblk)
   {
-    if (UNPLACED==(blks+iblk)->start)
+    if (UNPLACED==(blks+iblk)->status)
     {place_over=FALSE;return place_over;}
   }
   return place_over;
@@ -158,9 +158,9 @@ check_place_over(IN int nblk,
  *end and hint users to change parameters of software or the 
  *size of bread board.
  */
-void
+int
 check_all_placed(IN int nblk,
-                 IN t_pr_marco* icblks,
+                 IN t_pr_marco* blks,
                  IN int nvnet,
                  IN t_vnet* vnets
                 )
@@ -191,7 +191,7 @@ check_all_placed(IN int nblk,
 }
 
 void
-clear_left_right_place_info(t_place_info* place_info);
+clear_left_right_place_info(t_place_info* place_info)
 {
   place_info->left->flag=TRUE;
   place_info->left->mnext=NULL;

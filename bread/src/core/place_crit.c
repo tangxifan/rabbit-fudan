@@ -1,8 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <rabbit.h>
-#include <util.h>
+#include <rabbit_type.h>
 #include <bb_type.h>
 #include <place_route.h>
 #include <device.h>
@@ -58,7 +57,7 @@ find_starterblk_cost(IN t_pr_marco* blk)
   int ipin=0;
   int jpin=0;
   int pinnoi=0;
-  int pinnoj=0
+  int pinnoj=0;
   t_pr_pin* pintmpi=NULL;
   t_pr_pin* pintmpj=NULL;
   
@@ -66,15 +65,15 @@ find_starterblk_cost(IN t_pr_marco* blk)
   for(ipin=0;ipin<pinnoi;++ipin)
   {
     pintmpi=(*(blk->pins+ipin));
-    npinnoj=pintmpi->nets->numpin;
-    for(jpin=0;jpin<npinnoj;++jpin)
+    pinnoj=pintmpi->nets->numpin;
+    for(jpin=0;jpin<pinnoj;++jpin)
     {
-      pintmpj=pintmpi->nets->(*(pins+jpin));
-      if (pintmpk->parent!=blk)
+      pintmpj=pintmpi->nets->pins[jpin];
+      if (pintmpj->parent!=blk)
       {conn++;}
     }
   }
-  cost=conn/pinno;
+  cost=conn/pinnoi;
   return cost;
 }
 
@@ -129,11 +128,11 @@ check_pwidth_status(IN t_pr_marco* marco,
                    )
 {
   int ipin=0;
-  for (ipin=0;ipin<pinnum;++ipin)
+  for (ipin=0;ipin<marco->pinnum;++ipin)
   {
     if (POINTED==(*(marco->pins+ipin))->nets->spwidth)
     {return TRUE;}
-    else if (*(marco->pins+ipin))->nets!=vnet)
+    else if ((*(marco->pins+ipin))->nets!=vnet)
     {
       (*(marco->pins+ipin))->nets->spwidth=POINTED;
       return FALSE;
@@ -152,7 +151,7 @@ find_vnet_pwidth(IN t_vnet* vnet,
   int pwidth=find_vnet_basic_width(vnet,wcapacity);
   int ipin=0;
   int npin=vnet->numpin;
-  int minl=vnet->pins->parent->dev->min_length;
+  int minl=vnet->pins[0]->parent->device->min_length;
   t_pr_pin* vpin=NULL;
   
   for (ipin=0;ipin<npin;++ipin)
@@ -164,8 +163,8 @@ find_vnet_pwidth(IN t_vnet* vnet,
       /*Currently the optimization is neglected*/
     //if (check_pwidth_status(vpin->parent,vnet))
     //{pwidth--;}
-      if (minl>vpin->parent->dev->min_length)
-      {minl=vpin->parent->dev->min_length;}
+      if (minl>vpin->parent->device->min_length)
+      {minl=vpin->parent->device->min_length;}
     }
   }
   for (ipin=0;ipin<npin;++ipin)
@@ -185,7 +184,7 @@ find_blk_pwidth(IN int nblk,
                 IN int wcapacity
                )
 {
-  int pwidth=blk->dev->width;
+  int pwidth=blk->device->width;
   int ipin=0;
   int iblk=0;
   t_vnet* mnet=NULL;
@@ -205,7 +204,7 @@ find_blk_pwidth(IN int nblk,
 /*
  *Find a virtual net or IC block as starter
  */
-void
+int
 find_starter(IN int nblk,
              IN t_pr_marco* blks,
              IN int nvnet,
@@ -216,7 +215,7 @@ find_starter(IN int nblk,
 {
   int pwidth=0;
   int bb_pwidth=place_info->bb_pwidth;
-  int wcapacity=bb_array.(columns+place_info->column)->width_capacity; 
+  int wcapacity=bb_array.columns[place_info->column].width_capacity; 
 
   t_pr_marco* blkcd=NULL;
   t_vnet* netcd=NULL;
@@ -269,7 +268,7 @@ find_starter(IN int nblk,
         break;
       }
     }
-    check_start_error(nblk,icblks,nvnet,vnets);
+    check_start_error(nblk,blks,nvnet,vnets);
   }  
   return 1;
 }
@@ -370,7 +369,7 @@ find_match_vnet(IN int nblk,
   return netmatch;  
 }
 
-void
+int
 determine_net_place_location(IN t_vnet* net,
                              INOUT t_place_info* place_info
                             )
@@ -385,28 +384,28 @@ determine_net_place_location(IN t_vnet* net,
   int leftn=0;
   int rightn=0;
 
-  if (TRUE==place_info->left.flag)
+  if (TRUE==place_info->left->flag)
   {
-    blklft=place_info->left.mnext;
-    leftn=blkft->name;
+    blklft=place_info->left->mnext;
+    leftn=blklft->name;
     leftcl=find_mv_close(blklft,net);
   }
   else
   {
-    netlft=place_info->left.vnext;
+    netlft=place_info->left->vnext;
     leftn=netlft->name;
     leftcl=find_vv_close(netlft,net);
   }
 
-  if (TRUE==place_info->right.flag)
+  if (TRUE==place_info->right->flag)
   {
-    blkrgt=place_info->right.mnext;
+    blkrgt=place_info->right->mnext;
     rightn=blkrgt->name;
     rightcl=find_mv_close(blkrgt,net);
   }
   else
   {
-    netrgt=place_info->right.vnext;
+    netrgt=place_info->right->vnext;
     rightn=netrgt->name;
     rightcl=find_vv_close(netrgt,net);
   }
@@ -414,21 +413,21 @@ determine_net_place_location(IN t_vnet* net,
   if (rightcl<leftcl)
   {
     net->name=leftn-1;
-    place_info->left.flag=FALSE;
-    place_info->left.mnext=NULL;
-    place_info->left.vnext=net;
+    place_info->left->flag=FALSE;
+    place_info->left->mnext=NULL;
+    place_info->left->vnext=net;
   }
   else
   {
     net->name=rightn+1;
-    place_info->right.flag=FALSE;
-    place_info->right.mnext=NULL;
-    place_info->right.vnext=net;
+    place_info->right->flag=FALSE;
+    place_info->right->mnext=NULL;
+    place_info->right->vnext=net;
   }
   return 1;
 }
 
-void
+int
 determine_blk_place_location(IN t_pr_marco* blk,
                              INOUT t_place_info* place_info
                             )
@@ -443,28 +442,28 @@ determine_blk_place_location(IN t_pr_marco* blk,
   int leftn=0;
   int rightn=0;
 
-  if (TRUE==place_info->left.flag)
+  if (TRUE==place_info->left->flag)
   {
-    blklft=place_info->left.mnext;
-    leftn=blkft->name;
+    blklft=place_info->left->mnext;
+    leftn=blklft->name;
     leftcl=find_mm_close(blklft,blk);
   }
   else
   {
-    netlft=place_info->left.vnext;
+    netlft=place_info->left->vnext;
     leftn=netlft->name;
     leftcl=find_vm_close(netlft,blk);
   }
 
-  if (TRUE==place_info->right.flag)
+  if (TRUE==place_info->right->flag)
   {
-    blkrgt=place_info->right.mnext;
+    blkrgt=place_info->right->mnext;
     rightn=blkrgt->name;
     rightcl=find_mm_close(blkrgt,blk);
   }
   else
   {
-    netrgt=place_info->right.vnext;
+    netrgt=place_info->right->vnext;
     rightn=netrgt->name;
     rightcl=find_vm_close(netrgt,blk);
   }
@@ -472,16 +471,16 @@ determine_blk_place_location(IN t_pr_marco* blk,
   if (rightcl<leftcl)
   {
     blk->name=leftn-1;
-    place_info->left.flag=TRUE;
-    place_info->left.vnext=NULL;
-    place_info->left.mnext=blk;
+    place_info->left->flag=TRUE;
+    place_info->left->vnext=NULL;
+    place_info->left->mnext=blk;
   }
   else
   {
     blk->name=rightn+1;
-    place_info->right.flag=TRUE;
-    place_info->right.vnext=NULL;
-    place_info->right.mnext=blk;
+    place_info->right->flag=TRUE;
+    place_info->right->vnext=NULL;
+    place_info->right->mnext=blk;
   }
   return 1;
 }
@@ -499,7 +498,7 @@ find_match(IN int nblk,
            INOUT t_place_info* place_info
           )
 {
-  int wcapacity=bb_array.(columns+place_info->column)->width_capacity; 
+  int wcapacity=bb_array.columns[place_info->column].width_capacity; 
   int pwidth;
   int iblk=0;
   int inet=0;

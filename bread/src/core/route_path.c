@@ -1,12 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <rabbit_types.h>
-#include <util.h>
+#include <rabbit_type.h>
 #include <bb_type.h>
 #include <place_route.h>
 #include <device.h>
-#include <setup_rabbit.h>
 
 
 
@@ -32,11 +30,11 @@ find_vnet_bbs(IN int* nbbs,
 {
   int column=vnet->pcolumn;
   int ix=0;
-  int xstart=bb_array->(columns+column)->base->x;
+  int xstart=bb_array->columns[column].base->x;
   int iy=0;
-  int ystart=bb_array->(columns+column)->base->y;
-  int xend=ix+bb_array->(columns+column)->width;
-  int yend=iy+bb_array->(columns+column)->height;
+  int ystart=bb_array->columns[column].base->y;
+  int xend=ix+bb_array->columns[column].width;
+  int yend=iy+bb_array->columns[column].height;
   int ibb=0;
   int icol=0;
   t_location* bbs=NULL;
@@ -118,10 +116,10 @@ try_right_route_pin_on_bb(IN t_pr_pin* spin,
   t_location* nearloc;
   int ix=spin->location->x;
   int iy=spin->location->y;
-  int max_len=pin->parent->device->max_length;
+  int max_len=spin->parent->device->max_length;
   int itop=max_len+ix;
-  int iend=bb_array->(columns+spin->parent->pcolumn)->base->x
-          +bb_array->(columns+spin->parent->pcolumn)->width;
+  int iend=bb_array->columns[spin->parent->pcolumn].base->x
+          +bb_array->columns[spin->parent->pcolumn].width;
   if (itop>iend)
   {itop=iend;}
 
@@ -137,7 +135,7 @@ try_right_route_pin_on_bb(IN t_pr_pin* spin,
     else if (check_bb_node_vnet(tmploc,spin->nets,bb_array)&&(!check_bb_node_occupied(tmploc,bb_array)))
     {
       set_location_value(tmploc,ix,iy);
-      (*nearloc)=find_near_node_on_bb(tmploc,bb_array);
+      find_near_node_on_bb(tmploc,bb_array,nearloc);
       if (UNKNOWN==nearloc->y)
       {ix++;continue;}
     }
@@ -151,12 +149,12 @@ try_right_route_pin_on_bb(IN t_pr_pin* spin,
     if (rcost=0.0)
     {
       rcost=tmpcost;
-      (*dloc)=tmploc;
+      (*dloc)=(*tmploc);
     }
     else if (rcost>tmpcost)
     { 
       rcost=tmpcost;
-      (*dloc)=tmploc;
+      (*dloc)=(*tmploc);
     }
     ix++;
   }
@@ -177,9 +175,9 @@ try_left_route_pin_on_bb(IN t_pr_pin* spin,
   t_location* nearloc;
   int ix=spin->location->x;
   int iy=spin->location->y;
-  int max_len=pin->parent->device->max_length;
+  int max_len=spin->parent->device->max_length;
   int itop=ix-max_len;
-  int iend=bb_array->(columns+spin->parent->pcolumn)->base->x
+  int iend=bb_array->columns[spin->parent->pcolumn].base->x;
   if (itop<iend)
   {itop=iend;}
  
@@ -196,7 +194,7 @@ try_left_route_pin_on_bb(IN t_pr_pin* spin,
     else if (check_bb_node_vnet(tmploc,spin->nets,bb_array)&&(!check_bb_node_occupied(tmploc,bb_array)))
     {
       set_location_value(tmploc,ix,iy);
-      (*nearloc)=find_near_node_on_bb(tmploc,bb_array);
+      find_near_node_on_bb(tmploc,bb_array,nearloc);
       if (UNKNOWN==nearloc->y)
       {ix--;continue;}
     }
@@ -229,8 +227,8 @@ try_route_marco_pin_on_bb(IN t_pr_pin* src,
                           IN t_bb_array* bb_array
                          )
 {
-  t_location loclft=NULL;
-  t_location locrgt=NULL;
+  t_location loclft={0};
+  t_location locrgt={0};
   float cleft=try_left_route_pin_on_bb(src,des,&loclft,bb_array);
   float cright=try_right_route_pin_on_bb(src,des,&locrgt,bb_array);
   if ((UNKNOWN==cleft)&&(UNKNOWN==cright))
@@ -271,7 +269,7 @@ try_left_find_node(IN t_pr_pin* pin,
                   )
 {
   int ix=pin->parent->location->x;
-  int itop=bb_array->(columns+pin->parent->pcolumn)->base->x;
+  int itop=bb_array->columns[pin->parent->pcolumn].base->x;
   t_location* loc=NULL;
   float cost=0.0;
   while (ix>itop)
@@ -297,8 +295,8 @@ try_right_find_node(IN t_pr_pin* pin,
 {
   int ix=pin->parent->location->x
         +pin->parent->device->width;
-  int itop=bb_array->(columns+pin->parent->pcolumn)->base->x
-          +bb_array->(columns+pin->parent->pcolumn)->width;
+  int itop=bb_array->columns[pin->parent->pcolumn].base->x
+          +bb_array->columns[pin->parent->pcolumn].width;
   t_location* loc=NULL;
   float cost=0.0;
   while (ix<itop)
