@@ -33,6 +33,9 @@ int rbt_vnets_length;
 t_icdev **rbt_devices;
 int rbt_devices_length;
 
+t_pr_marco **rbt_marcos;
+int rbt_marcos_length;
+
 char *part_list;
 char *part_dir;
 
@@ -76,37 +79,76 @@ getnodeset (xmlDocPtr doc, xmlChar *xpath)
 
 	return result;
 }
-/**
- * function rbt_ins_macro
- * insert a macro into a vnets array
+
+/*
+ * function convert_pin_to_int
+ * remove string "pin" of a pin_id and convert the pin number to int
  */
 int
-rbt_ins_macro 
-(t_vnet** vnets, int *length, xmlChar *label, xmlChar *title, xmlChar *id, xmlChar *pin_id)
+convert_pin_to_int (char* pin_id)
 {
+	char *id_string;
+	int id_int;
+
+	if (NULL == (id_string = malloc (10 * sizeof (char))))
+		return -1;
 	
-	/* DEBUG */
-	return 0;
+	strcpy (id_string, pin_id);
+	strtok (id_string, " ");
+	id_string = strtok (NULL, " ");
+
+	id_int = atoi (id_string);
+	printf ("strtok: %d\n", id_int);
+	return id_int;
 }
+
+/*
+ * function rbt_find_marco
+ * find a marco in a t_pr_marco array
+ */
+t_pr_marco*
+rbt_find_marco (int name)
+{
+	int count;
+
+	for (count = 0; count < rbt_marcos_length; count++){
+		if (rbt_marcos[count]->name == name)
+			return rbt_marcos[count];
+	}
+
+	return NULL;
+}
+
 
 /*
  * function rbt_parse_connector
  * parse the <connector> </connector> tag within <net> </net>
  */
 int
-rbt_parse_connector (xmlNodePtr connector, xmlChar *pin_id)
+rbt_parse_connector (xmlNodePtr connector, xmlChar *pin_id, t_vnet *vnet_cur)
 {
 	xmlNodePtr cur;
-	xmlChar *label;
-	xmlChar *title;
-	xmlChar *id;
+	char *label;
+	char *title;
+	char *id;
+	t_pr_pin *pin_cur;
+	
+	pin_cur = vnet_cur->pins[0];
 
 	for (cur = connector->xmlChildrenNode; cur != NULL; cur = cur->next){
 		if ( !xmlStrcmp ((cur->name), (const xmlChar*) "part" )){
-			label = xmlGetProp (cur, (const xmlChar*) "label");
-			title = xmlGetProp (cur, (const xmlChar*) "title");
-			id = xmlGetProp (cur, (const xmlChar*) "id");
-			rbt_ins_macro (rbt_vnets, &rbt_vnets_length, label, title, id, pin_id);
+			label = (char*)xmlGetProp (cur, (const xmlChar*) "label");
+			title = (char*)xmlGetProp (cur, (const xmlChar*) "title");
+			id = (char*)xmlGetProp (cur, (const xmlChar*) "id");
+
+			/* Main Parse: fill in other data */
+			if (NULL == (pin_cur->parent = rbt_find_marco (atoi (id))))
+				return -2;
+
+			pin_cur->nets = vnet_cur;
+
+			pin_cur++;
+
 			xmlFree (label);
 			xmlFree (title);
 			xmlFree (id);
@@ -118,6 +160,47 @@ rbt_parse_connector (xmlNodePtr connector, xmlChar *pin_id)
 }
 
 /**
+ * function rbt_ins_vnet
+ * Insert a vnet, which is a node in the schematic
+ */
+t_vnet*
+rbt_ins_vnet ()
+{
+	t_vnet *cur;
+
+	if (NULL == (cur = (t_vnet*) malloc (sizeof (t_vnet))))
+		return NULL;
+	
+	rbt_vnets[rbt_vnets_length] = cur;
+
+	/* Set type to SPECIAL initially. */
+	/* If IC blocks found in <connector>, set it to NORMAL then. */
+	cur->type = SPECIAL;
+
+	rbt_vnets_length++;
+	return cur;
+}
+
+/**
+ * function rbt_ins_marco
+ */
+t_pr_marco*
+rbt_ins_marco (int name)
+{
+	t_pr_marco *cur;
+
+	if (NULL == (cur = (t_pr_marco*) malloc (sizeof (t_pr_marco))))
+		return NULL;
+
+	rbt_marcos[rbt_marcos_length] = cur;
+	cur->name = name;
+
+	rbt_marcos_length++;
+	return cur;
+}
+
+
+/**
  * function rbt_parse_net
  * parse the <net> </net> tag in a netlist
  */
@@ -126,11 +209,29 @@ rbt_parse_net (xmlNodePtr net)
 {
 	xmlNodePtr cur;
 	xmlChar* pin_id;
+	t_vnet *vnet_cur;
+	int pins_count;
 
+	/* First parse: initialize the vnet*/
+	/* fill in numpin and create memory for pins. */
+	pins_count = 0;
+	for (cur = net->xmlChildrenNode; cur != NULL; cur = cur->next){
+		if ( !xmlStrcmp ((cur->name), (const xmlChar*) "connector"))
+			pins_count++;
+	}
+	
+	if (NULL == (vnet_cur = rbt_ins_vnet ()))
+		return -2;
+
+	vnet_cur->numpin = pins_count;
+	if (NULL == (vnet_cur->pins = (t_pr_pin**) malloc (pins_count * sizeof (t_pr_pin*))))
+		return -1;
+	
+	/* Second parse: fill in the marcos */
 	for (cur = net->xmlChildrenNode; cur != NULL; cur = cur->next){
 		if ( !xmlStrcmp ((cur->name), (const xmlChar*) "connector")){
 			pin_id = xmlGetProp (cur, (const xmlChar*) "name");
-			rbt_parse_connector (cur, pin_id);	
+			rbt_parse_connector (cur, pin_id, vnet_cur);	
 			xmlFree (pin_id);
 		}
 	}
@@ -142,13 +243,13 @@ rbt_parse_net (xmlNodePtr net)
  * find a device in a t_icdev array
  */
 t_icdev*
-rbt_find_device (t_icdev** devs, int length, char* device_name)
+rbt_find_device (char* device_name)
 {
 	int count;
 
-	for (count = 0; count < length; count++){
-		if ( !strcmp (devs[count]->name, device_name) )
-			return devs[count];
+	for (count = 0; count < rbt_devices_length; count++){
+		if ( !strcmp (rbt_devices[count]->name, device_name) )
+			return rbt_devices[count];
 	}
 
 	return NULL;
@@ -182,13 +283,40 @@ rbt_config_ic (t_icdev* cur, xmlDocPtr doc)
 		if (i < cur->pin_num / 2){ /* lower level */
 			cur->pinls[i].loc = BOTTOM;
 			cur->pinls[i].offset = i;
+			cur->pinls[i].index = i;
 		}else{ /* upper level */
 			cur->pinls[i].loc = TOP;
 			cur->pinls[i].offset = i - (cur->pin_num / 2 + 1);
+			cur->pinls[i].index = i;
 		}
 	}
 
 	return 0;	
+}
+
+/*
+ * function rbt_config_scalable
+ */
+int
+rbt_config_scalable (t_icdev* cur, char* type)
+{
+	int i;
+
+	/* Deal with pins */
+	if (NULL == (cur->pinls = (t_dev_pin*)malloc (2 * sizeof (t_dev_pin))))
+		return -1;
+	for (i = 0; i < 2; i++)
+			cur->pinls[i].index = i;
+
+	if (!strcmp (type, "Resistor")){
+		cur->max_length = RESISTOR_MAX_LENGTH;
+		cur->min_length = RESISTOR_MIN_LENGTH;
+
+	}else if (!strcmp (type, "Capasitor")){
+		cur->max_length = CAPASITOR_MAX_LENGTH;
+		cur->min_length = CAPASITOR_MIN_LENGTH;
+	}
+	return 0;
 }
 
 /*
@@ -230,7 +358,16 @@ rbt_config_device (t_icdev* cur, char *device_name)
 		for (i=0; i < nodeset->nodeNr; i++) {
 			keyword = xmlNodeListGetString(doc, nodeset->nodeTab[i]->xmlChildrenNode, 1);
 			if (!strcmp ((char*)keyword, "IC")){
+			/* IC Blocks */
 				rbt_config_ic (cur, doc);
+				xmlFree (keyword);
+				break;
+			}else if (!strcmp ((char*)keyword, "Resistor") ||
+					  !strcmp ((char*)keyword, "Capasitor")){
+			/* Resistors and Capasitors */
+				rbt_config_scalable (cur, (char*) keyword);
+				xmlFree (keyword);
+				break;
 			}
 		}
 		xmlXPathFreeObject (result);
@@ -248,15 +385,80 @@ rbt_config_device (t_icdev* cur, char *device_name)
  * insert a device into a t_icdev array
  */
 int
-rbt_ins_device (t_icdev** dev, int *length, char *device_name)
+rbt_ins_device (char *device_name)
 {
 	t_icdev *cur;
 	cur = (t_icdev*) malloc (sizeof (t_icdev));
 	if (cur == NULL) return -1;
 
-	dev[*length] = cur;
-	(*length) = (*length) + 1;
+	rbt_devices[rbt_devices_length] = cur;
+	rbt_devices_length++;
 	rbt_config_device (cur, device_name);
+
+	return 0;
+}
+
+/*
+ * function rbt_set_marco_type
+ * Set whether the marco is a VCC or GND or IC or scalable
+ * according to <tag></tag>
+ */
+int
+rbt_set_marco_type (t_pr_marco *marco_cur, char *device_name)
+{
+	char *docname, *filename;
+	xmlDocPtr doc;
+	xmlNodeSetPtr nodeset;
+	xmlXPathObjectPtr result;
+	int i;
+	xmlChar *keyword;
+
+	/* Power and GND */
+	if (!strcmp (device_name, "Power")){
+		marco_cur->type = VDD;
+		return 0;
+	}else if (!strcmp (device_name, "Ground")){
+		marco_cur->type = GND;
+		return 0;
+	}
+
+	if (NULL == (filename = (char*) malloc (MAX_FILENAME_LENGTH * sizeof(char))))
+		return -1;
+	if (NULL == (docname = (char*) malloc (MAX_FILENAME_LENGTH * sizeof(char))))
+		return -1;
+	
+	if (NULL == (filename = rbt_find_device_file (part_list, device_name)))
+		return -2;
+	strcpy (docname, part_dir);
+	strcat (docname, filename);
+
+	/* Open the fzp file and parse, fill in struct icdev */
+
+	if (NULL == (doc = getdoc(docname)))
+		return -1;
+
+	result = getnodeset (doc, (xmlChar*) "//tag");
+	if (result) {
+		nodeset = result->nodesetval;
+		for (i=0; i < nodeset->nodeNr; i++) {
+			keyword = xmlNodeListGetString(doc, nodeset->nodeTab[i]->xmlChildrenNode, 1);
+			if (!strcmp ((char*)keyword, "IC")){
+			/* IC Blocks */
+				marco_cur->type = ICBLOCK;
+				break;
+			}else if (!strcmp ((char*)keyword, "Resistor") ||
+					  !strcmp ((char*)keyword, "Capasitor")){
+			/* Resistors and Capasitors */
+				marco_cur->type = RCD;
+				break;
+			}
+		}
+		xmlXPathFreeObject (result);
+	}
+
+	free (docname);
+	xmlFreeDoc(doc);
+	xmlCleanupParser();
 
 	return 0;
 }
@@ -270,19 +472,22 @@ int
 rbt_parse_init(char *docname)
 {	
 	xmlDocPtr doc;
-	xmlChar *xpath = (xmlChar*) "//part";
 	xmlNodeSetPtr nodeset;
 	xmlXPathObjectPtr result;
 	int device_count;
+	int marco_count;
 	ENTRY entry0;
-	char *temp_string;
+	char *temp_string, *temp_string2;
+	t_pr_marco *marco_cur;
+	t_icdev *dev_cur;
 	
 	int i;
 		
 	if (NULL == (doc = getdoc(docname)))
 		return -1;
 
-	result = getnodeset (doc, xpath);
+	/* First parse: count device number */
+	result = getnodeset (doc, (xmlChar*) "//part");
 	if (result == NULL)
 		return -2;
 
@@ -303,7 +508,6 @@ rbt_parse_init(char *docname)
 		xmlFree (entry0.key);
 	}
 
-
 	/* Init rbt_devices */
 	rbt_devices = (t_icdev**) malloc(device_count * sizeof(t_icdev*));
 	if (rbt_devices == NULL)
@@ -314,8 +518,8 @@ rbt_parse_init(char *docname)
 
 	for (i=0; i < nodeset->nodeNr; i++) {
 		temp_string = (char*) xmlGetProp (nodeset->nodeTab[i], (xmlChar*) "title");
-		if (NULL == rbt_find_device (rbt_devices, rbt_devices_length, temp_string)){
-			rbt_ins_device (rbt_devices, &rbt_devices_length, temp_string);
+		if (NULL == rbt_find_device ( temp_string)){
+			rbt_ins_device (temp_string);
 		}
 		xmlFree (temp_string);
 	}
@@ -325,13 +529,59 @@ rbt_parse_init(char *docname)
 	if (rbt_vnets == NULL)
 		return -5;
 
+	/* Destroy hash */
+	hdestroy();
+
+	/* Third parse. count how many marcos. */
+	/* Create a new hash */
+	if (!hcreate(53))
+		return -3;
+
+	result = getnodeset (doc, (xmlChar*) "//part");
+	if (result == NULL)
+		return -2;
+	nodeset = result->nodesetval;
+
+	marco_count = 0;
+	for (i=0; i < nodeset->nodeNr; i++) {
+		/* hash them and count how many marco */
+		/* write to marco_count */
+		entry0.key = (char*) xmlGetProp (nodeset->nodeTab[i], (xmlChar*) "id");
+		if (NULL == hsearch (entry0, FIND)){
+			hsearch (entry0, ENTER);
+			marco_count++;
+		}
+		xmlFree (entry0.key);
+	}
+
+	/* Initialize rbt_marcos */
+	if (NULL == (rbt_marcos = (t_pr_marco**) malloc (sizeof (t_pr_marco*) * marco_count)))
+		return -1;
+	
+	/* Fourth Parse: insert rbt_marcos */
+	rbt_marcos_length= 0;
+
+	for (i=0; i < nodeset->nodeNr; i++) {
+		temp_string = (char*) xmlGetProp (nodeset->nodeTab[i], (xmlChar*) "id");
+		temp_string2 = (char*) xmlGetProp (nodeset->nodeTab[i], (xmlChar*) "title");
+		if (NULL == rbt_find_marco (atoi (temp_string))){
+			marco_cur = rbt_ins_marco (atoi (temp_string));
+			if ((dev_cur = rbt_find_device (temp_string2)) == NULL)
+				return -5;
+			marco_cur->pinnum = dev_cur->pin_num;
+			rbt_set_marco_type (marco_cur, (char*) temp_string2);
+		}
+		xmlFree (temp_string);
+		xmlFree (temp_string2);
+	}
+
+	/* Destroy hash */
+	hdestroy();
 
 	xmlXPathFreeObject (result);
 	xmlFreeDoc(doc);
 	xmlCleanupParser();
 	
-	/* Destroy hash */
-	hdestroy();
 	return 0;
 }
 
@@ -369,7 +619,7 @@ rbt_parse_netlist
 
 	if (rbt_parse_init(docname)) return -3;
 
-	/* Third parse. Fill in rbt_vnets */
+	/* Fifth parse. Fill in rbt_vnets */
 	for (i=0; i < nodeset->nodeNr; i++) {
 		rbt_parse_net (nodeset->nodeTab[i]);
 	}
