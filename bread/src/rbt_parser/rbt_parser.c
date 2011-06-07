@@ -81,11 +81,11 @@ getnodeset (xmlDocPtr doc, xmlChar *xpath)
 }
 
 /*
- * function convert_pin_to_int
+ * function rbt_convert_pin_to_int
  * remove string "pin" of a pin_id and convert the pin number to int
  */
 int
-convert_pin_to_int (char* pin_id)
+rbt_convert_pin_to_int (char* pin_id)
 {
 	char *id_string;
 	int id_int;
@@ -96,6 +96,9 @@ convert_pin_to_int (char* pin_id)
 	strcpy (id_string, pin_id);
 	strtok (id_string, " ");
 	id_string = strtok (NULL, " ");
+
+	if (NULL == id_string)
+		return -1;
 
 	id_int = atoi (id_string);
 	printf ("strtok: %d\n", id_int);
@@ -128,33 +131,45 @@ int
 rbt_parse_connector (xmlNodePtr connector, xmlChar *pin_id, t_vnet *vnet_cur)
 {
 	xmlNodePtr cur;
-	char *label;
-	char *title;
-	char *id;
+	xmlChar *label;
+	xmlChar	*title;
+	xmlChar *id;
 	t_pr_pin *pin_cur;
+	int pin_num;
 	
 	pin_cur = vnet_cur->pins[0];
 
 	for (cur = connector->xmlChildrenNode; cur != NULL; cur = cur->next){
 		if ( !xmlStrcmp ((cur->name), (const xmlChar*) "part" )){
-			label = (char*)xmlGetProp (cur, (const xmlChar*) "label");
-			title = (char*)xmlGetProp (cur, (const xmlChar*) "title");
-			id = (char*)xmlGetProp (cur, (const xmlChar*) "id");
+			label = xmlGetProp (cur, (const xmlChar*) "label");
+			title = xmlGetProp (cur, (const xmlChar*) "title");
+			id = xmlGetProp (cur, (const xmlChar*) "id");
 
 			/* Main Parse: fill in other data */
-			if (NULL == (pin_cur->parent = rbt_find_marco (atoi (id))))
+			if (NULL == (pin_cur->parent = rbt_find_marco (atoi ((char*)id))))
 				return -2;
 
+			pin_cur->numnet = 1;
 			pin_cur->nets = vnet_cur;
+
+			/* Fill loc & offset */
+			pin_num = rbt_convert_pin_to_int ((char*)pin_id);
+
+			if (pin_num != -1){
+				// DEBUG
+				printf ("PIN NUM: %d\n", pin_num);
+				pin_cur->parent->pins[pin_num] = pin_cur;
+				pin_cur->loc = pin_cur->parent->device->pinls[pin_num].loc;
+				pin_cur->offset = pin_cur->parent->device->pinls[pin_num].offset;
+			}
 
 			pin_cur++;
 
-			xmlFree (label);
-			xmlFree (title);
 			xmlFree (id);
+			xmlFree (title);
+			xmlFree (label);
 		}
 	}
-	
 	return 0;
 
 }
@@ -219,11 +234,13 @@ rbt_parse_net (xmlNodePtr net)
 		if ( !xmlStrcmp ((cur->name), (const xmlChar*) "connector"))
 			pins_count++;
 	}
+
 	
 	if (NULL == (vnet_cur = rbt_ins_vnet ()))
 		return -2;
 
 	vnet_cur->numpin = pins_count;
+
 	if (NULL == (vnet_cur->pins = (t_pr_pin**) malloc (pins_count * sizeof (t_pr_pin*))))
 		return -1;
 	
@@ -302,6 +319,7 @@ rbt_config_scalable (t_icdev* cur, char* type)
 {
 	int i;
 
+	cur->pin_num = 2;
 	/* Deal with pins */
 	if (NULL == (cur->pinls = (t_dev_pin*)malloc (2 * sizeof (t_dev_pin))))
 		return -1;
@@ -312,7 +330,7 @@ rbt_config_scalable (t_icdev* cur, char* type)
 		cur->max_length = RESISTOR_MAX_LENGTH;
 		cur->min_length = RESISTOR_MIN_LENGTH;
 
-	}else if (!strcmp (type, "Capasitor")){
+	}else if (!strcmp (type, "Capacitor")){
 		cur->max_length = CAPASITOR_MAX_LENGTH;
 		cur->min_length = CAPASITOR_MIN_LENGTH;
 	}
@@ -363,8 +381,8 @@ rbt_config_device (t_icdev* cur, char *device_name)
 				xmlFree (keyword);
 				break;
 			}else if (!strcmp ((char*)keyword, "Resistor") ||
-					  !strcmp ((char*)keyword, "Capasitor")){
-			/* Resistors and Capasitors */
+					  !strcmp ((char*)keyword, "Capacitor")){
+			/* Resistors and Capacitors */
 				rbt_config_scalable (cur, (char*) keyword);
 				xmlFree (keyword);
 				break;
@@ -447,8 +465,8 @@ rbt_set_marco_type (t_pr_marco *marco_cur, char *device_name)
 				marco_cur->type = ICBLOCK;
 				break;
 			}else if (!strcmp ((char*)keyword, "Resistor") ||
-					  !strcmp ((char*)keyword, "Capasitor")){
-			/* Resistors and Capasitors */
+					  !strcmp ((char*)keyword, "Capacitor")){
+			/* Resistors and Capacitors */
 				marco_cur->type = RCD;
 				break;
 			}
@@ -569,6 +587,11 @@ rbt_parse_init(char *docname)
 			if ((dev_cur = rbt_find_device (temp_string2)) == NULL)
 				return -5;
 			marco_cur->pinnum = dev_cur->pin_num;
+			marco_cur->device = dev_cur;
+
+			if (NULL == (marco_cur->pins = (t_pr_pin**) malloc (sizeof(t_pr_pin*) * marco_cur->pinnum)))
+				return -1;
+
 			rbt_set_marco_type (marco_cur, (char*) temp_string2);
 		}
 		xmlFree (temp_string);

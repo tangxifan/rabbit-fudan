@@ -19,6 +19,17 @@ You should have received a copy of the GNU General Public License along with thi
 #include "place_route.h"
 #include "device.h"
 
+/* Rabbit arrays */
+t_vnet **rbt_vnets;
+int rbt_vnets_length;
+
+t_icdev **rbt_devices;
+int rbt_devices_length;
+	   
+t_pr_marco **rbt_marcos;
+int rbt_marcos_length;
+
+
 /* Read the device list "device.lst" to find out
    which file is to describe the certain part. */
 char* rbt_find_device_file (char*, char*);
