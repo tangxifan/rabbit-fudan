@@ -1,8 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <rabbit.h>
-#include <util.h>
+#include <rabbit_type.h>
 #include <bb_type.h>
 #include <place_route.h>
 #include <device.h>
@@ -14,7 +13,7 @@
  *The number of connected wires are returned.
  */
 int
-check_pin_direct_connect(IN t_pr_pin   *pin
+check_pin_direct_connect(IN t_pr_pin   *pin,
                          IN t_pr_marco *des
                         )
 {
@@ -24,7 +23,7 @@ check_pin_direct_connect(IN t_pr_pin   *pin
   {return 0;}
   for (ipin=0;ipin<pinno;++ipin)
   {
-    if (des==(*(vnet->pins+ipin))->parent)
+    if (des==pin->nets->pins[ipin]->parent)
     {dcon++;}
   }
   return dcon;
@@ -36,10 +35,10 @@ check_pin_direct_connect(IN t_pr_pin   *pin
  */
 boolean
 check_parent_type(IN t_pr_pin *src,
-                  IN e_pr_type tcomp
+                  IN enum e_pr_type tcomp
                  )
 {
-  e_pr_type gottype=src->parent->type;
+  enum e_pr_type gottype=src->parent->type;
   if (gottype==tcomp)
   {return TRUE;}
   return FALSE;
@@ -60,7 +59,7 @@ cal_mv_attract(IN t_pr_marco *src,
   t_pr_pin* mpin=NULL;
   for(ipin=0;ipin<src->pinnum;++ipin)
   { 
-    mpin=(*src->pins+ipin));
+    mpin=src->pins[ipin];
     if (mpin->nets==des)
     {mvattract++;}  
   }
@@ -103,12 +102,20 @@ cal_mv_close(IN t_pr_marco* src,
   int mvclose=0;
   int ipin=0;
   t_pr_pin* mpin=NULL;
-  for(ipin=0;ipin<src->pinnum,++ipin)
+  for(ipin=0;ipin<src->pinnum;++ipin)
   {
-    mpin=(*(src->pins+ipin));
+    mpin=src->pins[ipin];
     mvclose+=cal_vv_close(mpin->nets,des);
   }
   return mvclose;
+}
+
+int
+cal_vm_close(IN t_vnet* src,
+             IN t_pr_marco* des
+             )
+{
+  return cal_mv_close(des,src);
 }
 
 int cal_mm_close_in_vv(IN t_pr_marco* src,
@@ -149,7 +156,7 @@ cal_mm_close(IN t_pr_marco *src,
   for(ipin=0;ipin<pinno;++ipin)
   {
      pintmp=*(src->pins+ipin);
-     dir_att+=check_pin_direct_connect(pintmp,des);
+     close+=check_pin_direct_connect(pintmp,des);
   }
  close+=cal_mm_close_in_vv(src,des);
  return close;
@@ -179,8 +186,8 @@ find_mv_close(IN t_pr_marco* src,
  *and destination should be UNPLACED.
  */
 int
-find_vm_close(IN t_vnet* src
-              IN t_pr_marco* des,
+find_vm_close(IN t_vnet* src,
+              IN t_pr_marco* des
              )
 {
   if ((PLACED==src->status)&&(UNPLACED==des->status))
@@ -235,7 +242,7 @@ find_vnet_basic_width(IN t_vnet* vnet,
   else
   {wbasic=1;}
   vnet->locnum=wbasic;
-  vnet->locations=(t_location*)malloc(vnet->locnum*size(t_location));
+  vnet->locations=(t_location*)malloc(vnet->locnum*sizeof(t_location));
   return wbasic;
 }
 
@@ -289,7 +296,7 @@ find_mnet_basic_width(IN t_vnet* vnet,
   else
   {wbasic=1;}
   vnet->locnum=wbasic;
-  vnet->locations=(t_location*)malloc(vnet->locnum*size(t_location));
+  vnet->locations=(t_location*)malloc(vnet->locnum*sizeof(t_location));
   return wbasic;
 }
 

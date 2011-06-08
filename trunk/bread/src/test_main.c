@@ -7,11 +7,17 @@
 #include <rbt_parser.h>
 
 int
-main()
+main(int argc, char** argv)
 {
-	rbt_parse_netlist("simple_netlist.xml",
+	if (NULL == argv[1]){
+		printf ("USAGE: rabbit <input_netlist_file>\n");
+		return 1;
+	}
+
+	rbt_parse_netlist(argv[1],
 		"../../parts/parts.lst",
 		"../../parts/parts/"
 	);	
+
 	return 0;
 }

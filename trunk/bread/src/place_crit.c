@@ -227,8 +227,8 @@ find_vnet_pwidth(IN t_vnet* vnet,
       {minl=vpin->parent->device->min_length;}
     }
   }
-  for (ipin=0;ipin<npin;++ipin)
-  {set_unpoint_marco((*(vnet->pins+ipin))->parent);}
+  //for (ipin=0;ipin<npin;++ipin)
+  //{set_unpoint_marco((*(vnet->pins+ipin))->parent);}
 //pwidth+=minl;
   return pwidth;  
 }
@@ -413,7 +413,7 @@ find_match_vnet(IN int nblk,
       for(jnet=0;jnet<nvnet;++jnet)
       {
         if ((UNPLACED==(vnets+jnet)->status)&&(SPECIAL==(vnets+inet)->type))
-        {(vnets+jnet)->pcost+=(float)find_vv_close((vnets+inet),(vnets+jnet));}
+        {(vnets+jnet)->pcost+=(float)cal_vv_close((vnets+inet),(vnets+jnet));}
       }
     }
   }
@@ -454,7 +454,7 @@ determine_net_place_location(IN t_vnet* net,
   {
     netlft=place_info->left->vnext;
     leftn=netlft->name;
-    leftcl=find_vv_close(netlft,net);
+    leftcl=cal_vv_close(netlft,net);
   }
 
   if (TRUE==place_info->right->flag)
@@ -467,7 +467,7 @@ determine_net_place_location(IN t_vnet* net,
   {
     netrgt=place_info->right->vnext;
     rightn=netrgt->name;
-    rightcl=find_vv_close(netrgt,net);
+    rightcl=cal_vv_close(netrgt,net);
   }
   
   if (rightcl<leftcl)

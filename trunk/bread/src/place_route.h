@@ -13,7 +13,7 @@
 
 
 enum e_pr_type
-{NONE, RCD,ICBLOCK,VDD,GND};
+{NONE,RCD,ICBLOCK,VDD,GND};
 
 /*
  *This status flag is used during placemnt

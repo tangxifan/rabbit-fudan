@@ -50,7 +50,7 @@ find_vnet_bbs(IN int* nbbs,
   }
 
   
-  bbs=(t_location*)my_malloc((*nbbs)*sizeof(t_location));
+  bbs=(t_location*)malloc((*nbbs)*sizeof(t_location));
   for (ix=xstart;ix<xend;++ix)
   {
     for(iy=ystart;iy<yend;++iy)
