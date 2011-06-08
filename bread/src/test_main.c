@@ -6,6 +6,15 @@
 #include <device.h>
 #include <rbt_parser.h>
 
+extern t_vnet **rbt_vnets;
+extern int rbt_vnets_length;
+
+extern t_icdev **rbt_devices;
+extern int rbt_devices_length;
+
+extern t_pr_marco **rbt_marcos;
+extern int rbt_marcos_length;
+
 int
 main(int argc, char** argv)
 {
