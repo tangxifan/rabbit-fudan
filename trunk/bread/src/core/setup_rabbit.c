@@ -5,8 +5,16 @@
 #include <place_route.h>
 #include <bb_type.h>
 #include <device.h>
+#include <setup_rabbit.h>
 
+/*********Subroutines************/
+int 
+set_pr_marco_unplaced(IN t_pr_marco* marco);
 
+int 
+set_pr_marco_unstart(IN t_pr_marco* marco);
+
+/********************************/
 
 /*
  *To identify whether the vnet is a special net.
@@ -29,6 +37,10 @@ check_vnet(IN t_vnet* vnet)
 }
 
 /*
+ *This function has been annoted.
+ *Uncount is an abandoned flag.
+ */
+/*
 void
 set_uncount_vnets(IN int nvnet,
                   IN t_vnet* vnets
@@ -43,7 +55,20 @@ set_uncount_vnets(IN int nvnet,
 }
 */
 
-int
+/*
+ *Set single pr_marco unplaced.
+ */
+int 
+set_pr_marco_unplaced(IN t_pr_marco* marco)
+{
+  marcos->status=UNPLACED;
+  return 1;
+}
+
+/*
+ *Set all the pr_marcos unplaced.
+ */
+int 
 set_unplaced_marco(IN int nmarco,
                    IN t_pr_marco* marcos
                   )
@@ -51,12 +76,25 @@ set_unplaced_marco(IN int nmarco,
   int imarco=0;
   for (imarco=0;imarco<nmarco;++imarco)
   {
-    (marcos+imarco)->status=UNPLACED;
+    set_pr_marco_unplaced(marcos+imarco);
   }
   return 1;
 }
 
-int
+/*
+ *Set single pr_marco unstart.
+ */
+int 
+set_pr_marco_unstart(IN t_pr_marco* marco)
+{
+  marco->sstart=UNSTART;
+  return 1;
+}
+
+/*
+ *set all the pr_marcos unstarted.
+ */
+int 
 set_unstart_marco(IN int nmarco,
                   IN t_pr_marco* marcos
                   )
@@ -64,12 +102,16 @@ set_unstart_marco(IN int nmarco,
   int imarco=0;
   for (imarco=0;imarco<nmarco;++imarco)
   {
-    (marcos+imarco)->status=UNSTART;
+    set_pr_marco_unstart(marcos+imarco);
   }
   return 1;
 }
 
-int
+
+/*
+ *Set all the pins of the pr_marco unpoint
+ */
+int 
 set_unpoint_marco(IN t_pr_marco* marco)
 {
   int ipin=0;
@@ -84,7 +126,7 @@ set_unpoint_marco(IN t_pr_marco* marco)
  *Count the number of pointed pins with
  *given marco.
  */
-int
+int 
 count_pointed_pins(IN t_pr_marco* marco)
 {
   int ipin=0;
