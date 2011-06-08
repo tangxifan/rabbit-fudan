@@ -3,6 +3,7 @@
 
 #include <rabbit_type.h>
 #include <place_route.h>
+#include <place.h>
 
 int 
 place_route(IN int nvnet,

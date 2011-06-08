@@ -46,7 +46,7 @@ create_icblk_array(INOUT int* nblk,
   }
 
   (*nblk)=iblk;
-  icblks=(t_pr_marco*)my_malloc((*nblk)*sizeof(t_pr_marco));
+  icblks=(t_pr_marco*)malloc((*nblk)*sizeof(t_pr_marco));
 
   iblk=0;
   for (imarco=0;imarco<nmarco;++imarco)

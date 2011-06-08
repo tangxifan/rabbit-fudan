@@ -106,7 +106,7 @@ try_route_bias(IN int nvnet,
     else if (GND==(marcos+imarco)->type)
     {mgnd=marcos+imarco;}
   }
-  determine_vdd_gnd_location_on_bb(mvdd,mgnd,bb_array);
+  //determine_vdd_gnd_location_on_bb(mvdd,mgnd,bb_array);
   route_bias_on_bb(mvdd,bb_array,VDD);
   route_bias_on_bb(mgnd,bb_array,GND);
   return 1;
