@@ -6,6 +6,77 @@
 #include <place_route.h>
 #include <device.h>
 
+/***************Subroutines****************/
+int
+alloc_vnet_place_bb(IN int name,
+                    INOUT int* curloc,
+                    IN int blank,
+                    IN int column,
+                    IN int nvnet,
+                    IN t_vnet* vnets
+                   );
+
+int
+alloc_blk_place_bb(IN int name,
+                   INOUT int* curloc,
+                   IN int blank,
+                   IN int column,
+                   IN int nblk,
+                   IN t_pr_marco* blks
+                  );
+
+int
+alloc_bb_place(IN int nblk,
+               IN t_pr_marco* blks,
+               IN int nvnet,
+               IN t_vnet* vnets,
+               IN t_bb_array* bb_array
+               );
+
+t_pr_marco*
+find_blk_with_name(IN int name,
+                   IN int column,
+                   IN int nblk,
+                   IN t_pr_marco* blks
+                  );
+
+t_vnet*
+find_vnet_with_name(IN int name,
+                    IN int column,
+                    IN int nvnet,
+                    IN t_vnet* vnets
+                    );
+
+int
+detail_place_blk(INOUT t_pr_marco* blk,
+                 IN int column,
+                 IN int left,
+                 IN int nmarco,
+                 IN t_pr_marco* pr_marco,
+                 IN int nvnet,
+                 IN t_vnet* vnets,
+                 IN t_bb_array* bb_array
+                );
+
+int
+detail_place_vnet(INOUT t_vnet* vnet,
+                  IN int column,
+                  IN int left,
+                  IN int nmarco,
+                  IN t_pr_marco* pr_marco,
+                  IN int nvnet,
+                  IN t_vnet* vnets,
+                  IN t_bb_array* bb_array
+                 );
+
+int
+detail_place_big_vnet(IN int vnetoff,
+                      IN t_vnet* vnet,
+                      IN int wcapacity
+                     );
+
+/******************************************/
+
 
 int
 alloc_vnet_place_bb(IN int name,
