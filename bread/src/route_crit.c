@@ -479,7 +479,7 @@ finish_route_marco_on_bb(IN t_pr_marco* marco,
     {
       set_bb_net_unroutable(locb,bb_array);
       set_bb_node_unroutable(locb,bb_array);
-      wloc=find_near_node_on_bb(locb,bb_array);
+      find_near_node_on_bb(locb,bb_array,wloc);
       set_wired_on_bb(wloc,pina->exloc,bb_array);
       set_wired_on_bb(pina->exloc,wloc,bb_array);
       set_bb_node_occupied(wloc,bb_array);
@@ -496,7 +496,7 @@ finish_route_marco_on_bb(IN t_pr_marco* marco,
     {
       set_bb_node_occupied(loca,bb_array);
       set_bb_node_occupied(locb,bb_array);
-      wloc=find_near_node_on_bb(loca,bb_array);
+      find_near_node_on_bb(loca,bb_array,wloc);
       set_wired_on_bb(wloc,pinb->exloc,bb_array);
       set_wired_on_bb(pinb->exloc,wloc,bb_array);
       set_bb_node_occupied(wloc,bb_array);
