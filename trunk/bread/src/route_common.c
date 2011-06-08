@@ -189,7 +189,7 @@ find_near_node_on_bb(IN t_location* src,
      }
    }
    set_location_value(rtloc,src->x,ymin);
-   return rtloc;
+   return 0;
 }
 
 int

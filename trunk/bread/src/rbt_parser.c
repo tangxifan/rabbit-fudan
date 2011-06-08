@@ -26,7 +26,11 @@ You should have received a copy of the GNU General Public License along with thi
 #define MAX_DEVICE_NUMBER 100
 #define MAX_DEVICE_NAME 50
 
+#include "rabbit_type.h"
+#include "place_route.h"
+#include "device.h"
 
+/* Rabbit arrays */
 t_vnet **rbt_vnets;
 int rbt_vnets_length;
 

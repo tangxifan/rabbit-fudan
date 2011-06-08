@@ -15,20 +15,6 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "rabbit_type.h"
-#include "place_route.h"
-#include "device.h"
-
-/* Rabbit arrays */
-t_vnet **rbt_vnets;
-int rbt_vnets_length;
-
-t_icdev **rbt_devices;
-int rbt_devices_length;
-	   
-t_pr_marco **rbt_marcos;
-int rbt_marcos_length;
-
 
 /* Read the device list "device.lst" to find out
    which file is to describe the certain part. */

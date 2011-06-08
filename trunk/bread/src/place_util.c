@@ -222,7 +222,7 @@ get_left_place_info(t_place_info place_info)
 int 
 get_right_place_info(t_place_info place_info)
 {
-  if (TRUE==place_info.right>flag)
+  if (TRUE==place_info.right->flag)
   {
     return place_info.right->mnext->name;
   }
