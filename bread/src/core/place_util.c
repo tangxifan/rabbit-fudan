@@ -6,6 +6,22 @@
 #include <place_route.h>
 #include <device.h>
 
+/******************Subroutines*****************/
+int
+update_pr_marco(IN int nmarco,
+                INOUT t_pr_marco* pr_marco,
+                IN int nblk,
+                IN t_pr_marco* icblks
+                );
+
+
+boolean
+check_place_over(IN int nblk,
+                 IN t_pr_marco* blks
+                );
+
+/**********************************************/
+
 /*
  *Create a array for storing ic blocks.
  *First, select these qualified ic blocks,
@@ -82,21 +98,9 @@ update_marco_free_icblks(IN int nmarco,
                          )
 {
   update_pr_marco(nmarco,pr_marco,nblk,icblks);
-  free_icblks(nblk,icblks);
+  free(icblks);
 }
 
-
-
-int
-free_icblks(IN int nblk,
-            IN t_pr_marco* icblks
-           )
-{
-  int iblk;
-  for(iblk=0;iblk<nblk;++iblk)
-  {free(icblks+iblk);}
-  return 1;
-}
 
 /*
  *Check whether unable to find the start block
@@ -190,7 +194,7 @@ check_all_placed(IN int nblk,
   return 1;
 }
 
-void
+int 
 clear_left_right_place_info(t_place_info* place_info)
 {
   place_info->left->flag=TRUE;
@@ -202,3 +206,28 @@ clear_left_right_place_info(t_place_info* place_info)
   return 1;
 }
 
+int 
+get_left_place_info(t_place_info place_info)
+{
+  if (TRUE==place_info.left->flag)
+  {
+    return place_info.left->mnext->name;
+  }
+  else
+  {
+    return place_info.left->vnext->name;
+  }
+}
+
+int 
+get_right_place_info(t_place_info place_info)
+{
+  if (TRUE==place_info.right>flag)
+  {
+    return place_info.right->mnext->name;
+  }
+  else
+  {
+    return place_info.right->vnext->name;
+  }
+}

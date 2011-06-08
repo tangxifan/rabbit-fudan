@@ -6,6 +6,66 @@
 #include <place_route.h>
 #include <device.h>
 
+/*****************Subroutines***********************/
+
+t_vnet* 
+find_start_vnet(IN int nvnet,
+                IN t_vnet* vnets,
+                IN int wcapacity
+                );
+
+float
+find_starterblk_cost(IN t_pr_marco* blk);
+
+t_pr_marco*
+find_starter_block(IN int nblk,
+                   IN t_pr_marco* blks
+                  );
+
+boolean
+check_pwidth_status(IN t_pr_marco* marco,
+                    IN t_vnet* vnet
+                   );
+
+int
+find_vnet_pwidth(IN t_vnet* vnet,
+                 IN int wcapacity);
+
+int
+find_blk_pwidth(IN int nblk,
+                IN t_pr_marco* blks,
+                IN t_pr_marco* blk,
+                IN int wcapacity
+               );
+
+
+
+t_pr_marco*
+find_match_blk(IN int nblk,
+                    IN t_pr_marco* blks,
+                    IN int nvnet,
+                    IN t_vnet* vnets
+                   );
+
+t_vnet*
+find_match_vnet(IN int nblk,
+                IN t_pr_marco* blks,
+                IN int nvnet,
+                IN t_vnet* vnets
+                );
+
+int
+determine_net_place_location(IN t_vnet* net,
+                             INOUT t_place_info* place_info
+                            );
+
+int
+determine_blk_place_location(IN t_pr_marco* blk,
+                             INOUT t_place_info* place_info
+                            );
+
+/***************************************************/
+
 /*
  *Spot the start vnet
  */
