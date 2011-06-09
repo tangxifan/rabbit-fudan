@@ -93,6 +93,7 @@ struct s_bb_column
   int right;
   /*For route*/
   /*Only one blank area is permitted in a column*/
+  /*Blank Start and End are both blank nodes*/
   int blank_start;
   int blank_end;
 };
