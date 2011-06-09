@@ -106,6 +106,7 @@ struct s_bb_bias
   t_location* base;
   int height;
   int width;
+  int width_capacity;
   int former_column;
   int next_column;
   enum e_bias_type type;
