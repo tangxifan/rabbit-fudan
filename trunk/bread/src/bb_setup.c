@@ -16,10 +16,12 @@ int col_width=64;
 int col_height=2*col_wcapacity+col_blank_height;
 
 /*Bias Arch*/
-int bias_width=64;
+int bias_offset=2;
+int bias_width=60;
 int bias_height=2;
 int bias_blank=2;
 int bias_num=2*(col_num+1);
+int bias_wcapacity=5;
 
 /*Malloc the columns*/
 int 
@@ -89,6 +91,7 @@ initial_bias(t_bb_bias* curbias,
   (*curbias->base)=(*curcol);
   curbias->height=1;
   curbias->width=bias_width;
+  curbias->width_capacity=bias_wcapacity;
   curbias->type=BIAS_NONE;
   return 1;
 }
@@ -130,6 +133,127 @@ creat_bb_nodes(t_bb_array* bb_array)
 }
 
 int 
+initial_bb_bodes(INOUT t_bb_array* bb_array)
+{
+  int ix=0;
+  int iy=0;
+  
+  for (ix=0;ix<bb_array->width;++ix)
+  {
+    for (iy=0;iy<bb_array->height;++iy)
+    {
+      initial_single_bb_node(bb_array,ix,iy);
+    }
+  }
+  return 1;
+}
+
+int 
+initial_single_bb_node(INOUT t_bb_array* bb_array,
+                       IN int x,
+                       IN int y
+                       )
+{
+  bb_array->bb_node[x][y].bb_index=UNKNOWN;
+  bb_array->bb_node[x][y].type=BLANK;
+  bb_array->bb_node[x][y].column=UNKNOWN;
+  bb_array->bb_node[x][y].ninner=UNKNOWN;
+  bb_array->bb_node[x][y].inners=NULL;
+  bb_array->bb_node[x][y].pin=NULL;
+  bb_array->bb_node[x][y].net=NULL;
+  bb_array->bb_node[x][y].wired={0};
+  bb_array->bb_node[x][y].status=FREE;
+  bb_array->bb_node[x][y].rstatus=ROUTABLE;
+  bb_array->bb_node[x][y].bias_type=BIAS_NONE;
+  bb_array->bb_node[x][y].rcost=UNKNOWN;
+  set_location_value(bb_array->bb_node[x][y].location,x,y);
+  return 1;
+}
+
+
+int 
+initial_column_nodes(INOUT t_bb_array* bb_array)
+{
+  int icol=0;
+  int ix=0;
+  int iy=0;
+
+  for (icol=0;icol<bb_array->no_column;++icol)
+  {
+    for (ix=bb_array->columns[icol].base->x;ix<bb_array->columns[icol].width;++ix)
+    {
+      for (iy=bb_array->columns[icol].base->y;iy<bb_array->columns[icol].height;++iy)
+      {
+        if ((iy<bb_array->columns[icol].blank_start)||(iy>bb_array->columns[icol].blank_end))
+        {bb_array->bb_node[ix][iy].type=NORMAL_NODE;}
+        bb_array->bb_node[ix][iy].column=icol;
+      }
+    }
+  }  
+  return 1;
+}
+
+/*Unfinished!*/
+int 
+initial_bias_nodes(INOUT t_bb_array* bb_array)
+{
+  int ibias=0;
+  int ix=0;
+  int y=0;
+  /*Aware the blank nodes!*/
+  for (ibias=0;ibias<bb_array->nbias;++ibias)
+  {
+    y=bb_array->biases[ibias].base->y;
+    for (ix=bb_array->biases[ibias].base->y;ix<bb_array->biases[ibias].width;++ix)
+    {
+      bb_array->bb_node[ix][y].type=BIAS_NODE;
+      bb_array->bb_node[ix][y].bias_type=bb_array->biases[ibias].type;
+    }
+  }
+  return 1;
+}
+
+int 
+initial_bias_inners(INOUT t_bb_array* bb_array,
+                    IN int ix,
+                    IN int iy
+                    )
+{
+  
+  return 1;
+}
+
+int 
+initial_normal_inners(INOUT t_bb_array* bb_array,
+                      IN int ix,
+                      IN int iy
+                     )
+{
+  
+  return 1;
+}
+
+
+int 
+initial_inners(INOUT t_bb_array* bb_array)
+{
+  int ix=0;
+  int iy=0;
+  
+  for (ix=0;ix<bb_array->width;++ix)
+  {
+    for (iy=0;iy<bb_array->height;++iy)
+    {
+      if (BIAS_NODE==bb_array->bb_node[ix][iy].type)
+      {initial_bias_inners(bb_array,ix,iy);}
+      else if (NORMAL_NODE==bb_array->bb_node[ix][iy].type)
+      {initial_normal_inners(bb_array,ix,iy);}
+    }
+  }
+  return 1;
+}
+
+int 
 setup_breadboard(t_bb_array* bb_array)
 {
   t_location curbase={0};
@@ -139,8 +263,9 @@ setup_breadboard(t_bb_array* bb_array)
   int icol=0;
   int ibias=0;  
   enum e_bias_type given_type;
-
-
+  
+  bb_array->reserve_ratio=0.0;
+  /*Create Columns and Biases.*/
   create_columns(bb_array);
   create_biases(bb_array);
   /*
@@ -148,10 +273,10 @@ setup_breadboard(t_bb_array* bb_array)
    *the column information.   
    */
   /*Do Bias initialize work*/
-  set_location_value(&curbase,0,total_height);
+  set_location_value(&curbase,bias_offset,total_height);
   initial_bias(bb_array->biases+ibias,&curbase);
   ibias++;
-  set_location_value(&curbase,0,total_height+1);
+  set_location_value(&curbase,bias_offset,total_height+1);
   initial_bias(bb_array->biases+ibias,&curbase);
   ibias++;
   /*End bias initialization*/ 
@@ -168,10 +293,10 @@ setup_breadboard(t_bb_array* bb_array)
     total_height+=bb_array->columns[icol].height;
     total_height+=bias_blank;
     /*Do Bias initialize work*/
-    set_location_value(&curbase,0,total_height);
+    set_location_value(&curbase,bias_offset,total_height);
     initial_bias(bb_array->biases+ibias,&curbase);
     ibias++;
-    set_location_value(&curbase,0,total_height+1);
+    set_location_value(&curbase,bias_offset,total_height+1);
     initial_bias(bb_array->biases+ibias,&curbase);
     ibias++;
     /*End bias initialization*/ 
@@ -195,8 +320,17 @@ setup_breadboard(t_bb_array* bb_array)
   /*Create all bread board nodes*/
   creat_bb_nodes(bb_array);    
   
-
-
+  /*Initial all bread board nodes*/  
+  initial_bb_bodes(bb_array);
+  /*Initial column bread board nodes*/
+  initial_column_nodes(bb_array);
+  /*Initial bias bread board nodes*/
+  initial_bias_nodes(bb_array);
+  /*Initial the inner connections*/
+  initial_inners(bb_array);
   return 1;
 }
+
+ 
+
 
