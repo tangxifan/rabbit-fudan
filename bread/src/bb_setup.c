@@ -3,6 +3,7 @@
 
 #include "rabbit_type.h"
 #include "bb_type.h"
+#include "bb_setup.h"
 
 /*Global variant*/
 t_bb_array bb_array;
@@ -22,6 +23,65 @@ int bias_height=2;
 int bias_blank=2;
 int bias_num=2*(col_num+1);
 int bias_wcapacity=5;
+
+/*Route Cost*/
+float initial_route_cost=1.0;
+
+/************Subroutines***************/
+int 
+create_columns(INOUT t_bb_array* bb_array);
+
+int 
+create_biases(INOUT t_bb_array* bb_array);
+
+int 
+initial_column(t_bb_column* curcol,
+               t_location* curbase
+              );
+
+int 
+initial_bias(t_bb_bias* curbias,
+             t_location* curbase
+            );
+
+int 
+set_bias_type(t_bb_bias* curbias,
+              enum e_bias_type given_type
+             );
+
+int 
+create_bb_nodes(t_bb_array* bb_array);
+
+int 
+initial_bb_bodes(INOUT t_bb_array* bb_array);
+
+int 
+initial_single_bb_node(INOUT t_bb_array* bb_array,
+                       IN int x,
+                       IN int y
+                       );
+
+int 
+initial_column_nodes(INOUT t_bb_array* bb_array);
+
+int 
+initial_bias_nodes(INOUT t_bb_array* bb_array);
+
+int 
+initial_bias_inners(INOUT t_bb_array* bb_array,
+                    IN int x,
+                    IN int y
+                    );
+
+int 
+initial_normal_inners(INOUT t_bb_array* bb_array,
+                      IN int x,
+                      IN int y
+                     );
+
+int 
+initial_inners(INOUT t_bb_array* bb_array);
+/*************************************/
 
 /*Malloc the columns*/
 int 
@@ -106,7 +166,7 @@ set_bias_type(t_bb_bias* curbias,
 }
 
 int 
-creat_bb_nodes(t_bb_array* bb_array)
+create_bb_nodes(t_bb_array* bb_array)
 {
   int ibb=0;
   /*Malloc height*/
@@ -165,7 +225,7 @@ initial_single_bb_node(INOUT t_bb_array* bb_array,
   bb_array->bb_node[x][y].status=FREE;
   bb_array->bb_node[x][y].rstatus=ROUTABLE;
   bb_array->bb_node[x][y].bias_type=BIAS_NONE;
-  bb_array->bb_node[x][y].rcost=UNKNOWN;
+  bb_array->bb_node[x][y].rcost=initial_route_cost;
   set_location_value(bb_array->bb_node[x][y].location,x,y);
   return 1;
 }
@@ -193,21 +253,51 @@ initial_column_nodes(INOUT t_bb_array* bb_array)
   return 1;
 }
 
-/*Unfinished!*/
+/*Set all bias nodes. Give them identity*/
 int 
 initial_bias_nodes(INOUT t_bb_array* bb_array)
 {
   int ibias=0;
   int ix=0;
   int y=0;
+  int iwcap=0;
+  
   /*Aware the blank nodes!*/
   for (ibias=0;ibias<bb_array->nbias;++ibias)
   {
     y=bb_array->biases[ibias].base->y;
-    for (ix=bb_array->biases[ibias].base->y;ix<bb_array->biases[ibias].width;++ix)
+    for (ix=bb_array->biases[ibias].base->y;ix<bb_array->biases[ibias].width;)
     {
-      bb_array->bb_node[ix][y].type=BIAS_NODE;
-      bb_array->bb_node[ix][y].bias_type=bb_array->biases[ibias].type;
+      if (ix<(int)bb_array->width/2)
+      {
+        for (iwcap=0;iwcap<bb_array->biases[ibias].width_capacity;++iwcap)
+        {
+          bb_array->bb_node[ix][y].type=BIAS_NODE;
+          bb_array->bb_node[ix][y].bias_type=bb_array->biases[ibias].type;
+          bb_array->bb_node[ix][y].bias=ibias;
+          ix++;
+          if (FALSE==(ix<bb_array->biases[ibias].width))
+          {return 1;}
+        }
+        ix++;
+        if (FALSE==(ix<bb_array->biases[ibias].width))
+        {return 1;}
+      }
+      else
+      {
+        ix++;
+        if (FALSE==(ix<bb_array->biases[ibias].width))
+        {return 1;}
+        for (iwcap=0;iwcap<bb_array->biases[ibias].width_capacity;++iwcap)
+        {
+          bb_array->bb_node[ix][y].type=BIAS_NODE;
+          bb_array->bb_node[ix][y].bias_type=bb_array->biases[ibias].type;
+          bb_array->bb_node[ix][y].bias=ibias;
+          ix++;
+          if (FALSE==(ix<bb_array->biases[ibias].width))
+          {return 1;}
+        }
+      }
     }
   }
   return 1;
@@ -215,20 +305,102 @@ initial_bias_nodes(INOUT t_bb_array* bb_array)
 
 int 
 initial_bias_inners(INOUT t_bb_array* bb_array,
-                    IN int ix,
-                    IN int iy
+                    IN int x,
+                    IN int y
                     )
 {
-  
+  int ibias=bb_array->bb_node[x][y].bias;
+  int tmpx=0;
+  int tmpy=0;
+  int iin=0;
+
+  bb_array->bb_node[x][y].ninner=bb_array->biases[ibias].width_capacity;
+  bb_array->bb_node[x][y].inners=(t_bb_node**)malloc(bb_array->bb_node[x][y].ninner*sizeof(t_bb_node*));
+  if (NULL==bb_array->bb_node[x][y].inners)
+  {
+    printf("Fail to malloc the inners for the node: (x,y) (%d,%d).\n",x,y);
+    abort();
+    exit(1);
+  }
+  /*Try find similar nodes on the left*/
+  tmpx=x;
+  tmpy=y;
+  while(iin<bb_array->bb_node[x][y].ninner)
+  {
+    tmpx--;
+    if (bb_array->bb_node[tmpx][tmpy].type!=bb_array->bb_node[x][y].type)
+    {break;}
+    else
+    {
+      bb_array->bb_node[x][y].inners[iin]=&(bb_array->bb_node[tmpx][tmpy]);
+      iin++;
+    }
+  }
+  /*Try find similar nodes on the right*/
+  tmpx=x;
+  tmpy=y;
+  while(iin<bb_array->bb_node[x][y].ninner)
+  {
+    tmpx++;
+    if (bb_array->bb_node[tmpx][tmpy].type!=bb_array->bb_node[x][y].type)
+    {break;}
+    else
+    {
+      bb_array->bb_node[x][y].inners[iin]=&(bb_array->bb_node[tmpx][tmpy]);
+      iin++;
+    }
+  }
+
   return 1;
 }
 
 int 
 initial_normal_inners(INOUT t_bb_array* bb_array,
-                      IN int ix,
-                      IN int iy
+                      IN int x,
+                      IN int y
                      )
 {
+  int icol=bb_array->bb_node[x][y].column;
+  int tmpx=0;
+  int tmpy=0;
+  int iin=0;
+
+  bb_array->bb_node[x][y].ninner=bb_array->biases[icol].width_capacity;
+  bb_array->bb_node[x][y].inners=(t_bb_node**)malloc(bb_array->bb_node[x][y].ninner*sizeof(t_bb_node*));
+  if (NULL==bb_array->bb_node[x][y].inners)
+  {
+    printf("Fail to malloc the inners for the node: (x,y) (%d,%d).\n",x,y);
+    abort();
+    exit(1);
+  }
+  /*Try find similar nodes on the top*/
+  tmpx=x;
+  tmpy=y;
+  while(iin<bb_array->bb_node[x][y].ninner)
+  {
+    tmpy--;
+    if (bb_array->bb_node[tmpx][tmpy].type!=bb_array->bb_node[x][y].type)
+    {break;}
+    else
+    {
+      bb_array->bb_node[x][y].inners[iin]=&(bb_array->bb_node[tmpx][tmpy]);
+      iin++;
+    }
+  }
+  /*Try find similar nodes on the bottom*/
+  tmpx=x;
+  tmpy=y;
+  while(iin<bb_array->bb_node[x][y].ninner)
+  {
+    tmpy++;
+    if (bb_array->bb_node[tmpx][tmpy].type!=bb_array->bb_node[x][y].type)
+    {break;}
+    else
+    {
+      bb_array->bb_node[x][y].inners[iin]=&(bb_array->bb_node[tmpx][tmpy]);
+      iin++;
+    }
+  }
   
   return 1;
 }
@@ -318,7 +490,7 @@ setup_breadboard(t_bb_array* bb_array)
   /*End bias initialization*/   
 
   /*Create all bread board nodes*/
-  creat_bb_nodes(bb_array);    
+  create_bb_nodes(bb_array);    
   
   /*Initial all bread board nodes*/  
   initial_bb_bodes(bb_array);
@@ -328,6 +500,7 @@ setup_breadboard(t_bb_array* bb_array)
   initial_bias_nodes(bb_array);
   /*Initial the inner connections*/
   initial_inners(bb_array);
+
   return 1;
 }
 

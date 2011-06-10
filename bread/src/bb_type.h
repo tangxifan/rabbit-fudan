@@ -53,6 +53,7 @@ struct s_bb_node
    *The no. of column should be set as -1.
    */
   int column;
+  int bias;
   t_location* location;
   /*Inner list reveals what nodes are connected to current node
    *inside the breadboard.

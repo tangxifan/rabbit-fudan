@@ -6,6 +6,7 @@
 #include <bb_type.h>
 #include <device.h>
 #include <setup_rabbit.h>
+#include "bb_setup.h"
 
 /*********Subroutines************/
 int 
@@ -13,6 +14,12 @@ set_pr_marco_unplaced(IN t_pr_marco* marco);
 
 int 
 set_pr_marco_unstart(IN t_pr_marco* marco);
+
+int 
+initial_vnet(INOUT t_vnet* vnet);
+
+int 
+initial_marco(INOUT t_pr_marco* marco);
 
 /********************************/
 
@@ -139,3 +146,75 @@ count_pointed_pins(IN t_pr_marco* marco)
   return nptred;
 }
 
+int 
+initial_vnet(INOUT t_vnet* vnet)
+{
+  int ipin=0;
+  boolean special_flag=TRUE;
+
+  vnet->name=UNKNOWN;
+  /*Determine the virtual net type*/
+  while(ipin<vnet->numpin)
+  {
+    if (ICBLOCK==vnet->pins[ipin]->parent->type)
+    {
+      vnet->type=NORMAL;
+      special_flag=FALSE;
+      break;
+    }
+  }
+  if (TRUE==special_flag)
+  {vnet->type=SPECIAL;}
+  /*Initialize those status*/
+  vnet->status=UNPLACED;
+  vnet->sstart=UNSTART;
+  vnet->spwidth=UNPOINT;
+  vnet->pcost=UNKNOWN;
+  vnet->pcolumn=UNKNOWN;
+  vnet->pwidth=UNKNOWN;
+  vnet->locnum=UNKNOWN;
+  vnet->locations=NULL;
+  vnet->bbnum=UNKNOWN;
+  vnet->bb_nodes=NULL;
+  vnet->rstatus=UNROUTE;
+  
+  return 1;
+}
+
+int 
+initial_marco(INOUT t_pr_marco* marco)
+{
+  marco->name=UNKNOWN;
+  marco->pcost=UNKNOWN;
+  marco->pwidth=UNKNOWN;
+  marco->status=UNPLACED;
+  marco->sstart=UNSTART;
+  marco->priority=1;
+  marco->detail_offset=UNKNOWN;
+  marco->location=NULL;
+  marco->pcolumn=UNKNOWN;
+  marco->rstatus=UNROUTE;
+  
+  return 1;
+}
+
+int 
+setup_rabbit(IN int nvnet,
+             INOUT t_vnet* vnets,
+             IN int nmarco,
+             INOUT t_pr_marco marcos,
+             INOUT t_bb_array* bb_array
+            )
+{
+  int inet=0;
+  int imarco=0;
+
+  for (inet=0;inet<nvnet;++inet)
+  {initial_vnet(vnets+inet);}
+
+  for (imarco=0;imarco<nmarco;++imarco) 
+  {initial_marco(marcos+imarco);}
+
+  setup_breadboard(bb_array);
+  return 1;
+}
