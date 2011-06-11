@@ -2,8 +2,17 @@ resistor R1 220 B3 E7
 resistor R2 3.3k E40 E54
 resistor R3 4.7k D30 G30
 resistor R4 4.7k D10 J10
+resistor R5 4.7k D43 G44
 capacitor_tantalum C1 20n A20 A21
 ceramic_capacitor C2 33p C40 C41
 transistor_npn T1 0 F19 F20 F21
+transistor_npn T1 0 E12 F23 G25
 LM358_IC U1 0 E4 E5 E6 E7 F7 F6 F5 F4
-L293D_IC U2 0 E30 E31 E32 E33 E34 E35 E36 E37 F37 F36 F35 F34 F33 F32 F31 F30
+L293D_IC U2 0 E40 E41 E42 E43 E44 E45 E46 E47 F47 F46 F45 F44 F43 F42 F41 F40
+capacitor_tantalum C3 20n F50 F51
+capacitor_tantalum C4 20n C51 C53
+capacitor_tantalum C5 20n D52 D56
+capacitor_tantalum C6 20n E53 E58
+wire 0 0 A3 A9
+wire 0 0 B4 G10
+wire 0 0 B5 B9
