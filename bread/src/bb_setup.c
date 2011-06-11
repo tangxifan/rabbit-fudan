@@ -447,7 +447,10 @@ setup_breadboard(t_bb_array* bb_array)
   bb_array->reserve_ratio=0.0;
   /*Create Columns and Biases.*/
   create_columns(bb_array);
+  printf("Create the Columns for bread board...\n");
+
   create_biases(bb_array);
+  printf("Create the biases for bread board...\n");
   /*
    *Initialize the width and height of breadboard and
    *the column information.   
@@ -456,11 +459,13 @@ setup_breadboard(t_bb_array* bb_array)
   set_location_value(&curbase,bias_offset,total_height);
   initial_bias(bb_array->biases+ibias,&curbase);
   ibias++;
+  printf("Initial the biases(No.%d) for bread board...\n",ibias);
   set_location_value(&curbase,bias_offset,total_height+1);
   initial_bias(bb_array->biases+ibias,&curbase);
   ibias++;
-  /*End bias initialization*/ 
- 
+  printf("Initial the biases(No.%d) for bread board...\n",ibias);
+ /*End bias initialization*/ 
+
   total_width=col_width;
   total_height+=bias_height;
   for (icol=0;icol<bb_array->no_column;++icol)
@@ -469,6 +474,7 @@ setup_breadboard(t_bb_array* bb_array)
     /*Do column initialize work*/
     set_location_value(&curbase,0,total_height);
     initial_column(bb_array->columns+icol,&curbase);
+    printf("Initial the column(No.%d) for bread board...\n",icol);
     /*End column initialization*/
     total_height+=bb_array->columns[icol].height;
     total_height+=bias_blank;
@@ -476,10 +482,12 @@ setup_breadboard(t_bb_array* bb_array)
     set_location_value(&curbase,bias_offset,total_height);
     initial_bias(bb_array->biases+ibias,&curbase);
     ibias++;
+    printf("Initial the biases(No.%d) for bread board...\n",ibias);
     set_location_value(&curbase,bias_offset,total_height+1);
     initial_bias(bb_array->biases+ibias,&curbase);
     ibias++;
     /*End bias initialization*/ 
+    printf("Initial the biases(No.%d) for bread board...\n",ibias);
     total_height+=bias_height;
   }
   bb_array->width=total_width;
@@ -491,23 +499,28 @@ setup_breadboard(t_bb_array* bb_array)
     given_type=BIAS_GND;
     set_bias_type(bb_array->biases+ibias,given_type);
     ++ibias;
+    printf("Set Bias(no.%d) types...\n",ibias);
     given_type=BIAS_VDD;
     set_bias_type(bb_array->biases+ibias,given_type);
     ++ibias;
+    printf("Set Bias(no.%d) types...\n",ibias);
   }
   /*End bias initialization*/   
-
   /*Create all bread board nodes*/
   create_bb_nodes(bb_array);    
-  
+  printf("Create bread board nodes...\n");
   /*Initial all bread board nodes*/  
   initial_bb_bodes(bb_array);
+  printf("Initial bread board nodes...\n");
   /*Initial column bread board nodes*/
   initial_column_nodes(bb_array);
+  printf("Initial column nodes...\n");
   /*Initial bias bread board nodes*/
   initial_bias_nodes(bb_array);
+  printf("Initial bias nodes...\n");
   /*Initial the inner connections*/
   initial_inners(bb_array);
+  printf("Initial inner nodes...\n");
 
   return 1;
 }

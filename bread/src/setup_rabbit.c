@@ -162,6 +162,7 @@ initial_vnet(INOUT t_vnet* vnet)
       special_flag=FALSE;
       break;
     }
+	++ipin;
   }
   if (TRUE==special_flag)
   {vnet->type=SPECIAL;}
@@ -210,7 +211,7 @@ setup_rabbit(IN int nvnet,
   int imarco=0;
 
   for (inet=0;inet<nvnet;++inet)
-  {initial_vnet(vnets+inet);}
+  {initial_vnet(&vnets[inet]);}
 
   for (imarco=0;imarco<nmarco;++imarco) 
   {initial_marco(marcos+imarco);}

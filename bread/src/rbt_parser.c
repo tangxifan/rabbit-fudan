@@ -141,7 +141,7 @@ rbt_find_marco (int name)
  * parse the <connector> </connector> tag within <net> </net>
  */
 int
-rbt_parse_connector (xmlNodePtr connector, xmlChar *pin_id, t_vnet *vnet_cur)
+rbt_parse_connector (xmlNodePtr connector, xmlChar *pin_id, int pins_count, t_vnet *vnet_cur)
 {
 	xmlNodePtr cur;
 	xmlChar *label;
@@ -150,7 +150,8 @@ rbt_parse_connector (xmlNodePtr connector, xmlChar *pin_id, t_vnet *vnet_cur)
 	t_pr_pin *pin_cur;
 	int pin_num;
 	
-	pin_cur = vnet_cur->pins[0];
+	if (NULL == (pin_cur = (t_pr_pin*)malloc (sizeof (t_pr_pin))))
+		return -1;
 
 	for (cur = connector->xmlChildrenNode; cur != NULL; cur = cur->next){
 		if ( !xmlStrcmp ((cur->name), (const xmlChar*) "part" )){
@@ -159,8 +160,9 @@ rbt_parse_connector (xmlNodePtr connector, xmlChar *pin_id, t_vnet *vnet_cur)
 			id = xmlGetProp (cur, (const xmlChar*) "id");
 
 			/* Main Parse: fill in other data */
-			if (NULL == (pin_cur->parent = rbt_find_marco (atoi ((char*)id))))
+			if (NULL == (pin_cur->parent = rbt_find_marco (atoi ((char*)id)))){
 				return -2;
+			}
 
 			pin_cur->numnet = 1;
 			pin_cur->nets = vnet_cur;
@@ -174,7 +176,7 @@ rbt_parse_connector (xmlNodePtr connector, xmlChar *pin_id, t_vnet *vnet_cur)
 				pin_cur->offset = pin_cur->parent->device->pinls[pin_num].offset;
 			}
 
-			pin_cur++;
+			vnet_cur->pins[pins_count] = pin_cur;
 
 			xmlFree (id);
 			xmlFree (title);
@@ -256,10 +258,11 @@ rbt_parse_net (xmlNodePtr net)
 		return -1;
 	
 	/* Second parse: fill in the marcos */
-	for (cur = net->xmlChildrenNode; cur != NULL; cur = cur->next){
+	for (pins_count = 0, cur = net->xmlChildrenNode; cur != NULL; cur = cur->next){
 		if ( !xmlStrcmp ((cur->name), (const xmlChar*) "connector")){
 			pin_id = xmlGetProp (cur, (const xmlChar*) "name");
-			rbt_parse_connector (cur, pin_id, vnet_cur);	
+			rbt_parse_connector (cur, pin_id, pins_count, vnet_cur);	
+			pins_count++;
 			xmlFree (pin_id);
 		}
 	}
@@ -631,9 +634,6 @@ rbt_parse_init(char *docname)
 int
 rbt_gen_arrays()
 {
-	t_vnet *cur_vnet;
-	t_icdev *cur_icdev;
-	t_pr_marco *cur_marco;
 	int i;
 
 	vnets_length = rbt_vnets_length;
@@ -647,14 +647,15 @@ rbt_gen_arrays()
 	if (NULL == (marcos = (t_pr_marco*)malloc (marcos_length * sizeof (t_pr_marco))))
 		return -1;
 
-	for (i = 0, cur_vnet = rbt_vnets[0]; i < vnets_length; i++, cur_vnet++)
-		vnets[i] = *cur_vnet;
+	for (i = 0; i < vnets_length; i++){
+		memcpy (&vnets[i], rbt_vnets[i], sizeof (t_vnet));
+	}
 
-	for (i = 0, cur_icdev = rbt_devices[0]; i < devices_length; i++, cur_icdev++)
-		devices[i] = *cur_icdev;
+	for (i = 0; i < devices_length; i++)
+		memcpy (&devices[i], rbt_devices[i], sizeof (t_icdev));
 
-	for (i = 0, cur_marco = rbt_marcos[0]; i < marcos_length; i++, cur_marco++)
-		marcos[i] = *cur_marco;
+	for (i = 0; i < marcos_length; i++)
+		memcpy (&marcos[i], rbt_marcos[i], sizeof (t_pr_marco));
 
 	return 0;
 }
@@ -695,6 +696,8 @@ rbt_parse_netlist
 
 	/* Fifth parse. Fill in rbt_vnets */
 	for (i=0; i < nodeset->nodeNr; i++) {
+		// DEBUG
+		printf ("Now parsing net #%d.\n", i);
 		rbt_parse_net (nodeset->nodeTab[i]);
 	}
 
