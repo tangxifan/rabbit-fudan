@@ -372,6 +372,7 @@ find_match_blk(IN int nblk,
   int inet=0;
   float maxcost=0.0;
   t_pr_marco* blkmatch=NULL;
+
   /*Find the matched block from PLACED ic blocks*/
   for(iblk=0;iblk<nblk;++iblk)
   {
@@ -399,7 +400,7 @@ find_match_blk(IN int nblk,
   /*Spot the matched IC block*/
   for (iblk=0;iblk<nblk;++iblk)
   {
-    if ((blks+iblk)->pcost>maxcost)
+    if ((blks[iblk].pcost>maxcost)&&(UNPLACED==blks[iblk].status))
     {
       maxcost=(blks+iblk)->pcost;
       blkmatch=(blks+iblk);
@@ -420,6 +421,7 @@ find_match_vnet(IN int nblk,
   int iblk=0;
   float maxcost=0.0;
   t_vnet* netmatch=NULL;
+
   /*Find the matched virtual net from PLACED ic blocks*/
   for(iblk=0;iblk<nblk;++iblk)
   {
@@ -427,7 +429,7 @@ find_match_vnet(IN int nblk,
     {
       for(jnet=0;jnet<nvnet;++jnet)
       {
-        if ((UNPLACED==(vnets+jnet)->status)&&(SPECIAL==(vnets+inet)->type))
+        if ((UNPLACED==(vnets+jnet)->status)&&(SPECIAL==(vnets+jnet)->type))
         {(vnets+jnet)->pcost+=(float)find_mv_close((blks+iblk),(vnets+jnet));}
       }
     }
@@ -439,7 +441,7 @@ find_match_vnet(IN int nblk,
     {
       for(jnet=0;jnet<nvnet;++jnet)
       {
-        if ((UNPLACED==(vnets+jnet)->status)&&(SPECIAL==(vnets+inet)->type))
+        if ((UNPLACED==(vnets+jnet)->status)&&(SPECIAL==(vnets+jnet)->type))
         {(vnets+jnet)->pcost+=(float)cal_vv_close((vnets+inet),(vnets+jnet));}
       }
     }
@@ -447,7 +449,7 @@ find_match_vnet(IN int nblk,
   /*Spot the matched virtual net*/
   for (inet=0;inet<nvnet;++inet)
   {
-    if ((vnets+inet)->pcost>maxcost)
+    if ((vnets[inet].pcost>maxcost)&&(SPECIAL==vnets[inet].type)&&(UNPLACED==vnets[inet].status))
     {
       maxcost=(vnets+inet)->pcost;
       netmatch=(vnets+inet);
@@ -591,25 +593,51 @@ find_match(IN int nblk,
   int inet=0;
   int blkpw=0;
   int netpw=0;
+
   t_vnet* netmatch=NULL;
   t_pr_marco* blkmatch=NULL;
   
-  netmatch=find_match_vnet(nblk,blks,nvnet,vnets);
-  blkmatch=find_match_blk(nblk,blks,nvnet,vnets);
-  netpw=find_vnet_pwidth(netmatch,wcapacity);
-  blkpw=find_blk_pwidth(nblk,blks,blkmatch,wcapacity);
+  float blk_pcost=0.0;
+  float net_pcost=0.0;
+
+  if (nvnet!=0)
+  {
+    netmatch=find_match_vnet(nblk,blks,nvnet,vnets);
+    if (netmatch!=NULL)
+	{net_pcost=netmatch->pcost;}
+  }
+  
+  if (nblk!=0)
+  {
+    blkmatch=find_match_blk(nblk,blks,nvnet,vnets);
+    if (blkmatch!=NULL)
+	{blk_pcost=blkmatch->pcost;}	
+  }
+  
+  if ((nvnet!=0)&&(netmatch!=NULL))
+  {netpw=find_vnet_pwidth(netmatch,wcapacity);}
+  
+  if ((nblk!=0)&&(blkmatch!=NULL))
+  {blkpw=find_blk_pwidth(nblk,blks,blkmatch,wcapacity);}
+
+
   if (((place_info->cur_width+netpw)>place_info->bb_pwidth)&&((place_info->cur_width+blkpw)>place_info->bb_pwidth))
   {return FALSE;}
-  if ((netmatch->pcost*netpw)>(blkmatch->pcost*blkpw))
+
+  if ((NULL==blkmatch)&&(NULL==netmatch))
+  {return FALSE;}
+  if ((net_pcost*netpw)>(blk_pcost*blkpw))
   {
     if (!((place_info->cur_width+netpw)>place_info->bb_pwidth))
     {
+      printf("Find net[%d]!\n",netmatch-vnets); 
       determine_net_place_location(netmatch,place_info);
       netmatch->pcolumn=place_info->column;
       netmatch->status=PLACED;
     }
-    else
+    else if (nblk!=0)
     {
+      printf("Find block[%d]!\n",blkmatch-blks); 
       determine_blk_place_location(blkmatch,place_info);
       blkmatch->pcolumn=place_info->column;
       blkmatch->status=PLACED;
@@ -619,12 +647,14 @@ find_match(IN int nblk,
   {
     if (!((place_info->cur_width+netpw)>place_info->bb_pwidth))
     {
+      printf("Find block[%d]!\n",blkmatch-blks); 
       determine_blk_place_location(blkmatch,place_info);
       blkmatch->pcolumn=place_info->column;
       blkmatch->status=PLACED;
     }
     else
     {
+      printf("Find net[%d]!\n",netmatch-vnets); 
       determine_net_place_location(netmatch,place_info);
       netmatch->pcolumn=place_info->column;
       netmatch->status=PLACED;

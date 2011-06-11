@@ -35,6 +35,8 @@ try_place(IN int nvnet,
   int wcapacity=0;
   
   place_info.column=0;
+  if (1==DEBUG)
+  {printf("Column Number: %d.\n",ncolumn);}
 
   create_icblk_array(&nblk,icblks,nmarco,pr_marco);
   initial_place_info(&place_info);
@@ -46,18 +48,19 @@ try_place(IN int nvnet,
     clear_left_right_place_info(&place_info);
     wcapacity=(bb_array->columns+place_info.column)->width_capacity;
     find_starter(nblk,icblks,nvnet,vnets,&place_info,*bb_array);
-	printf("Find Starter...\n");
+	printf("Find Starter Complete...\n");
     while(1)
     {
 	  if (1==DEBUG)
 	  {printf("Try find match block or vnet...\n");}
-      if (FALSE==find_match(nblk,icblks,nvnet,vnets,bb_array,&place_info))
+      if (FALSE==find_match(nblk,icblks,nvnet,vnets,*bb_array,&place_info))
       {
+	    printf("No match found!...");
 	    printf("Do Climbing placement...\n");
-        climbing_place(nblk,icblks,nvnet,vnets,bb_array,&place_info);
+        climbing_place(nblk,icblks,nvnet,vnets,*bb_array,&place_info);
         break;
       }
-	  printf("Find Match...\n");
+	  printf("Find Match Complete...\n");
     }
     /*Operation on the bb_array information*/
     (bb_array->columns+place_info.column)->usedwidth=place_info.cur_width;
@@ -92,37 +95,53 @@ climbing_place(IN int nblk,
   t_pr_marco* blkchn=NULL;
   t_vnet* netchn=NULL;
   int wcapacity=bb_array.columns[place_info->column].width_capacity;
+  printf("Current column: %d.\twidth capacity: %d",place_info->column,wcapacity);
   
-  minwid=find_blk_pwidth(blks,wcapacity);
-  widthtmp=find_vnet_pwidth(vnets,wcapacity);
+  if (nblk!=0)
+  {minwid=find_blk_pwidth(blks,wcapacity);}
+  if (nvnet!=0)
+  {widthtmp=find_vnet_pwidth(vnets,wcapacity);}
   if (minwid>widthtmp)
-  {minwid=widthtmp;}
+  {
+    minwid=widthtmp;
+    blkchn=blks;
+  }
+  else
+  {
+    netchn=vnets;
+  }
  
   while(1)
   {
-    for(iblk=0;iblk<nblk;++iblk)
-    {
-      if (UNPLACED==(iblk+blks)->status)
+    if (nblk!=0)
+	{
+      for(iblk=0;iblk<nblk;++iblk)
       {
-        widthtmp=find_blk_pwidth((blks+iblk),wcapacity);
-        if (minwid>widthtmp)
+        if (UNPLACED==(iblk+blks)->status)
         {
-          minwid=widthtmp;
-          blkchn=blks+iblk;
-          chntype=TRUE;
-        }
+          widthtmp=find_blk_pwidth((blks+iblk),wcapacity);
+          if (minwid>widthtmp)
+          {
+            minwid=widthtmp;
+            blkchn=blks+iblk;
+            chntype=TRUE;
+          }
+        } 
       }
-    }
-    for(inet=0;inet<nvnet;++inet)
-    {
-      if (UNPLACED==(inet+vnets)->status)
+	}
+	if (nvnet!=0)
+	{
+      for(inet=0;inet<nvnet;++inet)
       {
-        widthtmp=find_vnet_pwidth((vnets+inet),wcapacity);
-        if (minwid>widthtmp)
+        if (UNPLACED==(inet+vnets)->status)
         {
-          minwid=widthtmp;
-          netchn=vnets+inet;
-          chntype=FALSE;
+          widthtmp=find_vnet_pwidth((vnets+inet),wcapacity);
+          if (minwid>widthtmp)
+          {
+            minwid=widthtmp;
+            netchn=vnets+inet;
+            chntype=FALSE;
+		  }
         }
       }
     }
