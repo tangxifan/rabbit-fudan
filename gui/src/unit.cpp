@@ -185,7 +185,8 @@ void Unit::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 
         painter->setPen(pen);
         QRectF rect = boundingRect();
-        //painter->translate(m_svg->pos());
+        rect.moveTo(0, 0);
+        painter->translate(m_svg->pos());
         painter->rotate(m_angle);
         painter->drawRect(rect);
     }
