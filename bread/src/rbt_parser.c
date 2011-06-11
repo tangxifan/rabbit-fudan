@@ -115,7 +115,6 @@ rbt_convert_pin_to_int (char* pin_id)
 		return -1;
 
 	id_int = atoi (id_string);
-	printf ("strtok: %d\n", id_int);
 	return id_int;
 }
 
@@ -170,8 +169,6 @@ rbt_parse_connector (xmlNodePtr connector, xmlChar *pin_id, t_vnet *vnet_cur)
 			pin_num = rbt_convert_pin_to_int ((char*)pin_id);
 
 			if (pin_num != -1){
-				// DEBUG
-				printf ("PIN NUM: %d\n", pin_num);
 				pin_cur->parent->pins[pin_num] = pin_cur;
 				pin_cur->loc = pin_cur->parent->device->pinls[pin_num].loc;
 				pin_cur->offset = pin_cur->parent->device->pinls[pin_num].offset;
@@ -448,9 +445,11 @@ rbt_set_marco_type (t_pr_marco *marco_cur, char *device_name)
 	/* Power and GND */
 	if (!strcmp (device_name, "Power")){
 		marco_cur->type = VDD;
+		marco_cur->pinnum = 0;
 		return 0;
 	}else if (!strcmp (device_name, "Ground")){
 		marco_cur->type = GND;
+		marco_cur->pinnum = 0;
 		return 0;
 	}
 
@@ -598,15 +597,18 @@ rbt_parse_init(char *docname)
 		temp_string2 = (char*) xmlGetProp (nodeset->nodeTab[i], (xmlChar*) "title");
 		if (NULL == rbt_find_marco (atoi (temp_string))){
 			marco_cur = rbt_ins_marco (atoi (temp_string));
+
 			if ((dev_cur = rbt_find_device (temp_string2)) == NULL)
 				return -5;
 			marco_cur->pinnum = dev_cur->pin_num;
 			marco_cur->device = dev_cur;
 
-			if (NULL == (marco_cur->pins = (t_pr_pin**) malloc (sizeof(t_pr_pin*) * marco_cur->pinnum)))
-				return -1;
-
 			rbt_set_marco_type (marco_cur, (char*) temp_string2);
+
+			if (marco_cur->pinnum > 0){
+				if (NULL == (marco_cur->pins = (t_pr_pin**) malloc (sizeof(t_pr_pin*) * marco_cur->pinnum)))
+					return -1;
+			}
 		}
 		xmlFree (temp_string);
 		xmlFree (temp_string2);
@@ -697,7 +699,7 @@ rbt_parse_netlist
 	}
 
 	/* Generate the arrays for output */
-	rbt_gen_arrays;
+	rbt_gen_arrays();
 
 	xmlXPathFreeObject (result);
 	xmlFreeDoc(doc);

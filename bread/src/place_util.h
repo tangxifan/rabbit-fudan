@@ -19,6 +19,8 @@ check_all_placed(IN int nblk,
                  IN int nvnet,
                  IN t_vnet* vnets
                 );
+int
+initial_place_info(t_place_info* place_info);
 
 int 
 clear_left_right_place_info(t_place_info* place_info);

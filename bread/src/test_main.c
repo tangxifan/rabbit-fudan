@@ -18,6 +18,14 @@ extern int marcos_length;
 
 extern t_bb_array bb_array;
 
+int 
+place_route(IN int nvnet,
+            IN t_vnet* vnets,
+            IN int nmarco,
+            INOUT t_pr_marco* pr_marco,
+            INOUT t_bb_array* bb_array
+           );
+
 int
 main(int argc, char** argv)
 {
@@ -33,5 +41,6 @@ main(int argc, char** argv)
 
 	setup_rabbit (vnets_length, vnets, marcos_length, marcos, &bb_array);
 
-	return 0;
+    place_route(vnets_length, vnets, marcos_length, marcos, &bb_array);
+return 0;
 }
