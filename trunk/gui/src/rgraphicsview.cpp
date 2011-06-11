@@ -5,7 +5,6 @@
 
 #include "rgraphicsview.h"
 #include "unit.h"
-#include "electronicpart.h"
 
 RGraphicsView::RGraphicsView(QWidget *parent)
     :QGraphicsView(parent)
@@ -105,14 +104,13 @@ bool RGraphicsView::readFile(const QString &fileName)
         }
 
         //add electronic parts
-        ElectronicPart *part = unit->unitAdd();
-        part->svgPart->setVisible(true);
-        part->wirePart->setVisible(true);
+        unit->unitAdd();
 
         m_unitList.append(unit);
-        m_partList.append(part);
         s->addItem(unit);
+        unit->setZValue(unit->getZ());
     }
+    update();
     return true;
 }
 
@@ -121,8 +119,22 @@ void RGraphicsView::updateItemShow()
     Unit *unit = new Unit();
     foreach (unit, m_unitList) {
         unit->setTypeVisible(m_show);
-        if (unit->isSelected())
-            unit->setSelectVisible(m_show);
+        if (m_show->m_hideSelected) {
+            if (unit->isSelected()) {
+                unit->setWasSelected(true);
+                unit->setSelectVisible(m_show);
+            }
+            else {
+                unit->setWasSelected(false);
+            }
+        }
+        else {
+            if (unit->wasSelected()) {
+                unit->setWasSelected(false);
+                unit->setSelectVisible(m_show);
+                unit->setSelected(true);
+            }
+        }
     }
 }
 

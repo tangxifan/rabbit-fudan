@@ -7,19 +7,17 @@
 #include <cmath>
 
 #include "unit.h"
-#include "electronicpart.h"
 
 Unit::Unit()
 {
     setFlags(ItemIsSelectable);
+    m_wasSelected = false;
+    m_minPinY = 9999;
 }
 
-ElectronicPart * Unit::unitAdd()
+void Unit::unitAdd()
 {
-    m_unit = new ElectronicPart();
-    m_unit->svgPart = new QGraphicsSvgItem();
-    //m_unit->outlinePart = new QGraphicsRectItem();
-    m_unit->wirePart = new QGraphicsLineItem();
+    m_svg = new QGraphicsSvgItem();
 
     if (m_unitType == "resistor")
         addResistor();
@@ -29,7 +27,10 @@ ElectronicPart * Unit::unitAdd()
         addTransistor();
     if (m_unitType.contains("IC", Qt::CaseSensitive))
         addIC();
-    return m_unit;
+    if (m_unitType.contains("wire", Qt::CaseInsensitive))
+        addWire();
+    m_svg->setVisible(true);
+    setUnitWireVisible(true);
 }
 
 void Unit::setUnitType(const QString &type)
@@ -49,7 +50,10 @@ void Unit::setUnitValue(const QString &value)
 
 void Unit::appendUnitPin(QString pin)
 {
-    m_unitPin.append(bbCoordConvert(pin));
+    QPointF pinPos = bbCoordConvert(pin);
+    if (pinPos.y() < m_minPinY)
+        m_minPinY = pinPos.y();
+    m_unitPin.append(pinPos);
 }
 
 QPointF Unit::bbCoordConvert(QString &bbCoord)
@@ -65,7 +69,7 @@ QPointF Unit::bbCoordConvert(QString &bbCoord)
     }
 
     if ((row == 'x') || (row == 'y')) {
-        y = 8 + 9 * (row - 'x');
+        y = POWERTOEDGE + HOLEGAP * (row - 'x');
         column = bbCoord.remove(0, 1);
         int extra;
         if (column.toInt(&ok, 10) % 5)
@@ -74,18 +78,18 @@ QPointF Unit::bbCoordConvert(QString &bbCoord)
             extra = (column.toInt(&ok, 10) / 5 - 1);
         if (column.toInt(&ok, 10) > 25)
             extra += 1;
-        x = 23 + 9 * (column.toInt(&ok, 10) + extra);
+        x = TOLEFTEDGE + HOLEGAP * (column.toInt(&ok, 10) + extra);
         //x = 24 + 9 * (toY.toInt(&ok, 10));
     }
     else if (((row - 'a') >= 0) && ((row - 'e') <= 0)) {
-        y = 44 + 9 * (row - 'a');
+        y = TOTOPEDGE + HOLEGAP * (row - 'a');
         column = bbCoord.remove(0, 1);
-        x = 23 + 9 * (column.toInt(&ok, 10));
+        x = TOLEFTEDGE + HOLEGAP * (column.toInt(&ok, 10));
     }
     else if (((row - 'f') >= 0) && ((row - 'j') <= 0)) {
-        y = 62 + 9 * (row - 'a');
+        y = TOTOPEDGE + SLOTGAP + HOLEGAP * (row - 'a');
         column = bbCoord.remove(0, 1);
-        x = 23 + 9 * (column.toInt(&ok, 10));
+        x = TOLEFTEDGE + HOLEGAP * (column.toInt(&ok, 10));
     }
     else {
         //QMessageBox::warning(this, "Rabbit", "File Syntax Error.");
@@ -105,34 +109,59 @@ void Unit::drawPins()
 
 }
 
+void Unit::setUnitWireVisible(bool visible)
+{
+    QGraphicsLineItem *wires = new QGraphicsLineItem();
+    foreach(wires, m_wire)
+        wires->setVisible(visible);
+}
+
 void Unit::setTypeVisible(Show *show)
 {
     if (m_unitType.contains("resistor", Qt::CaseInsensitive)) {
-        m_unit->svgPart->setVisible(show->m_showResistor);
+        m_svg->setVisible(show->m_showResistor);
         return;
     }
     if (m_unitType.contains("capacitor", Qt::CaseInsensitive)) {
-        m_unit->svgPart->setVisible(show->m_showCapacitor);
+        m_svg->setVisible(show->m_showCapacitor);
         return;
     }
     if (m_unitType.contains("transistor", Qt::CaseInsensitive)) {
-        m_unit->svgPart->setVisible(show->m_showTransistor);
+        m_svg->setVisible(show->m_showTransistor);
         return;
     }
     if (m_unitType.contains("IC", Qt::CaseInsensitive)) {
-        m_unit->svgPart->setVisible(show->m_showIC);
+        m_svg->setVisible(show->m_showIC);
         return;
     }
 }
 
 void Unit::setSelectVisible(Show *show)
 {
-    m_unit->svgPart->setVisible(!(show->m_hideSelected));
+    setUnitWireVisible(!(show->m_hideSelected));
+    m_svg->setVisible(!(show->m_hideSelected));
+
+}
+
+void Unit::setWasSelected(bool wasSelected)
+{
+    m_wasSelected = wasSelected;
+}
+
+int Unit::getZ()
+{
+    return m_z;
+}
+
+bool Unit::wasSelected()
+{
+    return m_wasSelected;
 }
 
 QRectF Unit::boundingRect() const
 {
-    QRectF rect = m_unit->svgPart->boundingRect();
+    QRectF rect = m_svg->boundingRect();
+    rect.moveTopLeft(m_svg->pos());
     return rect;
 }
 
@@ -156,8 +185,8 @@ void Unit::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 
         painter->setPen(pen);
         QRectF rect = boundingRect();
-        painter->translate(m_unit->svgPart->pos());
-        painter->rotate(m_unit->angle);
+        //painter->translate(m_svg->pos());
+        painter->rotate(m_angle);
         painter->drawRect(rect);
     }
 }
@@ -166,87 +195,145 @@ void Unit::addResistor()
 {
     QSvgRenderer *renderer = new QSvgRenderer(QString("./parts/svg/breadboard/%1_%2.svg")
                                               .arg(m_unitType).arg(m_unitValue));
-    m_unit->svgPart->setSharedRenderer(renderer);
+\
+    m_svg->setSharedRenderer(renderer);
 
-    QPointF point = QPointF((m_unitPin.at(1).x()+m_unitPin.at(0).x()) / 2 - m_unit->svgPart->boundingRect().width() / 2,
-                            (m_unitPin.at(1).y()+m_unitPin.at(0).y()) / 2 - m_unit->svgPart->boundingRect().height() / 2);
-    m_unit->angle = std::atan((m_unitPin.at(1).x()-m_unitPin.at(0).x()) /
+    QPointF point = QPointF((m_unitPin.at(1).x()+m_unitPin.at(0).x()) / 2 - m_svg->boundingRect().width() / 2,
+                            (m_unitPin.at(1).y()+m_unitPin.at(0).y()) / 2 - m_svg->boundingRect().height() / 2);
+    m_angle = std::atan((m_unitPin.at(1).x()-m_unitPin.at(0).x()) /
                              (m_unitPin.at(1).y()-m_unitPin.at(0).y()));
-    m_unit->angle = 90 - 180 / 3.14 * m_unit->angle;
+    m_angle = 90 - 180 / 3.14 * m_angle;
 
-    m_unit->svgPart->setPos(point);
+    m_svg->setPos(point);
 
     //rotate around its centre
-    m_unit->svgPart->translate(m_unit->svgPart->boundingRect().width() / 2,
-                       m_unit->svgPart->boundingRect().height() / 2);
-    m_unit->svgPart->rotate(m_unit->angle);
-    m_unit->svgPart->translate(-m_unit->svgPart->boundingRect().width() / 2,
-                               -m_unit->svgPart->boundingRect().height() / 2);
+    m_svg->translate(m_svg->boundingRect().width() / 2,
+                       m_svg->boundingRect().height() / 2);
+    m_svg->rotate(m_angle);
+    m_svg->translate(-m_svg->boundingRect().width() / 2,
+                               -m_svg->boundingRect().height() / 2);
+    m_svg->setZValue(2);
 
-    m_unit->svgPart->setZValue(10);
-
-    m_unit->wirePart->setLine(m_unitPin.at(0).x(), m_unitPin.at(0).y(),
-                                            m_unitPin.at(1).x(), m_unitPin.at(1).y());
+    QGraphicsLineItem *wires =
+            new QGraphicsLineItem(m_unitPin.at(0).x(), m_unitPin.at(0).y(),
+                                  m_unitPin.at(1).x(), m_unitPin.at(1).y());
     QPen wire(Qt::gray, 3, Qt::SolidLine, Qt::RoundCap);//color not sure.
     wire.setCosmetic(false);
-    m_unit->wirePart->setPen(wire);
-    m_unit->wirePart->setZValue(9999);
+    wires->setPen(wire);
+    wires->setZValue(1);
+    addToGroup(wires);
+    m_wire.append(wires);
 
-    addToGroup(m_unit->svgPart);
-    addToGroup(m_unit->wirePart);
+    m_z = 2;
+
+    addToGroup(m_svg);
 }
 
 void Unit::addCapacitor()
 {
     QSvgRenderer *renderer = new QSvgRenderer(QString("./parts/svg/breadboard/%1.svg")
                                               .arg(m_unitType));
-    m_unit->svgPart->setSharedRenderer(renderer);
+    m_svg->setSharedRenderer(renderer);
 
-    QPointF point = QPointF((m_unitPin.at(1).x()+m_unitPin.at(0).x()) / 2 - m_unit->svgPart->boundingRect().width() / 2,
-                            (m_unitPin.at(1).y()+m_unitPin.at(0).y()) / 2 - m_unit->svgPart->boundingRect().height());
-    m_unit->svgPart->setPos(point);
-    m_unit->svgPart->setZValue((int)m_unitPin.at(0).y());
+    QPointF point = QPointF((m_unitPin.at(1).x()+m_unitPin.at(0).x()) / 2 - m_svg->boundingRect().width() / 2,
+                            m_minPinY - m_svg->boundingRect().height() - VOFFSET);
+    m_svg->setPos(point);
+    m_z = (int)m_unitPin.at(0).y();
+    m_angle = 0;
 
-    m_unit->angle = 0;
+    //add connectors to the unit(NOT WIRE)
+    //left connector
+    QGraphicsLineItem *wires =
+            new QGraphicsLineItem(m_unitPin.at(0).x(), m_unitPin.at(0).y(),
+                                  boundingRect().center().x() - HOLEGAP / 2, boundingRect().bottom());
+    QPen wire(Qt::gray, 3, Qt::SolidLine, Qt::RoundCap);//color not sure.
+    wire.setCosmetic(false);
+    wires->setPen(wire);
+    wires->setZValue(1);
+    addToGroup(wires);
+    m_wire.append(wires);
 
-    addToGroup(m_unit->svgPart);
-    addToGroup(m_unit->wirePart);
+    wires = new QGraphicsLineItem(m_unitPin.at(1).x(), m_unitPin.at(1).y(),
+                                   boundingRect().center().x() + HOLEGAP / 2, boundingRect().bottom());
+    wire.setCosmetic(false);
+    wires->setPen(wire);
+    wires->setZValue(1);
+    addToGroup(wires);
+    m_wire.append(wires);
+
+    addToGroup(m_svg);
 }
 
 void Unit::addTransistor()
 {
     QSvgRenderer *renderer = new QSvgRenderer(QString("./parts/svg/breadboard/basic_%1.svg")
                                               .arg(m_unitType));
-    m_unit->svgPart->setSharedRenderer(renderer);
+    m_svg->setSharedRenderer(renderer);
 
-    QPointF point = QPointF(m_unitPin.at(1).x() - m_unit->svgPart->boundingRect().width() / 2
-                            , m_unitPin.at(1).y() - m_unit->svgPart->boundingRect().height());
-    m_unit->svgPart->setPos(point);
-    m_unit->svgPart->setZValue((int)m_unitPin.at(0).y());
+    QPointF point = QPointF(m_unitPin.at(1).x() - m_svg->boundingRect().width() / 2
+                            , m_minPinY - m_svg->boundingRect().height() - VOFFSET);
+    m_svg->setPos(point);
+    m_z = (int)m_unitPin.at(0).y();
 
-    m_unit->angle = 0;
+    m_angle = 0;
 
-    addToGroup(m_unit->svgPart);
-    addToGroup(m_unit->wirePart);
+    QGraphicsLineItem *wires =
+            new QGraphicsLineItem(m_unitPin.at(0).x(), m_unitPin.at(0).y(),
+                                  boundingRect().center().x() - HOLEGAP, boundingRect().bottom());
+    QPen wire(Qt::gray, 3, Qt::SolidLine, Qt::RoundCap);//color not sure.
+    wire.setCosmetic(false);
+    wires->setPen(wire);
+    wires->setZValue(1);
+    addToGroup(wires);
+    m_wire.append(wires);
+
+    wires = new QGraphicsLineItem(m_unitPin.at(1).x(), m_unitPin.at(1).y(),
+                                   boundingRect().center().x(), boundingRect().bottom());
+    wire.setCosmetic(false);
+    wires->setPen(wire);
+    wires->setZValue(1);
+    addToGroup(wires);
+    m_wire.append(wires);
+
+    wires = new QGraphicsLineItem(m_unitPin.at(2).x(), m_unitPin.at(2).y(),
+                                   boundingRect().center().x() + HOLEGAP, boundingRect().bottom());
+    wire.setCosmetic(false);
+    wires->setPen(wire);
+    wires->setZValue(1);
+    addToGroup(wires);
+    m_wire.append(wires);
+
+    addToGroup(m_svg);
 }
 
 void Unit::addIC()
 {
     QSvgRenderer *render = new QSvgRenderer(QString("./parts/svg/breadboard/%1.svg")
                                             .arg(m_unitType));
-    m_unit->svgPart->setSharedRenderer(render);
+    m_svg->setSharedRenderer(render);
 
-    QPointF point = QPointF(m_unitPin.at(0).x() - m_unit->svgPart->boundingRect().width() / (m_unitPin.count() + 1)
+    QPointF point = QPointF(m_unitPin.at(0).x() - m_svg->boundingRect().width() / (m_unitPin.count() + 1)
                             , m_unitPin.at(0).y());
-    m_unit->svgPart->setPos(point);
-    m_unit->svgPart->setZValue(1);
+    m_svg->setPos(point);
+    m_z = 0;
 
-    m_unit->angle = 0;
-    addToGroup(m_unit->svgPart);
-    addToGroup(m_unit->wirePart);
+    m_angle = 0;
+    addToGroup(m_svg);
 }
 
 void Unit::addWire()
 {
+    QGraphicsLineItem *wires =
+            new QGraphicsLineItem(m_unitPin.at(0).x(), m_unitPin.at(0).y(),
+                                  m_unitPin.at(1).x(), m_unitPin.at(1).y());
+    QPen wire(Qt::blue, 3, Qt::SolidLine, Qt::RoundCap);//color not sure.
+    wire.setCosmetic(false);
+    wires->setPen(wire);
+    wires->setZValue(1);
+    addToGroup(wires);
+    m_wire.append(wires);
 
+    m_z = 1;
+
+    addToGroup(wires);
 }
