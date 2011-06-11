@@ -193,7 +193,7 @@ void Unit::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 
 void Unit::addResistor()
 {
-    QSvgRenderer *renderer = new QSvgRenderer(QString("./parts/svg/breadboard/%1_%2.svg")
+    QSvgRenderer *renderer = new QSvgRenderer(QString("../parts/svg/breadboard/%1_%2.svg")
                                               .arg(m_unitType).arg(m_unitValue));
 \
     m_svg->setSharedRenderer(renderer);
@@ -231,7 +231,7 @@ void Unit::addResistor()
 
 void Unit::addCapacitor()
 {
-    QSvgRenderer *renderer = new QSvgRenderer(QString("./parts/svg/breadboard/%1.svg")
+    QSvgRenderer *renderer = new QSvgRenderer(QString("../parts/svg/breadboard/%1.svg")
                                               .arg(m_unitType));
     m_svg->setSharedRenderer(renderer);
 
@@ -266,7 +266,7 @@ void Unit::addCapacitor()
 
 void Unit::addTransistor()
 {
-    QSvgRenderer *renderer = new QSvgRenderer(QString("./parts/svg/breadboard/basic_%1.svg")
+    QSvgRenderer *renderer = new QSvgRenderer(QString("../parts/svg/breadboard/basic_%1.svg")
                                               .arg(m_unitType));
     m_svg->setSharedRenderer(renderer);
 
@@ -308,7 +308,7 @@ void Unit::addTransistor()
 
 void Unit::addIC()
 {
-    QSvgRenderer *render = new QSvgRenderer(QString("./parts/svg/breadboard/%1.svg")
+    QSvgRenderer *render = new QSvgRenderer(QString("../parts/svg/breadboard/%1.svg")
                                             .arg(m_unitType));
     m_svg->setSharedRenderer(render);
 

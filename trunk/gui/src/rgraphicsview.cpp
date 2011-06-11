@@ -43,11 +43,10 @@ void RGraphicsView::drawBackground(QPainter *p, const QRectF &)
 
 bool RGraphicsView::readFile(const QString &fileName)
 {
-//    if (!file.exists())
-//        return false;
-
     QFile file(fileName);
     QGraphicsScene *s = scene();
+    if (!file.exists())
+        return false;
 
     if (!file.open(QIODevice::ReadOnly)) {
         QMessageBox::warning(this, tr("RABBIT"),
@@ -56,9 +55,15 @@ bool RGraphicsView::readFile(const QString &fileName)
                              .arg(file.errorString()));
         return false;
     }
-    QGraphicsItem *bread1 = new QGraphicsSvgItem("./parts/breadboard.svg");
-    QGraphicsItem *bread2 = new QGraphicsSvgItem("./parts/breadboard.svg");
-    QGraphicsItem *bread3 = new QGraphicsSvgItem("./parts/breadboard.svg");
+
+    //clear screen and old data
+    s->clear();
+    m_unitList.clear();
+
+    //adding the board background
+    QGraphicsItem *bread1 = new QGraphicsSvgItem("../parts/svg/breadboard/breadboard.svg");
+    QGraphicsItem *bread2 = new QGraphicsSvgItem("../parts/svg/breadboard/breadboard.svg");
+    QGraphicsItem *bread3 = new QGraphicsSvgItem("../parts/svg/breadboard/breadboard.svg");
     bread1->setVisible(true);
     s->addItem(bread1);
     bread2->setY(bread2->boundingRect().height());
@@ -78,8 +83,6 @@ bool RGraphicsView::readFile(const QString &fileName)
     s->addItem(outline1);
     s->addItem(outline2);
     s->addItem(outline3);
-
-
 
     QTextStream stream(&file);
     while (!stream.atEnd()) {
