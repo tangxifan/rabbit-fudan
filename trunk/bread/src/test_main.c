@@ -5,15 +5,18 @@
 #include <place_route.h>
 #include <device.h>
 #include <rbt_parser.h>
+#include <setup_rabbit.h>
 
-extern t_vnet **rbt_vnets;
-extern int rbt_vnets_length;
+extern t_vnet *vnets;
+extern int vnets_length;
 
-extern t_icdev **rbt_devices;
-extern int rbt_devices_length;
+extern t_icdev *devices;
+extern int devices_length;
 
-extern t_pr_marco **rbt_marcos;
-extern int rbt_marcos_length;
+extern t_pr_marco *marcos;
+extern int marcos_length;
+
+extern t_bb_array bb_array;
 
 int
 main(int argc, char** argv)
@@ -27,6 +30,8 @@ main(int argc, char** argv)
 		"../../parts/parts.lst",
 		"../../parts/parts/"
 	);	
+
+	setup_rabbit (vnets_length, vnets, marcos_length, marcos, &bb_array);
 
 	return 0;
 }

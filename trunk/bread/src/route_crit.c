@@ -30,11 +30,11 @@ determine_block_base_on_bb(IN t_pr_marco* blk,
   int column=blk->pcolumn;
   int bbheight=bb_array->columns[column].height;
  
-  blk->location->y=bb_array->columns[column].base->y
+  blk->location.y=bb_array->columns[column].base.y
                  +(int)((bbheight-blk->device->height)/2);
 
-  if (blk->location->y>bb_array->columns[column].blank_start)
-  {blk->location->y=bb_array->columns[column].blank_start;}
+  if (blk->location.y>bb_array->columns[column].blank_start)
+  {blk->location.y=bb_array->columns[column].blank_start;}
 
   if (bbheight<blk->device->height)
   {
@@ -68,26 +68,26 @@ determine_pins_of_blk_on_bb(IN t_pr_marco* blk,
     curpin=*(blk->pins+ipin);
     if (TOP==curpin->loc)
     {
-      curpin->location->x=blk->location->x+curpin->offset;
-      curpin->location->y=blk->location->y-1;
+      curpin->location.x=blk->location.x+curpin->offset;
+      curpin->location.y=blk->location.y-1;
     }
     if (BOTTOM==curpin->loc)
     {
-      curpin->location->x=blk->location->x+curpin->offset;
-      curpin->location->y=blk->location->y+blk->device->height+1;
+      curpin->location.x=blk->location.x+curpin->offset;
+      curpin->location.y=blk->location.y+blk->device->height+1;
     }
     if (LEFT==curpin->loc)
     {
-      curpin->location->x=blk->location->x-1;
-      curpin->location->y=blk->location->y+curpin->offset;
+      curpin->location.x=blk->location.x-1;
+      curpin->location.y=blk->location.y+curpin->offset;
     }
     if (RIGHT==curpin->loc)
     {
-      curpin->location->x=blk->location->x+blk->device->width+1;
-      curpin->location->y=blk->location->y+curpin->offset;
+      curpin->location.x=blk->location.x+blk->device->width+1;
+      curpin->location.y=blk->location.y+curpin->offset;
     }
     /*Check whether the location of pin on bread board have been occupied*/
-    if (bb_array->bb_node[curpin->location->x][curpin->location->y].status!=FREE)
+    if (bb_array->bb_node[curpin->location.x][curpin->location.y].status!=FREE)
     {
       printf("Error:Fail to put the pin on breadboard\n");
       abort();
@@ -95,8 +95,8 @@ determine_pins_of_blk_on_bb(IN t_pr_marco* blk,
     }
     else
     {
-      bb_array->bb_node[curpin->location->x][curpin->location->y].pin=curpin;
-      bb_array->bb_node[curpin->location->x][curpin->location->y].net=curpin->nets;
+      bb_array->bb_node[curpin->location.x][curpin->location.y].pin=curpin;
+      bb_array->bb_node[curpin->location.x][curpin->location.y].net=curpin->nets;
       set_bb_node_occupied(curpin->location,bb_array);
       set_bb_node_unroutable(curpin->location,bb_array);
     }
@@ -118,9 +118,9 @@ determine_bb_node_covered_by_blk(IN t_pr_marco* blk,
   t_location base;
   int ix=0;
   int iy=0;
-  for (ix=blk->location->x;ix<blk->device->width;++ix)
+  for (ix=blk->location.x;ix<blk->device->width;++ix)
   {
-    for (iy=blk->location->y;iy<blk->device->height;++iy)
+    for (iy=blk->location.y;iy<blk->device->height;++iy)
     {
       set_location_value(&base,ix,iy);
       set_bb_node_occupied(&base,bb_array);
@@ -188,8 +188,8 @@ route_special_vnet_on_bb(IN t_vnet* vnet,
   int column=vnet->pcolumn;
   int iloc=0;
   int iy=0;
-  int ystart=bb_array->columns[column].base->y;
-  int yend=bb_array->columns[column].base->y+bb_array->columns[column].height;
+  int ystart=bb_array->columns[column].base.y;
+  int yend=bb_array->columns[column].base.y+bb_array->columns[column].height;
   
   int blankstart=0;
   int blankend=0;
@@ -357,9 +357,9 @@ alloc_additional_space_for_normal_vnet(IN t_vnet* vnet,
           {mincost=rgtcost;}
         }        
         if (lftcost<mincost)
-        {mincost=lftcost;locchn=loclft;loccur=curpin->location;}
+        {mincost=lftcost;locchn=loclft;loccur=&(curpin->location);}
         if (rgtcost<mincost)
-        {mincost=rgtcost;locchn=locrgt;loccur=curpin->location;}
+        {mincost=rgtcost;locchn=locrgt;loccur=&(curpin->location);}
       }
       ipin++;
     } 
@@ -436,10 +436,10 @@ try_route_marco_on_bb(IN t_pr_marco* marco,
       printf("Warning: the marco have %d pins which is expected to be 2!\n",marco->pinnum);
       printf("Warning: only two pins of the marco will be routed!\n");
     }
-    srcloc=((*(marco->pins))->location);
-    desloc=((*(marco->pins+marco->pinnum-1))->location);
-    srcnet=(*(marco->pins))->nets;
-    desnet=(*(marco->pins+marco->pinnum-1))->nets;
+    srcloc=&(marco->pins[0]->location);
+    desloc=&(marco->pins[marco->pinnum-1]->location);
+    srcnet=marco->pins[0]->nets;
+    desnet=marco->pins[marco->pinnum-1]->nets;
     rcost=find_path_cost_vnets(srcloc,desloc,srcnet,desnet,bb_array);
     return rcost;
   }
@@ -472,7 +472,7 @@ finish_route_marco_on_bb(IN t_pr_marco* marco,
   {
     /*Remain the pin b. Revise the pin a*/
     pina->exloc=pina->location;
-    *(pina->location)=(*locb);
+    pina->location=(*locb);
     set_bb_node_occupied(locb,bb_array);
     set_bb_node_occupied(loca,bb_array);
     if (!check_bb_node_unroutable(locb,bb_array))
@@ -489,7 +489,7 @@ finish_route_marco_on_bb(IN t_pr_marco* marco,
   {
     /*Remain the pin a. Revise the pin b*/
     pinb->exloc=pinb->location;
-    *(pinb->location)=(*loca);
+    pinb->location=(*loca);
     set_bb_net_unroutable(loca,bb_array);
     set_bb_node_unroutable(loca,bb_array);
     if (!check_bb_node_unroutable(loca,bb_array))

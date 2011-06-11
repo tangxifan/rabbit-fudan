@@ -14,14 +14,14 @@ int col_num=3;
 int col_wcapacity=5;
 int col_blank_height=2;
 int col_width=64;
-int col_height=2*col_wcapacity+col_blank_height;
+int col_height=2*5/*col_wcapacity*/+2/*col_blank_height*/;
 
 /*Bias Arch*/
 int bias_offset=2;
 int bias_width=60;
 int bias_height=2;
 int bias_blank=2;
-int bias_num=2*(col_num+1);
+int bias_num=2*(3/*col_num*/+1);
 int bias_wcapacity=5;
 
 /*Route Cost*/
@@ -128,7 +128,7 @@ initial_column(t_bb_column* curcol,
               )
 {
   /*Give general arch information.*/
-  (*curcol->base)=(*curcol);
+  curcol->base=(*curbase);
   curcol->height=col_height;
   curcol->width=col_width;
   curcol->width_capacity=col_wcapacity;
@@ -137,7 +137,7 @@ initial_column(t_bb_column* curcol,
   curcol->left=UNKNOWN;
   curcol->right=UNKNOWN;
   /*Blank Information*/
-  curcol->blank_start=curcol->base->y+curcol->width_capacity;
+  curcol->blank_start=curcol->base.y+curcol->width_capacity;
   curcol->blank_end=curcol->blank_start+col_blank_height-1;
   return 1;
 }
@@ -148,7 +148,7 @@ initial_bias(t_bb_bias* curbias,
             )
 {
   /*Give general arch information.*/
-  (*curbias->base)=(*curcol);
+  curbias->base=(*curbase);
   curbias->height=1;
   curbias->width=bias_width;
   curbias->width_capacity=bias_wcapacity;
@@ -169,21 +169,21 @@ int
 create_bb_nodes(t_bb_array* bb_array)
 {
   int ibb=0;
-  /*Malloc height*/
-  *(bb_array->bb_node)=(t_bb_node*)malloc(bb_array->height*sizeof(t_bb_node*));
-  if (NULL==*(bb_array->bb_node))
+  /*Malloc width*/
+  bb_array->bb_node=(t_bb_node**)malloc(bb_array->width*sizeof(t_bb_node*));
+  if (NULL==(bb_array->bb_node))
   {
-    printf("Fail to malloc the height for bread board architecture!\n");
+    printf("Fail to malloc the width  for bread board architecture!\n");
     abort();
     exit(1);
   }
-  /*Malloc width*/
-  for (ibb=0;ibb<bb_array->height;++ibb)
+  /*Malloc height*/
+  for (ibb=0;ibb<bb_array->width;++ibb)
   {
-    bb_array->bb_node[ibb]=(t_bb_node*)malloc(bb_array->width*sizeof(t_bb_node));
+    bb_array->bb_node[ibb]=(t_bb_node*)malloc(bb_array->height*sizeof(t_bb_node));
     if (NULL==bb_array->bb_node[ibb])
     {
-      printf("Fail to malloc the width for bread board architecture!\n");
+      printf("Fail to malloc the height for bread board architecture!\n");
       abort();
       exit(1);
     }    
@@ -221,12 +221,12 @@ initial_single_bb_node(INOUT t_bb_array* bb_array,
   bb_array->bb_node[x][y].inners=NULL;
   bb_array->bb_node[x][y].pin=NULL;
   bb_array->bb_node[x][y].net=NULL;
-  bb_array->bb_node[x][y].wired={0};
+  //bb_array->bb_node[x][y].wired=NULL;
   bb_array->bb_node[x][y].status=FREE;
   bb_array->bb_node[x][y].rstatus=ROUTABLE;
   bb_array->bb_node[x][y].bias_type=BIAS_NONE;
   bb_array->bb_node[x][y].rcost=initial_route_cost;
-  set_location_value(bb_array->bb_node[x][y].location,x,y);
+  set_location_value(&(bb_array->bb_node[x][y].location),x,y);
   return 1;
 }
 
@@ -240,9 +240,9 @@ initial_column_nodes(INOUT t_bb_array* bb_array)
 
   for (icol=0;icol<bb_array->no_column;++icol)
   {
-    for (ix=bb_array->columns[icol].base->x;ix<bb_array->columns[icol].width;++ix)
+    for (ix=bb_array->columns[icol].base.x;ix<bb_array->columns[icol].width;++ix)
     {
-      for (iy=bb_array->columns[icol].base->y;iy<bb_array->columns[icol].height;++iy)
+      for (iy=bb_array->columns[icol].base.y;iy<bb_array->columns[icol].height;++iy)
       {
         if ((iy<bb_array->columns[icol].blank_start)||(iy>bb_array->columns[icol].blank_end))
         {bb_array->bb_node[ix][iy].type=NORMAL_NODE;}
@@ -265,8 +265,8 @@ initial_bias_nodes(INOUT t_bb_array* bb_array)
   /*Aware the blank nodes!*/
   for (ibias=0;ibias<bb_array->nbias;++ibias)
   {
-    y=bb_array->biases[ibias].base->y;
-    for (ix=bb_array->biases[ibias].base->y;ix<bb_array->biases[ibias].width;)
+    y=bb_array->biases[ibias].base.y;
+    for (ix=bb_array->biases[ibias].base.y;ix<bb_array->biases[ibias].width;)
     {
       if (ix<(int)bb_array->width/2)
       {
@@ -328,7 +328,9 @@ initial_bias_inners(INOUT t_bb_array* bb_array,
   while(iin<bb_array->bb_node[x][y].ninner)
   {
     tmpx--;
-    if (bb_array->bb_node[tmpx][tmpy].type!=bb_array->bb_node[x][y].type)
+    if ((tmpx>(bb_array->width-1))||(tmpx<0))
+	{break;}
+	if (bb_array->bb_node[tmpx][tmpy].type!=bb_array->bb_node[x][y].type)
     {break;}
     else
     {
@@ -342,6 +344,8 @@ initial_bias_inners(INOUT t_bb_array* bb_array,
   while(iin<bb_array->bb_node[x][y].ninner)
   {
     tmpx++;
+    if ((tmpx>(bb_array->width-1))||(tmpx<0))
+	{break;}
     if (bb_array->bb_node[tmpx][tmpy].type!=bb_array->bb_node[x][y].type)
     {break;}
     else
@@ -379,6 +383,8 @@ initial_normal_inners(INOUT t_bb_array* bb_array,
   while(iin<bb_array->bb_node[x][y].ninner)
   {
     tmpy--;
+    if ((tmpy>(bb_array->height-1))||(tmpx<0))
+	{break;}
     if (bb_array->bb_node[tmpx][tmpy].type!=bb_array->bb_node[x][y].type)
     {break;}
     else
@@ -393,6 +399,8 @@ initial_normal_inners(INOUT t_bb_array* bb_array,
   while(iin<bb_array->bb_node[x][y].ninner)
   {
     tmpy++;
+    if ((tmpy>(bb_array->height-1))||(tmpx<0))
+	{break;}
     if (bb_array->bb_node[tmpx][tmpy].type!=bb_array->bb_node[x][y].type)
     {break;}
     else
