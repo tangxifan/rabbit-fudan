@@ -46,13 +46,18 @@ try_place(IN int nvnet,
     clear_left_right_place_info(&place_info);
     wcapacity=(bb_array->columns+place_info.column)->width_capacity;
     find_starter(nblk,icblks,nvnet,vnets,&place_info,*bb_array);
+	printf("Find Starter...\n");
     while(1)
     {
+	  if (1==DEBUG)
+	  {printf("Try find match block or vnet...\n");}
       if (FALSE==find_match(nblk,icblks,nvnet,vnets,bb_array,&place_info))
       {
+	    printf("Do Climbing placement...\n");
         climbing_place(nblk,icblks,nvnet,vnets,bb_array,&place_info);
         break;
       }
+	  printf("Find Match...\n");
     }
     /*Operation on the bb_array information*/
     (bb_array->columns+place_info.column)->usedwidth=place_info.cur_width;

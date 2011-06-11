@@ -38,6 +38,9 @@ check_parent_type(IN t_pr_pin *src,
                   IN enum e_pr_type tcomp
                  )
 {
+  // DEBUG
+ // t_pr_pin *cur = 0x8054ba0;
+
   enum e_pr_type gottype=src->parent->type;
   if (gottype==tcomp)
   {return TRUE;}
