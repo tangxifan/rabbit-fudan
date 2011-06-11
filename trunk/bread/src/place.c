@@ -37,6 +37,8 @@ try_place(IN int nvnet,
   place_info.column=0;
 
   create_icblk_array(&nblk,icblks,nmarco,pr_marco);
+  initial_place_info(&place_info);
+  
   while(place_info.column<ncolumn)
   {
     place_info.cur_width=0;

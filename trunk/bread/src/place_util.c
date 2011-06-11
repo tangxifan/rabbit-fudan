@@ -195,6 +195,14 @@ check_all_placed(IN int nblk,
 }
 
 int 
+initial_place_info(t_place_info* place_info)
+{
+  place_info->left=(t_pr_node*)malloc(sizeof(t_pr_node));
+  place_info->right=(t_pr_node*)malloc(sizeof(t_pr_node));
+  return 1;
+}
+
+int 
 clear_left_right_place_info(t_place_info* place_info)
 {
   place_info->left->flag=TRUE;
