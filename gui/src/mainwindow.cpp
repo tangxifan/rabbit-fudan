@@ -23,7 +23,6 @@ along with Rabbit.  If not, see <http://www.gnu.org/licenses/>.
 #include "rgraphicsscene.h"
 #include "rgraphicsview.h"
 #include "unit.h"
-#include "electronicpart.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
