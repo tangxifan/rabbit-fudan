@@ -1,0 +1,138 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Created with Fritzing (http://www.fritzing.org/) -->
+<netlist sketch="p34测量放大器电路原理图面包版图.fz" date="周六 六月 11 15:25:11 2011">
+ <net>
+  <connector id="connector1" name="Pin 1">
+   <part title="220Ω Resistor" id="7050" label="R"/>
+  </connector>
+  <connector id="connector3" name="Pin 4">
+   <part title="LM 358 Dual Op-Amp" id="2840" label="U1"/>
+  </connector>
+  <connector id="connector2" name="Pin 3">
+   <part title="LM 358 Dual Op-Amp" id="2840" label="U1"/>
+  </connector>
+  <connector id="connector1" name="Pin 2">
+   <part title="LM 358 Dual Op-Amp" id="2840" label="U1"/>
+  </connector>
+  <connector id="connector0" name="Pin 1">
+   <part title="LM 358 Dual Op-Amp" id="2840" label="U1"/>
+  </connector>
+  <connector id="connector0" name="-">
+   <part title="Battery" id="2960" label="VCC2"/>
+   <erc etype="ground">
+    <current valueMax="0.1" flow="sink"/>
+   </erc>
+  </connector>
+  <connector id="connector1" name="Pin 1">
+   <part title="220Ω Resistor" id="3270" label="R3"/>
+  </connector>
+  <connector id="connector3" name="Pin 4">
+   <part title="LM 358 Dual Op-Amp" id="3370" label="U2"/>
+  </connector>
+  <connector id="connector2" name="Pin 3">
+   <part title="LM 358 Dual Op-Amp" id="3370" label="U2"/>
+  </connector>
+  <connector id="connector0" name="Pin 0">
+   <part title="220Ω Resistor" id="4050" label="R5"/>
+  </connector>
+  <connector id="connector0" name="Pin 0">
+   <part title="220Ω Resistor" id="3270" label="R3"/>
+  </connector>
+  <connector id="connector1" name="Pin 2">
+   <part title="LM 358 Dual Op-Amp" id="3370" label="U2"/>
+  </connector>
+  <connector id="connector0" name="Pin 1">
+   <part title="LM 358 Dual Op-Amp" id="3370" label="U2"/>
+  </connector>
+  <connector id="connector0" name="Pin 0">
+   <part title="220Ω Resistor" id="3100" label="R1"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector0" name="Pin 0">
+   <part title="220Ω Resistor" id="7050" label="R"/>
+  </connector>
+  <connector id="connector1" name="+">
+   <part title="Battery" id="2960" label="VCC2"/>
+   <erc etype="VCC">
+    <current valueMax="0.1" flow="source"/>
+    <voltage value="3"/>
+   </erc>
+  </connector>
+  <connector id="connector1" name="Pin 1">
+   <part title="220Ω Resistor" id="4670" label="R7"/>
+  </connector>
+  <connector id="connector0" name="-">
+   <part title="Battery" id="2880" label="VCC1"/>
+   <erc etype="ground">
+    <current valueMax="0.1" flow="sink"/>
+   </erc>
+  </connector>
+  <connector id="connector1" name="Pin 1">
+   <part title="220Ω Resistor" id="6150" label="R"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector0" name="Pin 0">
+   <part title="220Ω Resistor" id="6150" label="R"/>
+  </connector>
+  <connector id="connector4" name="Pin 5">
+   <part title="LM 358 Dual Op-Amp" id="2840" label="U1"/>
+  </connector>
+  <connector id="connector5" name="Pin 6">
+   <part title="LM 358 Dual Op-Amp" id="2840" label="U1"/>
+  </connector>
+  <connector id="connector1" name="Pin 1">
+   <part title="220Ω Resistor" id="3100" label="R1"/>
+  </connector>
+  <connector id="connector6" name="Pin 7">
+   <part title="LM 358 Dual Op-Amp" id="2840" label="U1"/>
+  </connector>
+  <connector id="connector7" name="Pin 8">
+   <part title="LM 358 Dual Op-Amp" id="2840" label="U1"/>
+  </connector>
+  <connector id="connector1" name="Pin 1">
+   <part title="220Ω Resistor" id="3170" label="R2"/>
+  </connector>
+  <connector id="connector0" name="Pin 0">
+   <part title="220Ω Resistor" id="3170" label="R2"/>
+  </connector>
+  <connector id="connector0" name="Pin 0">
+   <part title="220Ω Resistor" id="3710" label="R4"/>
+  </connector>
+  <connector id="connector1" name="+">
+   <part title="Battery" id="2880" label="VCC1"/>
+   <erc etype="VCC">
+    <current valueMax="0.1" flow="source"/>
+    <voltage value="3"/>
+   </erc>
+  </connector>
+  <connector id="connector7" name="Pin 8">
+   <part title="LM 358 Dual Op-Amp" id="3370" label="U2"/>
+  </connector>
+  <connector id="connector6" name="Pin 7">
+   <part title="LM 358 Dual Op-Amp" id="3370" label="U2"/>
+  </connector>
+  <connector id="connector5" name="Pin 6">
+   <part title="LM 358 Dual Op-Amp" id="3370" label="U2"/>
+  </connector>
+  <connector id="connector0" name="Pin 0">
+   <part title="220Ω Resistor" id="4490" label="R6"/>
+  </connector>
+  <connector id="connector4" name="Pin 5">
+   <part title="LM 358 Dual Op-Amp" id="3370" label="U2"/>
+  </connector>
+  <connector id="connector1" name="Pin 1">
+   <part title="220Ω Resistor" id="4490" label="R6"/>
+  </connector>
+  <connector id="connector1" name="Pin 1">
+   <part title="220Ω Resistor" id="3710" label="R4"/>
+  </connector>
+  <connector id="connector0" name="Pin 0">
+   <part title="220Ω Resistor" id="4670" label="R7"/>
+  </connector>
+  <connector id="connector1" name="Pin 1">
+   <part title="220Ω Resistor" id="4050" label="R5"/>
+  </connector>
+ </net>
+</netlist>
