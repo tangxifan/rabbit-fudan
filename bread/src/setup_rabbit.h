@@ -24,6 +24,6 @@ int
 setup_rabbit(IN int nvnet,
              INOUT t_vnet* vnets,
              IN int nmarco,
-             INOUT t_pr_marco marcos,
+             INOUT t_pr_marco* marcos,
              INOUT t_bb_array* bb_array
             );

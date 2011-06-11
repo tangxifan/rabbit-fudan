@@ -54,7 +54,7 @@ struct s_bb_node
    */
   int column;
   int bias;
-  t_location* location;
+  t_location location;
   /*Inner list reveals what nodes are connected to current node
    *inside the breadboard.
    */
@@ -63,7 +63,7 @@ struct s_bb_node
   /*Provide this bb node is routed by which pin of which virtual net*/
   t_pr_pin *pin;
   t_vnet *net;
-  t_location* wired;
+  t_location wired;
   enum e_bb_status status;
   enum e_bb_route_status rstatus;
   enum e_bias_type bias_type;
@@ -84,7 +84,7 @@ struct s_bb_node
  */
 struct s_bb_column
 {
-  t_location* base;
+  t_location base;
   int height;
   int width;
   int width_capacity;
@@ -104,7 +104,7 @@ struct s_bb_column
  */
 struct s_bb_bias
 {
-  t_location* base;
+  t_location base;
   int height;
   int width;
   int width_capacity;

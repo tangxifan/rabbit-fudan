@@ -30,6 +30,16 @@ You should have received a copy of the GNU General Public License along with thi
 #include "place_route.h"
 #include "device.h"
 
+/* for external use*/
+t_vnet *vnets;
+int vnets_length;
+
+t_icdev *devices;
+int devices_length;
+
+t_pr_marco *marcos;
+int marcos_length;
+
 /* Rabbit arrays */
 t_vnet **rbt_vnets;
 int rbt_vnets_length;
@@ -613,6 +623,41 @@ rbt_parse_init(char *docname)
 }
 
 /**
+ * function rbt_gen_arrays
+ * Generate the arrays for external use.
+ */
+int
+rbt_gen_arrays()
+{
+	t_vnet *cur_vnet;
+	t_icdev *cur_icdev;
+	t_pr_marco *cur_marco;
+	int i;
+
+	vnets_length = rbt_vnets_length;
+	devices_length = rbt_devices_length;
+	marcos_length = rbt_marcos_length;
+
+	if (NULL == (vnets = (t_vnet*)malloc (vnets_length * sizeof (t_vnet))))
+		return -1;
+	if (NULL == (devices = (t_icdev*)malloc (devices_length * sizeof (t_icdev))))
+		return -1;
+	if (NULL == (marcos = (t_pr_marco*)malloc (marcos_length * sizeof (t_pr_marco))))
+		return -1;
+
+	for (i = 0, cur_vnet = rbt_vnets[0]; i < vnets_length; i++, cur_vnet++)
+		vnets[i] = *cur_vnet;
+
+	for (i = 0, cur_icdev = rbt_devices[0]; i < devices_length; i++, cur_icdev++)
+		devices[i] = *cur_icdev;
+
+	for (i = 0, cur_marco = rbt_marcos[0]; i < marcos_length; i++, cur_marco++)
+		marcos[i] = *cur_marco;
+
+	return 0;
+}
+
+/**
  * function rbt_parse_netlist
  * Parse the Fritzing netlist xml
  */
@@ -650,6 +695,9 @@ rbt_parse_netlist
 	for (i=0; i < nodeset->nodeNr; i++) {
 		rbt_parse_net (nodeset->nodeTab[i]);
 	}
+
+	/* Generate the arrays for output */
+	rbt_gen_arrays;
 
 	xmlXPathFreeObject (result);
 	xmlFreeDoc(doc);

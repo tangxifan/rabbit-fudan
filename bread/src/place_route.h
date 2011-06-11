@@ -70,7 +70,7 @@ struct s_vnet
   int pwidth;
   /*For route*/
   int locnum;
-  t_location *locations;
+  t_location* locations;
   int bbnum;
   t_bb_node **bb_nodes;
   enum e_route_status rstatus;
@@ -86,9 +86,9 @@ struct s_pr_pin
   /*For Route*/
   enum e_pin_location loc;
   int offset;
-  t_location* location;
+  t_location location;
   /*For route*/
-  t_location* exloc;
+  t_location exloc;
   /*For struct*/
   t_pr_marco *parent;
   t_pr_pin *next;
@@ -114,7 +114,7 @@ struct s_pr_marco
   /*For Route*/
   int priority;
   int detail_offset;
-  t_location* location;
+  t_location location;
   int pcolumn;
   enum e_route_status rstatus;
   /*For struct*/

@@ -68,7 +68,7 @@ set_uncount_vnets(IN int nvnet,
 int 
 set_pr_marco_unplaced(IN t_pr_marco* marco)
 {
-  marcos->status=UNPLACED;
+  marco->status=UNPLACED;
   return 1;
 }
 
@@ -140,7 +140,7 @@ count_pointed_pins(IN t_pr_marco* marco)
   int nptred=0;
   for (ipin=0;ipin<(marco->pinnum);++ipin)
   {
-    if (POINTED==marco->pins[ipin]->spwidth)
+    if (POINTED==marco->pins[ipin]->nets->spwidth)
     {nptred++;}
   }
   return nptred;
@@ -191,7 +191,7 @@ initial_marco(INOUT t_pr_marco* marco)
   marco->sstart=UNSTART;
   marco->priority=1;
   marco->detail_offset=UNKNOWN;
-  marco->location=NULL;
+  //marco->location={ 0 };
   marco->pcolumn=UNKNOWN;
   marco->rstatus=UNROUTE;
   
@@ -202,7 +202,7 @@ int
 setup_rabbit(IN int nvnet,
              INOUT t_vnet* vnets,
              IN int nmarco,
-             INOUT t_pr_marco marcos,
+             INOUT t_pr_marco* marcos,
              INOUT t_bb_array* bb_array
             )
 {

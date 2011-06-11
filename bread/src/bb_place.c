@@ -116,7 +116,7 @@ alloc_blk_place_bb(IN int name,
   {
     if ((column==(blks+iblk)->pcolumn)&&(name==(blks+iblk)->name)&&(ICBLOCK==(blks+iblk)->type))
     {
-      (blks+iblk)->location->x=(*curloc);
+      (blks+iblk)->location.x=(*curloc);
       (*curloc)=(*curloc)+blank+(blks+iblk)->pwidth;  
        return 1;
     }
@@ -239,7 +239,7 @@ detail_place_blk(INOUT t_pr_marco* blk,
       blkoff+=find_mnet_basic_width(blkvnet,wcapacity)-1;
     }
   }
-  blk->location->x+=blkoff;
+  blk->location.x+=blkoff;
   return 1;
 }
 
