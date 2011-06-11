@@ -170,9 +170,9 @@ initial_vnet(INOUT t_vnet* vnet)
   vnet->status=UNPLACED;
   vnet->sstart=UNSTART;
   vnet->spwidth=UNPOINT;
-  vnet->pcost=UNKNOWN;
+  vnet->pcost=0.0;
   vnet->pcolumn=UNKNOWN;
-  vnet->pwidth=UNKNOWN;
+  vnet->pwidth=0;
   vnet->locnum=UNKNOWN;
   vnet->locations=NULL;
   vnet->bbnum=UNKNOWN;
@@ -186,8 +186,8 @@ int
 initial_marco(INOUT t_pr_marco* marco)
 {
   marco->name=UNKNOWN;
-  marco->pcost=UNKNOWN;
-  marco->pwidth=UNKNOWN;
+  marco->pcost=0.0;
+  marco->pwidth=0;
   marco->status=UNPLACED;
   marco->sstart=UNSTART;
   marco->priority=1;
