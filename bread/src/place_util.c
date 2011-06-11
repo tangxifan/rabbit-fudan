@@ -38,15 +38,18 @@ create_icblk_array(INOUT int* nblk,
   int iblk=0;
   enum e_pr_type mcotype=0;
   (*nblk)=0;
+  
+  printf("Counting IC blocks...");
   for (imarco=0;imarco<nmarco;++imarco)
   {
     mcotype=(marcos+imarco)->type;
     if (ICBLOCK==mcotype)
     {iblk++;}
   }
-
+  printf("Result:%d\n",iblk);
   (*nblk)=iblk;
   icblks=(t_pr_marco*)malloc((*nblk)*sizeof(t_pr_marco));
+  printf("Creating IC blocks...\n");
 
   iblk=0;
   for (imarco=0;imarco<nmarco;++imarco)

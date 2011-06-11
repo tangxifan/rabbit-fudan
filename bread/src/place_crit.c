@@ -81,9 +81,15 @@ find_start_vnet(IN int nvnet,
   float tmpcost=0.0;
   int pwidth=0;
   t_vnet* bnets=NULL;
+ 
+  
+   if (1==DEBUG)
+   {printf("Finding vnet....\n");}
   
   for (inet=0;inet<nvnet;++inet)
   {
+    if (1==DEBUG)
+	{printf("Currently checking vnet(No.%d)...\n",inet);}
     bnets=vnets+inet;
     if ((UNSTART==bnets->sstart)&&(UNPLACED==bnets->status))
     {
@@ -214,9 +220,13 @@ find_vnet_pwidth(IN t_vnet* vnet,
   int minl=vnet->pins[0]->parent->device->min_length;
   t_pr_pin* vpin=NULL;
   
+  if(1==DEBUG)
+  {printf("Find Virtual net place width....\n");}
   for (ipin=0;ipin<npin;++ipin)
   {
-    vpin=(*(vnet->pins+ipin));
+    if(1==DEBUG)
+	{printf("Checking pin[%d](Net No.%d) for place width...\n",ipin,vnet);}
+    vpin=vnet->pins[ipin];
     if ((!check_parent_type(vpin,ICBLOCK))&&(!check_parent_type(vpin,GND))&&(!check_parent_type(vpin,VDD)))
     {
       pwidth++;
@@ -280,13 +290,30 @@ find_starter(IN int nblk,
   t_pr_marco* blkcd=NULL;
   t_vnet* netcd=NULL;
   
+  float vnet_pcost=0.0;
+  float blk_pcost=0.0;
+
   while(1)
   {
-    blkcd=find_starter_block(nblk,blks);
-    netcd=find_start_vnet(nvnet,vnets,wcapacity);
-    if (blkcd->pcost<netcd->pcost)
+    if (nblk!=0)
     {
+	  blkcd=find_starter_block(nblk,blks);
+      blk_pcost=blkcd->pcost;	  
+    }
+    if (nvnet!=0)
+    {
+	  netcd=find_start_vnet(nvnet,vnets,wcapacity);
+      vnet_pcost=netcd->pcost;
+	}
+	if (blk_pcost<vnet_pcost)
+    {
+	  if(1==DEBUG)
+	  {printf("The Start Net is vnet[%d].\n",netcd-vnets);}
       pwidth=find_vnet_pwidth(netcd,wcapacity);
+
+	  if(1==DEBUG)
+	  {printf("The Start Net place width is %d.\n",pwidth);}
+
       if (bb_pwidth<pwidth)
       {netcd->sstart=STARTED;}
       else

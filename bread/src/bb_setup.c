@@ -90,7 +90,7 @@ create_columns(INOUT t_bb_array* bb_array)
   int icol=0;
   /*Determine colnumn number*/
   bb_array->no_column=col_num;
-  /*Do malloc work*/
+  /*Do mall(oc work*/
   bb_array->columns=(t_bb_column*)malloc(bb_array->no_column*sizeof(t_bb_column));
   if (NULL==bb_array->columns)
   {
