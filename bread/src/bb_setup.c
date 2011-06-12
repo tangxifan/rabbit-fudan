@@ -237,12 +237,16 @@ initial_column_nodes(INOUT t_bb_array* bb_array)
   int icol=0;
   int ix=0;
   int iy=0;
+  int topx=0;
+  int topy=0;
 
   for (icol=0;icol<bb_array->no_column;++icol)
   {
-    for (ix=bb_array->columns[icol].base.x;ix<bb_array->columns[icol].width;++ix)
+    topx=bb_array->columns[icol].base.x+bb_array->columns[icol].width;
+    topy=bb_array->columns[icol].base.y+bb_array->columns[icol].height;
+    for (ix=bb_array->columns[icol].base.x;ix<topx;++ix)
     {
-      for (iy=bb_array->columns[icol].base.y;iy<bb_array->columns[icol].height;++iy)
+      for (iy=bb_array->columns[icol].base.y;iy<topy;++iy)
       {
         if ((iy<bb_array->columns[icol].blank_start)||(iy>bb_array->columns[icol].blank_end))
         {bb_array->bb_node[ix][iy].type=NORMAL_NODE;}
@@ -261,12 +265,15 @@ initial_bias_nodes(INOUT t_bb_array* bb_array)
   int ix=0;
   int y=0;
   int iwcap=0;
+  int topx=0;
+  int topy=0;
   
   /*Aware the blank nodes!*/
   for (ibias=0;ibias<bb_array->nbias;++ibias)
   {
     y=bb_array->biases[ibias].base.y;
-    for (ix=bb_array->biases[ibias].base.y;ix<bb_array->biases[ibias].width;)
+	topx=bb_array->biases[ibias].base.x+bb_array->biases[ibias].width;
+    for (ix=bb_array->biases[ibias].base.x;ix<topx;)
     {
       if (ix<(int)bb_array->width/2)
       {
@@ -276,17 +283,17 @@ initial_bias_nodes(INOUT t_bb_array* bb_array)
           bb_array->bb_node[ix][y].bias_type=bb_array->biases[ibias].type;
           bb_array->bb_node[ix][y].bias=ibias;
           ix++;
-          if (FALSE==(ix<bb_array->biases[ibias].width))
+          if (FALSE==(ix<topx))
           {return 1;}
         }
         ix++;
-        if (FALSE==(ix<bb_array->biases[ibias].width))
+        if (FALSE==(ix<topx))
         {return 1;}
       }
       else
       {
         ix++;
-        if (FALSE==(ix<bb_array->biases[ibias].width))
+        if (FALSE==(ix<topx))
         {return 1;}
         for (iwcap=0;iwcap<bb_array->biases[ibias].width_capacity;++iwcap)
         {
@@ -294,7 +301,7 @@ initial_bias_nodes(INOUT t_bb_array* bb_array)
           bb_array->bb_node[ix][y].bias_type=bb_array->biases[ibias].type;
           bb_array->bb_node[ix][y].bias=ibias;
           ix++;
-          if (FALSE==(ix<bb_array->biases[ibias].width))
+          if (FALSE==(ix<topx))
           {return 1;}
         }
       }
@@ -314,7 +321,7 @@ initial_bias_inners(INOUT t_bb_array* bb_array,
   int tmpy=0;
   int iin=0;
 
-  bb_array->bb_node[x][y].ninner=bb_array->biases[ibias].width_capacity;
+  bb_array->bb_node[x][y].ninner=bb_array->biases[ibias].width_capacity-1;
   bb_array->bb_node[x][y].inners=(t_bb_node**)malloc(bb_array->bb_node[x][y].ninner*sizeof(t_bb_node*));
   if (NULL==bb_array->bb_node[x][y].inners)
   {
@@ -369,7 +376,7 @@ initial_normal_inners(INOUT t_bb_array* bb_array,
   int tmpy=0;
   int iin=0;
 
-  bb_array->bb_node[x][y].ninner=bb_array->biases[icol].width_capacity;
+  bb_array->bb_node[x][y].ninner=bb_array->biases[icol].width_capacity-1;
   bb_array->bb_node[x][y].inners=(t_bb_node**)malloc(bb_array->bb_node[x][y].ninner*sizeof(t_bb_node*));
   if (NULL==bb_array->bb_node[x][y].inners)
   {

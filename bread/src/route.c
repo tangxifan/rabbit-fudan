@@ -16,8 +16,8 @@ try_route(IN int nvnet,
 {
   int imarco=0;
   float tmpcost=0.0;
-  float mincost=try_route_marco_on_bb(marcos,bb_array);
-  t_pr_marco* mchn=marcos;
+  float mincost=0.0;
+  t_pr_marco* mchn=NULL;
   t_pr_marco* marco=NULL;
   set_route_vnets_on_bb(nvnet,vnets,bb_array);
   update_bb_array_route_cost(bb_array);
@@ -30,11 +30,11 @@ try_route(IN int nvnet,
       marco=marcos+imarco;
       if ((ICBLOCK!=marco->type)&&(VDD!=marco->type)&&(GND!=marco->type))
       {
-        tmpcost=try_route_marco_on_bb(marcos+imarco,bb_array);
-        if (tmpcost<mincost)
+        tmpcost=try_route_marco_on_bb(marco,bb_array);
+		if ((NULL==mchn)||(tmpcost<mincost))
         {
           mincost=tmpcost;
-          mchn=marcos+imarco;
+          mchn=marco;
         }
       }
     }
