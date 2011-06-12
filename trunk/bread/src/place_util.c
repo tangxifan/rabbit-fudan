@@ -15,10 +15,6 @@ update_pr_marco(IN int nmarco,
                 );
 
 
-boolean
-check_place_over(IN int nblk,
-                 IN t_pr_marco* blks
-                );
 
 /**********************************************/
 
@@ -144,15 +140,31 @@ check_start_error(IN int nblk,
  */
 boolean
 check_place_over(IN int nblk,
-                 IN t_pr_marco* blks
+                 IN t_pr_marco* blks,
+                 IN int nvnet,
+				 IN t_vnet* vnets
                 )
 {
   int iblk=0;
+  int inet=0;
   boolean place_over=TRUE;
-  for (iblk=0;iblk<nblk;++iblk)
+
+  if (nblk!=0)
   {
-    if (UNPLACED==(blks+iblk)->status)
-    {place_over=FALSE;return place_over;}
+    for (iblk=0;iblk<nblk;++iblk)
+    {
+      if (UNPLACED==(blks+iblk)->status)
+      {place_over=FALSE;return place_over;}
+    }
+  }
+  
+  if (nvnet!=0)
+  {
+    for (inet=0;inet<nvnet;++inet)
+    {
+      if ((UNPLACED==vnets[inet].status)&&(SPECIAL==vnets[inet].type))
+      {place_over=FALSE;return place_over;}
+    }
   }
   return place_over;
 }
@@ -172,20 +184,8 @@ check_all_placed(IN int nblk,
                  IN t_vnet* vnets
                 )
 {
-  int iblk=0;
-  int inet=0;
-  boolean place_overflow=TRUE;
-  for (iblk=0;iblk<nblk;++iblk)
-  {
-    if (UNPLACED==(blks+iblk)->status)
-    {place_overflow=FALSE;}
-  }
-  
-  for (inet=0;inet<nvnet;++inet)
-  {
-    if (UNPLACED==(vnets+inet)->status)
-    {place_overflow=FALSE;}
-  }
+
+  boolean place_overflow=check_place_over(nblk,blks,nvnet,vnets);
 
   if (FALSE==place_overflow)
   {

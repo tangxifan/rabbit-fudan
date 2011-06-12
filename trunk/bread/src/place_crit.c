@@ -240,6 +240,8 @@ find_vnet_pwidth(IN t_vnet* vnet,
   //for (ipin=0;ipin<npin;++ipin)
   //{set_unpoint_marco((*(vnet->pins+ipin))->parent);}
 //pwidth+=minl;
+  if (1==DEBUG)
+  {printf("Virtual Net(%d) place width is %d.\n",vnet,pwidth);}
   return pwidth;  
 }
 

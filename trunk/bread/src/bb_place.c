@@ -291,10 +291,24 @@ detail_place_vnet(INOUT t_vnet* vnet,
   /*Determine the virtual nets are too big to occupy several x*/
   wcapacity=bb_array->columns[column].width_capacity;
   baswidth=find_vnet_basic_width(vnet,wcapacity);
+
+  vnet->locnum=baswidth;
+  vnet->locations=(t_location*)malloc(baswidth*sizeof(t_location));
+  if (NULL==vnet->locations)
+  {
+    printf("Bread Board Placement: Fail to malloc locatons(Width:%d) for vnet(%d).\n");
+    abort();
+	exit(1);
+  }
+
   if (baswidth>1)
-  {detail_place_big_vnet(vnetoff,vnet,wcapacity);}
+  {
+    detail_place_big_vnet(vnetoff,vnet,wcapacity);
+  }
   else
-  {vnet->locations->x+=vnetoff;}
+  {
+    vnet->locations->x+=vnetoff;
+  }
   return 1;
 }
 

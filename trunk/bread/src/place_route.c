@@ -14,7 +14,7 @@ place_route(IN int nvnet,
            )
 {
   try_place(nvnet,vnets,nmarco,pr_marco,bb_array);
-  //detail_place(nvnet,vnets,nmarco,pr_marco,bb_array);
+  detail_place(nvnet,vnets,nmarco,pr_marco,bb_array);
   //try_route(nvnet,vnets,nmarco,pr_marco,bb_array);
   return 1;
 }
