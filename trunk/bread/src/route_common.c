@@ -129,7 +129,7 @@ set_bb_net_unroutable(IN t_location* src,
  t_location* loc=NULL;
  for (iy=0;iy<in;++iy)
  {
-   loc=bb_array->bb_node[src->x][src->y].inners[iy]->location;
+   loc=&(bb_array->bb_node[src->x][src->y].inners[iy]->location);
    if (!check_bb_node_blank(loc,bb_array))
    {set_bb_node_unroutable(loc,bb_array);}
  }
@@ -158,7 +158,7 @@ find_top_inner_on_bb(IN t_location* src,
    t_location* loc=NULL;
    for (iy=0;iy<in;++iy)
    {
-     loc=bb_array->bb_node[src->x][src->y].inners[iy]->location;
+     loc=&(bb_array->bb_node[src->x][src->y].inners[iy]->location);
      if ((loc->y<ymin)&&(!check_bb_node_occupied(loc,bb_array)))
      {ymin=loc->y;}
    }
@@ -179,7 +179,7 @@ find_near_node_on_bb(IN t_location* src,
    t_location* loc=NULL;
    for (iy=0;iy<in;++iy)
    {
-     loc=bb_array->bb_node[src->x][src->y].inners[iy]->location;
+     loc=&(bb_array->bb_node[src->x][src->y].inners[iy]->location);
      if (!check_bb_node_occupied(loc,bb_array))
      {     
        if  (UNKNOWN==ymin)
@@ -198,7 +198,7 @@ set_wired_on_bb(IN t_location* src,
                 IN t_bb_array* bb_array
                )
 {
-  set_location_value(bb_array->bb_node[src->x][src->y].wired,des->x,des->y);
+  set_location_value(&(bb_array->bb_node[src->x][src->y].wired),des->x,des->y);
   return 1;
 }
 

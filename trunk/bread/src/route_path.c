@@ -30,9 +30,9 @@ find_vnet_bbs(IN int* nbbs,
 {
   int column=vnet->pcolumn;
   int ix=0;
-  int xstart=bb_array->columns[column].base->x;
+  int xstart=bb_array->columns[column].base.x;
   int iy=0;
-  int ystart=bb_array->columns[column].base->y;
+  int ystart=bb_array->columns[column].base.y;
   int xend=ix+bb_array->columns[column].width;
   int yend=iy+bb_array->columns[column].height;
   int ibb=0;
@@ -111,14 +111,14 @@ try_right_route_pin_on_bb(IN t_pr_pin* spin,
 {
   float rcost=0.0;
   float tmpcost=0.0;
-  t_location* rloc=spin->location;
+  t_location* rloc=&(spin->location);
   t_location* tmploc;
   t_location* nearloc;
-  int ix=spin->location->x;
-  int iy=spin->location->y;
+  int ix=spin->location.x;
+  int iy=spin->location.y;
   int max_len=spin->parent->device->max_length;
   int itop=max_len+ix;
-  int iend=bb_array->columns[spin->parent->pcolumn].base->x
+  int iend=bb_array->columns[spin->parent->pcolumn].base.x
           +bb_array->columns[spin->parent->pcolumn].width;
   if (itop>iend)
   {itop=iend;}
@@ -170,14 +170,14 @@ try_left_route_pin_on_bb(IN t_pr_pin* spin,
 {
   float rcost=UNKNOWN;
   float tmpcost=0.0;
-  t_location* rloc=spin->location;
+  t_location* rloc=&(spin->location);
   t_location* tmploc;
   t_location* nearloc;
-  int ix=spin->location->x;
-  int iy=spin->location->y;
+  int ix=spin->location.x;
+  int iy=spin->location.y;
   int max_len=spin->parent->device->max_length;
   int itop=ix-max_len;
-  int iend=bb_array->columns[spin->parent->pcolumn].base->x;
+  int iend=bb_array->columns[spin->parent->pcolumn].base.x;
   if (itop<iend)
   {itop=iend;}
  
@@ -268,16 +268,16 @@ try_left_find_node(IN t_pr_pin* pin,
                    IN t_bb_array* bb_array
                   )
 {
-  int ix=pin->parent->location->x;
-  int itop=bb_array->columns[pin->parent->pcolumn].base->x;
+  int ix=pin->parent->location.x;
+  int itop=bb_array->columns[pin->parent->pcolumn].base.x;
   t_location* loc=NULL;
   float cost=0.0;
   while (ix>itop)
   {
-    set_location_value(loc,ix,pin->location->y);
+    set_location_value(loc,ix,pin->location.y);
     if (FALSE==check_bb_node_unroutable(loc,bb_array))
     {
-      set_location_value(leftloc,ix,pin->location->y);
+      set_location_value(leftloc,ix,pin->location.y);
       cost=find_manhattan_distance(leftloc,loc)
           +get_bb_node_route_cost(leftloc,bb_array)
           +get_bb_node_route_cost(loc,bb_array);
@@ -293,18 +293,18 @@ try_right_find_node(IN t_pr_pin* pin,
                     IN t_bb_array* bb_array
                    )
 {
-  int ix=pin->parent->location->x
+  int ix=pin->parent->location.x
         +pin->parent->device->width;
-  int itop=bb_array->columns[pin->parent->pcolumn].base->x
+  int itop=bb_array->columns[pin->parent->pcolumn].base.x
           +bb_array->columns[pin->parent->pcolumn].width;
   t_location* loc=NULL;
   float cost=0.0;
   while (ix<itop)
   {
-    set_location_value(loc,ix,pin->location->y);
+    set_location_value(loc,ix,pin->location.y);
     if (FALSE==check_bb_node_unroutable(loc,bb_array))
     {
-      set_location_value(rightloc,ix,pin->location->y);
+      set_location_value(rightloc,ix,pin->location.y);
       cost=find_manhattan_distance(rightloc,loc)
           +get_bb_node_route_cost(rightloc,bb_array)
           +get_bb_node_route_cost(loc,bb_array);
