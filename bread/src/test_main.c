@@ -43,6 +43,6 @@ main(int argc, char** argv)
 
 	setup_rabbit (vnets_length, vnets, marcos_length, marcos, &bb_array);
 
-    place_route(vnets_length, vnets, marcos_length, marcos, &bb_array);
+    //place_route(vnets_length, vnets, marcos_length, marcos, &bb_array);
     return 0;
 }
