@@ -13,7 +13,8 @@ alloc_vnet_place_bb(IN int name,
                     IN int blank,
                     IN int column,
                     IN int nvnet,
-                    IN t_vnet* vnets
+                    IN t_vnet* vnets,
+					IN int wcapacity
                    );
 
 int
@@ -84,17 +85,31 @@ alloc_vnet_place_bb(IN int name,
                     IN int blank,
                     IN int column,
                     IN int nvnet,
-                    IN t_vnet* vnets
+                    IN t_vnet* vnets,
+					IN int wcapacity
                    )
 {
   int inet=0;
+  int baswidth;
+  
   for (inet=0;inet<nvnet;++inet)
   {
     if ((column==(vnets+inet)->pcolumn)
 	   &&(name==(vnets+inet)->name)
 	   &&(SPECIAL==(vnets+inet)->type))
     {
-      (vnets+inet)->locations->x=(*curloc);
+      baswidth=find_vnet_basic_width(vnets+inet,wcapacity);
+
+      vnets[inet].locnum=baswidth;
+      vnets[inet].locations=(t_location*)malloc(baswidth*sizeof(t_location));
+      if (NULL==vnets[inet].locations)
+      {
+        printf("Bread Board Placement: Fail to malloc locatons(Width:%d) for vnet(%d).\n");
+        abort();
+	    exit(1);
+      }
+      vnets[inet].locations->x=(*curloc);
+
       (*curloc)=(*curloc)+blank+(vnets+inet)->pwidth;  
        return 1;
     }
@@ -138,15 +153,20 @@ alloc_bb_place(IN int nblk,
   int right=0;
   int curloc=0;
   int ioff=0;
+  int wcapacity=0;
+
   while(icol<bb_array->no_column)
   {
+    if (0==bb_array->columns[icol].usedwidth)
+	{icol++;continue;}
     left=bb_array->columns[icol].left;
     right=bb_array->columns[icol].right;
     blank=(bb_array->width-bb_array->columns[icol].usedwidth)/(right-left+1);
     curloc=blank;
+	wcapacity=bb_array->columns[icol].width_capacity;
     for (ioff=left;ioff<(right+1);++ioff)
     {
-      alloc_vnet_place_bb(ioff,&curloc,blank,icol,nvnet,vnets);
+      alloc_vnet_place_bb(ioff,&curloc,blank,icol,nvnet,vnets,wcapacity);
       alloc_blk_place_bb(ioff,&curloc,blank,icol,nblk,blks);
     }
     icol++;
@@ -292,15 +312,6 @@ detail_place_vnet(INOUT t_vnet* vnet,
   wcapacity=bb_array->columns[column].width_capacity;
   baswidth=find_vnet_basic_width(vnet,wcapacity);
 
-  vnet->locnum=baswidth;
-  vnet->locations=(t_location*)malloc(baswidth*sizeof(t_location));
-  if (NULL==vnet->locations)
-  {
-    printf("Bread Board Placement: Fail to malloc locatons(Width:%d) for vnet(%d).\n");
-    abort();
-	exit(1);
-  }
-
   if (baswidth>1)
   {
     detail_place_big_vnet(vnetoff,vnet,wcapacity);
@@ -394,8 +405,22 @@ detail_place(IN int nvnet,
   int ioff=0;
   t_pr_marco* blk=NULL;
   t_vnet* vnet=NULL;
+  
+  alloc_bb_place(nmarco,pr_marco,nvnet,vnets,bb_array);
+
+  printf("Start detail placement on bread board...\n");
+
   while (icol<bb_array->no_column)
   {
+    printf("Detail Placement on column(%d)...\n",icol);
+
+    if (0==bb_array->columns[icol].usedwidth)
+	{
+	  icol++;
+	  continue;
+	}
+
+
     left=bb_array->columns[icol].left;
     right=bb_array->columns[icol].right;
     blk=find_blk_with_name(ioff,icol,nmarco,pr_marco); 
@@ -419,5 +444,6 @@ detail_place(IN int nvnet,
     }
     icol++;
   }
+  printf("Detail placement Over...\n");
   return TRUE;
 }

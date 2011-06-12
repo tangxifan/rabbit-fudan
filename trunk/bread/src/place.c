@@ -95,6 +95,7 @@ climbing_place(IN int nblk,
   t_pr_marco* blkchn=NULL;
   t_vnet* netchn=NULL;
   int wcapacity=bb_array.columns[place_info->column].width_capacity;
+
   printf("Current column: %d.\twidth capacity: %d\tbb pwidth: %d.\n",place_info->column,wcapacity,place_info->bb_pwidth);
   
   while(1)
@@ -137,12 +138,14 @@ climbing_place(IN int nblk,
     {
       if (TRUE==chntype)
       {
+        place_info->cur_width+=minwid;	    
         determine_blk_place_location(blkchn,place_info);
         blkchn->pcolumn=place_info->column;
         blkchn->status=PLACED;
       }
       else
       {
+        place_info->cur_width+=minwid;	    
         determine_net_place_location(netchn,place_info);
         netchn->pcolumn=place_info->column;
         netchn->status=PLACED;

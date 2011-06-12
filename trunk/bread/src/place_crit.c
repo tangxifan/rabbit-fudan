@@ -221,7 +221,7 @@ find_vnet_pwidth(IN t_vnet* vnet,
   t_pr_pin* vpin=NULL;
   
   if(1==DEBUG)
-  {printf("Find Virtual net place width....\n");}
+  {printf("Virtual net basic place width(%d)....\n",pwidth);}
   for (ipin=0;ipin<npin;++ipin)
   {
     if(1==DEBUG)
@@ -240,6 +240,7 @@ find_vnet_pwidth(IN t_vnet* vnet,
   //for (ipin=0;ipin<npin;++ipin)
   //{set_unpoint_marco((*(vnet->pins+ipin))->parent);}
 //pwidth+=minl;
+  vnet->pwidth=pwidth;
   if (1==DEBUG)
   {printf("Virtual Net(%d) place width is %d.\n",vnet,pwidth);}
   return pwidth;  

@@ -244,8 +244,6 @@ find_vnet_basic_width(IN t_vnet* vnet,
   }
   else
   {wbasic=1;}
-  vnet->locnum=wbasic;
-  vnet->locations=(t_location*)malloc(vnet->locnum*sizeof(t_location));
   return wbasic;
 }
 
