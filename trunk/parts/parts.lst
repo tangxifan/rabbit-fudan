@@ -1,2 +1,651 @@
+11LC010*11LC010.fzp
+11LC020*11LC020.fzp
+11LC040*11LC040.fzp
+11LC080*11LC080.fzp
+11LC160*11LC160.fzp
+16-segment display*16-segment_display.fzp
+24LC01*24LC01.fzp
+24LC02*24LC02.fzp
+24LC04*24LC04.fzp
+24LC08*24LC08.fzp
+24LC1025*24LC1025.fzp
+24LC128*24LC128.fzp
+24LC16*24LC16.fzp
+24LC256*24LC256.fzp
+24LC32*24LC32.fzp
+24LC512*24LC512.fzp
+24LC64*24LC64.fzp
+25LC010*25LC010.fzp
+25LC020*25LC020.fzp
+25LC040*25LC040.fzp
+25LC080*25LC080.fzp
+25LC1024*25LC1024.fzp
+25LC128*25LC128.fzp
+25LC160*25LC160.fzp
+25LC256*25LC256.fzp
+25LC320*25LC320.fzp
+25LC512*25LC512.fzp
+25LC640*25LC640.fzp
+555 Timer*555timer.fzp
+7-Segment LED Display*7-segment_display.fzp
+74HC595*74HC595.fzp
+3-Axis Accelerometer Breakout*accelerometer-adxl.fzp
+AD5206 Digital Potentiometer*AD5206 Digital Potentiometer.fzp
+Antenna*Antenna.fzp
+Arduino Ethernet Shield*Arduino Ethernet Shield.fzp
+Arduino Fio*Arduino Fio.fzp
+Arduino LilyPad*Arduino LilyPad.fzp
+Arduino Mini Pro*Arduino Mini Pro.fzp
+Arduino Mini*Arduino Mini.fzp
+Arduino Nano*Arduino Nano.fzp
+Arduino*arduino.fzp
+Arduino Mega*arduino_mega.fzp
+Artreeno*artreeno.fzp
+atmega168*atmega168.fzp
+Barometric Pressure Sensor*Barometric Pressure Sensor.fzp
+Basic Flex Resistor*Basic Force Sensing Resistor (FSR).fzp
+Rectifier Diode*basic-diode.fzp
+Relay*basic-relay.fzp
+Toggle Switch*basic-toggle-switch.fzp
+Basic FET N-Channel*basic_fet_n.fzp
+Basic FET P-Channel*basic_fet_p.fzp
+Basic Force Sensing Resistor (FSR)*basic_fsr.fzp
+Basic Photo-Resistor (Photocell)*basic_ldr.fzp
+Trimmer Potentiometer*basic_poti.fzp
+npn-Powertransistor*basic_power_transistor_npn.fzp
+pnp-Powertransistor*basic_power_transistor_pnp.fzp
+Pushbutton*basic_pushbutton.fzp
+Pushbutton*basic_pushbutton_2lead_horizon.fzp
+Basic Servo*basic_servo.fzp
+BASIC Stamp 1*BASIC_Stamp_1.fzp
+BASIC Stamp 2 sx*BASIC_Stamp_2.fzp
+BASIC Stamp 2e*BASIC_Stamp_2e.fzp
+BASIC Stamp 2p24*BASIC_Stamp_2p24.fzp
+BASIC Stamp 2p 40-Pin*BASIC_Stamp_2p40.fzp
+BASIC Stamp 2pe*BASIC_Stamp_2pe.fzp
+BASIC Stamp 2px24*BASIC_Stamp_2px24.fzp
+BASIC Stamp 2sx*BASIC_Stamp_2sx.fzp
+Temperature Sensor (Thermistor)*basic_thermistor.fzp
+NPN-Transistor*basic_transistor_npn.fzp
+pnp-Transistor*basic_transistor_pnp.fzp
+Battery block 9V*Battery block 9V.fzp
+Battery*battery-AA.fzp
+Rotary Potentiometer (Large)*big_pot.fzp
+Generic Bajillion Hole Breadboard*breadboard.fzp
+RSR 03MB102 Breadboard*breadboard2.fzp
+Ceramic Capacitor*capacitor_ceramic_0_1nF.fzp
+Ceramic Capacitor*capacitor_ceramic_0_1uF.fzp
+Ceramic Capacitor*capacitor_ceramic_100mil.fzp
+Ceramic Capacitor*capacitor_ceramic_1nF.fzp
+Ceramic Capacitor*capacitor_ceramic_1uF.fzp
+Ceramic Capacitor*capacitor_ceramic_200mil.fzp
+Ceramic Capacitor*capacitor_ceramic_47nF.fzp
+Ceramic Capacitor*capacitor_ceramic_disk_0_01uF.fzp
+Ceramic Capacitor*capacitor_ceramic_disk_0_1uF.fzp
+Ceramic Disk Capacitor*capacitor_ceramic_disk_1pF.fzp
+Ceramic Disk Capacitor*capacitor_ceramic_disk_220pF.fzp
+Ceramic Disk Capacitor*capacitor_ceramic_disk_22pF.fzp
+Electrolytic Capacitor*capacitor_electrolytic_large.fzp
+Electrolytic Capacitor*capacitor_electrolytic_medium.fzp
+Electrolytic Capacitor*capacitor_electrolytic_small.fzp
+Tantalum Capacitor*capacitor_tantalum_0_1uF.fzp
+Tantalum Capacitor*capacitor_tantalum_100mil.fzp
+Tantalum Capacitor*capacitor_tantalum_100uF.fzp
+Tantalum Capacitor*capacitor_tantalum_10uF.fzp
+Tantalum Capacitor*capacitor_tantalum_1uF.fzp
+Tantalum Capacitor*capacitor_tantalum_200mil.fzp
+Ceramic Capacitor*ceramic_capacitor_0_01uF.fzp
+Ceramic Disk Capacitor*ceramic_capacitor_22pf.fzp
+Ceramic Capacitor*ceramic_capacitor_basic_0_1uF.fzp
+Arduino Diecimila (deprecated)*controller_arduino_diecimila.fzp
+mbed*controller_mbed.fzp
+Modified Pico*controller_pico.fzp
+Parallax Propeller D40*controller_propeller_D40.fzp
+Wiring*controller_wiring.fzp
+Wiring Mini*controller_wiring_mini.fzp
+Crystal*crystal.fzp
+DC Motor*dc_motor.fzp
+DIN-5 jack (MIDI)*din-5_midi_connector.fzp
+Rectifier Diode*diode_1N4001_300mil.fzp
+Schottky Diode*diode_schottky_1N5817_300mil.fzp
+Zener Diode*diode_zener_0_5w_3_6v_300mil.fzp
+Zener Diode*diode_zener_1w_4_7v_300mil.fzp
+DS1302*DS1302.fzp
+DS1307*DS1307.fzp
+Electrolytic Capacitor*electrolytic_capacitor_1000uF.fzp
+Electrolytic Capacitor*electrolytic_capacitor_100uF.fzp
+Electrolytic Capacitor*electrolytic_capacitor_10uF.fzp
+Electrolytic Capacitor*electrolytic_capacitor_1uF.fzp
+Electrolytic Capacitor*electrolytic_capacitor_220uF.fzp
+Electrolytic Capacitor*electrolytic_capacitor_22uF.fzp
+Electrolytic Capacitor*electrolytic_capacitor_4700uF.fzp
+Electrolytic Capacitor*electrolytic_capacitor_470uF.fzp
+Electrolytic Capacitor*electrolytic_capacitor_47uF.fzp
+Electrolytic Capacitor*electrolytic_capacitor_basic_10uF.fzp
+FRM010*FRM010.fzp
+FRM050*FRM050.fzp
+Generic female header - metal rounded*Generic female header - metal rounded.fzp
+Generic female header*Generic female header.fzp
+Generic male header*Generic male header.fzp
+Generic female header - metal rounded - 10 pins*generic-female-header-rounded_10.fzp
+Generic female header - metal rounded - 11 pins*generic-female-header-rounded_11.fzp
+Generic female header - metal rounded - 12 pins*generic-female-header-rounded_12.fzp
+Generic female header - metal rounded - 14 pins*generic-female-header-rounded_14.fzp
+Generic female header - metal rounded - 16 pins*generic-female-header-rounded_16.fzp
+Generic female header - metal rounded - 18 pins*generic-female-header-rounded_18.fzp
+Generic female header - metal rounded - 2 pins*generic-female-header-rounded_2.fzp
+Generic female header - metal rounded - 20 pins*generic-female-header-rounded_20.fzp
+Generic female header - metal rounded - 3 pins*generic-female-header-rounded_3.fzp
+Generic female header - metal rounded - 4 pins*generic-female-header-rounded_4.fzp
+Generic female header - metal rounded - 5 pins*generic-female-header-rounded_5.fzp
+Generic female header - metal rounded - 6 pins*generic-female-header-rounded_6.fzp
+Generic female header - metal rounded - 7 pins*generic-female-header-rounded_7.fzp
+Generic female header - metal rounded - 8 pins*generic-female-header-rounded_8.fzp
+Generic female header - metal rounded - 9 pins*generic-female-header-rounded_9.fzp
+Generic female header - 10 pins*generic-female-header_10.fzp
+Generic female header - 11 pins*generic-female-header_11.fzp
+Generic female header - 12 pins*generic-female-header_12.fzp
+Generic female header - 14 pins*generic-female-header_14.fzp
+Generic female header - 16 pins*generic-female-header_16.fzp
+Generic female header - 18 pins*generic-female-header_18.fzp
+Generic female header - 2 pins*generic-female-header_2.fzp
+Generic female header - 20 pins*generic-female-header_20.fzp
+Generic female header - 3 pins*generic-female-header_3.fzp
+Generic female header - 4 pins*generic-female-header_4.fzp
+Generic female header - 5 pins*generic-female-header_5.fzp
+Generic female header - 6 pins*generic-female-header_6.fzp
+Generic female header - 7 pins*generic-female-header_7.fzp
+Generic female header - 8 pins*generic-female-header_8.fzp
+Generic female header - 9 pins*generic-female-header_9.fzp
+Generic male header - 10 pins*generic-male-header_10.fzp
+Generic male header - 11 pins*generic-male-header_11.fzp
+Generic male header - 12 pins*generic-male-header_12.fzp
+Generic male header - 14 pins*generic-male-header_14.fzp
+Generic male header - 16 pins*generic-male-header_16.fzp
+Generic male header - 18 pins*generic-male-header_18.fzp
+Generic male header - 2 pins*generic-male-header_2.fzp
+Generic male header - 20 pins*generic-male-header_20.fzp
+Generic male header - 3 pins*generic-male-header_3.fzp
+Generic male header - 4 pins*generic-male-header_4.fzp
+Generic male header - 5 pins*generic-male-header_5.fzp
+Generic male header - 6 pins*generic-male-header_6.fzp
+Generic male header - 7 pins*generic-male-header_7.fzp
+Generic male header - 8 pins*generic-male-header_8.fzp
+Generic male header - 9 pins*generic-male-header_9.fzp
+Generic female header - 10 pins*generic_female_pin_header_10_100mil.fzp
+Generic female header - 11 pins*generic_female_pin_header_11_100mil.fzp
+Generic female header - 12 pins*generic_female_pin_header_12_100mil.fzp
+Generic female header - 13 pins*generic_female_pin_header_13_100mil.fzp
+Generic female header - 14 pins*generic_female_pin_header_14_100mil.fzp
+Generic female header - 15 pins*generic_female_pin_header_15_100mil.fzp
+Generic female header - 16 pins*generic_female_pin_header_16_100mil.fzp
+Generic female header - 17 pins*generic_female_pin_header_17_100mil.fzp
+Generic female header - 18 pins*generic_female_pin_header_18_100mil.fzp
+Generic female header - 19 pins*generic_female_pin_header_19_100mil.fzp
+Generic female header - 1 pins*generic_female_pin_header_1_100mil.fzp
+Generic female header - 20 pins*generic_female_pin_header_20_100mil.fzp
+Generic female header - 21 pins*generic_female_pin_header_21_100mil.fzp
+Generic female header - 22 pins*generic_female_pin_header_22_100mil.fzp
+Generic female header - 23 pins*generic_female_pin_header_23_100mil.fzp
+Generic female header - 24 pins*generic_female_pin_header_24_100mil.fzp
+Generic female header - 25 pins*generic_female_pin_header_25_100mil.fzp
+Generic female header - 26 pins*generic_female_pin_header_26_100mil.fzp
+Generic female header - 27 pins*generic_female_pin_header_27_100mil.fzp
+Generic female header - 28 pins*generic_female_pin_header_28_100mil.fzp
+Generic female header - 29 pins*generic_female_pin_header_29_100mil.fzp
+Generic female header - 2 pins*generic_female_pin_header_2_100mil.fzp
+Generic female header - 30 pins*generic_female_pin_header_30_100mil.fzp
+Generic female header - 31 pins*generic_female_pin_header_31_100mil.fzp
+Generic female header - 32 pins*generic_female_pin_header_32_100mil.fzp
+Generic female header - 33 pins*generic_female_pin_header_33_100mil.fzp
+Generic female header - 34 pins*generic_female_pin_header_34_100mil.fzp
+Generic female header - 35 pins*generic_female_pin_header_35_100mil.fzp
+Generic female header - 36 pins*generic_female_pin_header_36_100mil.fzp
+Generic female header - 37 pins*generic_female_pin_header_37_100mil.fzp
+Generic female header - 38 pins*generic_female_pin_header_38_100mil.fzp
+Generic female header - 39 pins*generic_female_pin_header_39_100mil.fzp
+Generic female header - 3 pins*generic_female_pin_header_3_100mil.fzp
+Generic female header - 40 pins*generic_female_pin_header_40_100mil.fzp
+Generic female header - 41 pins*generic_female_pin_header_41_100mil.fzp
+Generic female header - 42 pins*generic_female_pin_header_42_100mil.fzp
+Generic female header - 43 pins*generic_female_pin_header_43_100mil.fzp
+Generic female header - 44 pins*generic_female_pin_header_44_100mil.fzp
+Generic female header - 45 pins*generic_female_pin_header_45_100mil.fzp
+Generic female header - 46 pins*generic_female_pin_header_46_100mil.fzp
+Generic female header - 47 pins*generic_female_pin_header_47_100mil.fzp
+Generic female header - 48 pins*generic_female_pin_header_48_100mil.fzp
+Generic female header - 49 pins*generic_female_pin_header_49_100mil.fzp
+Generic female header - 4 pins*generic_female_pin_header_4_100mil.fzp
+Generic female header - 50 pins*generic_female_pin_header_50_100mil.fzp
+Generic female header - 51 pins*generic_female_pin_header_51_100mil.fzp
+Generic female header - 52 pins*generic_female_pin_header_52_100mil.fzp
+Generic female header - 53 pins*generic_female_pin_header_53_100mil.fzp
+Generic female header - 54 pins*generic_female_pin_header_54_100mil.fzp
+Generic female header - 55 pins*generic_female_pin_header_55_100mil.fzp
+Generic female header - 56 pins*generic_female_pin_header_56_100mil.fzp
+Generic female header - 57 pins*generic_female_pin_header_57_100mil.fzp
+Generic female header - 58 pins*generic_female_pin_header_58_100mil.fzp
+Generic female header - 59 pins*generic_female_pin_header_59_100mil.fzp
+Generic female header - 5 pins*generic_female_pin_header_5_100mil.fzp
+Generic female header - 60 pins*generic_female_pin_header_60_100mil.fzp
+Generic female header - 61 pins*generic_female_pin_header_61_100mil.fzp
+Generic female header - 62 pins*generic_female_pin_header_62_100mil.fzp
+Generic female header - 63 pins*generic_female_pin_header_63_100mil.fzp
+Generic female header - 64 pins*generic_female_pin_header_64_100mil.fzp
+Generic female header - 6 pins*generic_female_pin_header_6_100mil.fzp
+Generic female header - 7 pins*generic_female_pin_header_7_100mil.fzp
+Generic female header - 8 pins*generic_female_pin_header_8_100mil.fzp
+Generic female header - 9 pins*generic_female_pin_header_9_100mil.fzp
+DIP - 10 pins*generic_ic_dip_10_300mil.fzp
+DIP - 12 pins*generic_ic_dip_12_300mil.fzp
+DIP - 14 pins*generic_ic_dip_14_300mil.fzp
+DIP - 16 pins*generic_ic_dip_16_300mil.fzp
+DIP - 18 pins*generic_ic_dip_18_300mil.fzp
+DIP - 20 pins*generic_ic_dip_20_300mil.fzp
+DIP - 22 pins*generic_ic_dip_22_300mil.fzp
+DIP - 24 pins*generic_ic_dip_24_300mil.fzp
+DIP - 26 pins*generic_ic_dip_26_300mil.fzp
+DIP - 28 pins*generic_ic_dip_28_300mil.fzp
+DIP - 30 pins*generic_ic_dip_30_300mil.fzp
+DIP - 32 pins*generic_ic_dip_32_300mil.fzp
+DIP - 34 pins*generic_ic_dip_34_300mil.fzp
+DIP - 36 pins*generic_ic_dip_36_300mil.fzp
+DIP - 38 pins*generic_ic_dip_38_300mil.fzp
+DIP - 40 pins*generic_ic_dip_40_300mil.fzp
+DIP - 42 pins*generic_ic_dip_42_300mil.fzp
+DIP - 44 pins*generic_ic_dip_44_300mil.fzp
+DIP - 46 pins*generic_ic_dip_46_300mil.fzp
+DIP - 48 pins*generic_ic_dip_48_300mil.fzp
+DIP - 4 pins*generic_ic_dip_4_300mil.fzp
+DIP - 50 pins*generic_ic_dip_50_300mil.fzp
+DIP - 52 pins*generic_ic_dip_52_300mil.fzp
+DIP - 54 pins*generic_ic_dip_54_300mil.fzp
+DIP - 56 pins*generic_ic_dip_56_300mil.fzp
+DIP - 58 pins*generic_ic_dip_58_300mil.fzp
+DIP - 60 pins*generic_ic_dip_60_300mil.fzp
+DIP - 62 pins*generic_ic_dip_62_300mil.fzp
+DIP - 64 pins*generic_ic_dip_64_300mil.fzp
+DIP - 6 pins*generic_ic_dip_6_300mil.fzp
+DIP - 8 pins*generic_ic_dip_8_300mil.fzp
+SIP - 10 pins*generic_sip_10_300mil.fzp
+SIP - 11 pins*generic_sip_11_300mil.fzp
+SIP - 12 pins*generic_sip_12_300mil.fzp
+SIP - 13 pins*generic_sip_13_300mil.fzp
+SIP - 14 pins*generic_sip_14_300mil.fzp
+SIP - 15 pins*generic_sip_15_300mil.fzp
+SIP - 16 pins*generic_sip_16_300mil.fzp
+SIP - 17 pins*generic_sip_17_300mil.fzp
+SIP - 18 pins*generic_sip_18_300mil.fzp
+SIP - 19 pins*generic_sip_19_300mil.fzp
+SIP - 20 pins*generic_sip_20_300mil.fzp
+SIP - 21 pins*generic_sip_21_300mil.fzp
+SIP - 22 pins*generic_sip_22_300mil.fzp
+SIP - 23 pins*generic_sip_23_300mil.fzp
+SIP - 24 pins*generic_sip_24_300mil.fzp
+SIP - 25 pins*generic_sip_25_300mil.fzp
+SIP - 26 pins*generic_sip_26_300mil.fzp
+SIP - 27 pins*generic_sip_27_300mil.fzp
+SIP - 28 pins*generic_sip_28_300mil.fzp
+SIP - 29 pins*generic_sip_29_300mil.fzp
+SIP - 2 pins*generic_sip_2_300mil.fzp
+SIP - 30 pins*generic_sip_30_300mil.fzp
+SIP - 31 pins*generic_sip_31_300mil.fzp
+SIP - 32 pins*generic_sip_32_300mil.fzp
+SIP - 33 pins*generic_sip_33_300mil.fzp
+SIP - 34 pins*generic_sip_34_300mil.fzp
+SIP - 35 pins*generic_sip_35_300mil.fzp
+SIP - 36 pins*generic_sip_36_300mil.fzp
+SIP - 37 pins*generic_sip_37_300mil.fzp
+SIP - 38 pins*generic_sip_38_300mil.fzp
+SIP - 39 pins*generic_sip_39_300mil.fzp
+SIP - 3 pins*generic_sip_3_300mil.fzp
+SIP - 40 pins*generic_sip_40_300mil.fzp
+SIP - 41 pins*generic_sip_41_300mil.fzp
+SIP - 42 pins*generic_sip_42_300mil.fzp
+SIP - 43 pins*generic_sip_43_300mil.fzp
+SIP - 44 pins*generic_sip_44_300mil.fzp
+SIP - 45 pins*generic_sip_45_300mil.fzp
+SIP - 46 pins*generic_sip_46_300mil.fzp
+SIP - 47 pins*generic_sip_47_300mil.fzp
+SIP - 48 pins*generic_sip_48_300mil.fzp
+SIP - 49 pins*generic_sip_49_300mil.fzp
+SIP - 4 pins*generic_sip_4_300mil.fzp
+SIP - 50 pins*generic_sip_50_300mil.fzp
+SIP - 51 pins*generic_sip_51_300mil.fzp
+SIP - 52 pins*generic_sip_52_300mil.fzp
+SIP - 53 pins*generic_sip_53_300mil.fzp
+SIP - 54 pins*generic_sip_54_300mil.fzp
+SIP - 55 pins*generic_sip_55_300mil.fzp
+SIP - 56 pins*generic_sip_56_300mil.fzp
+SIP - 57 pins*generic_sip_57_300mil.fzp
+SIP - 58 pins*generic_sip_58_300mil.fzp
+SIP - 59 pins*generic_sip_59_300mil.fzp
+SIP - 5 pins*generic_sip_5_300mil.fzp
+SIP - 60 pins*generic_sip_60_300mil.fzp
+SIP - 61 pins*generic_sip_61_300mil.fzp
+SIP - 62 pins*generic_sip_62_300mil.fzp
+SIP - 63 pins*generic_sip_63_300mil.fzp
+SIP - 64 pins*generic_sip_64_300mil.fzp
+SIP - 6 pins*generic_sip_6_300mil.fzp
+SIP - 7 pins*generic_sip_7_300mil.fzp
+SIP - 8 pins*generic_sip_8_300mil.fzp
+SIP - 9 pins*generic_sip_9_300mil.fzp
+128 x 64 Graphic LCD*GLCD 128x64.fzp
+GogoBoard 4.0*gogoboard 4.0.fzp
+H-Bridge*h-bridge.fzp
+Half-Breadboard*halfBreadboard.fzp
+HCMS-29xx*HCMS-29xx.fzp
+Inductor*inductor.fzp
+Infrared Proximity Sensor*infrared_proximity_sensor.fzp
+L293D*L293D.fzp
+LCD screen*lcd-screen.fzp
+Photocell (LDR)*LDR_photocell_300mil.fzp
+Blue LED - 5mm*LED-blue-5mm.fzp
+Blue LED - 5mm*LED-blue-5mm_t1.75.fzp
+green LED - 5mm*LED-green-5mm.fzp
+green LED - 5mm*LED-green-5mm_t1.75.fzp
+Red LED - 5mm*LED-red-5mm.fzp
+Red LED - 5mm*LED-red-5mm_t1.75.fzp
+RGB LED - (4 legs)*led-rgb-4pin-anode.fzp
+RGB LED (6 legs)*led-rgb-6pin.fzp
+white LED - 5mm*LED-white-5mm.fzp
+white LED - 5mm*LED-white-5mm_t1.75.fzp
+yellow LED - 5mm*LED-yellow-5mm.fzp
+yellow LED - 5mm*LED-yellow-5mm_t1.75.fzp
+LM 358 Dual Op-Amp*lm358.fzp
+Loudspeaker*loudspeaker.fzp
+Microphone*microphone.fzp
+Mystery Part - 1 pins*mystery_part1.fzp
+Mystery Part - 10 pins*mystery_part10.fzp
+Mystery Part - 11 pins*mystery_part11.fzp
+Mystery Part - 12 pins*mystery_part12.fzp
+Mystery Part - 14 pins*mystery_part14.fzp
+Mystery Part - 16 pins*mystery_part16.fzp
+Mystery Part - 18 pins*mystery_part18.fzp
+Mystery Part - 2 pins*mystery_part2.fzp
+Mystery Part - 20 pins*mystery_part20.fzp
+Mystery Part - 3 pins*mystery_part3.fzp
+Mystery Part - 4 pins*mystery_part4.fzp
+Mystery Part - 5 pins*mystery_part5.fzp
+Mystery Part - 6 pins*mystery_part6.fzp
+Mystery Part - 7 pins*mystery_part7.fzp
+Mystery Part - 8 pins*mystery_part8.fzp
+Mystery Part - 9 pins*mystery_part9.fzp
+Mystery Part - 10 pins*mystery_part_10_dip_300mil.fzp
+Mystery Part - 10 pins*mystery_part_10_sip_100mil.fzp
+Mystery Part - 11 pins*mystery_part_11_sip_100mil.fzp
+Mystery Part - 12 pins*mystery_part_12_dip_300mil.fzp
+Mystery Part - 12 pins*mystery_part_12_sip_100mil.fzp
+Mystery Part - 13 pins*mystery_part_13_sip_100mil.fzp
+Mystery Part - 14 pins*mystery_part_14_dip_300mil.fzp
+Mystery Part - 14 pins*mystery_part_14_sip_100mil.fzp
+Mystery Part - 15 pins*mystery_part_15_sip_100mil.fzp
+Mystery Part - 16 pins*mystery_part_16_dip_300mil.fzp
+Mystery Part - 16 pins*mystery_part_16_sip_100mil.fzp
+Mystery Part - 17 pins*mystery_part_17_sip_100mil.fzp
+Mystery Part - 18 pins*mystery_part_18_dip_300mil.fzp
+Mystery Part - 18 pins*mystery_part_18_sip_100mil.fzp
+Mystery Part - 19 pins*mystery_part_19_sip_100mil.fzp
+Mystery Part - 1 pins*mystery_part_1_sip_100mil.fzp
+Mystery Part - 20 pins*mystery_part_20_dip_300mil.fzp
+Mystery Part - 20 pins*mystery_part_20_sip_100mil.fzp
+Mystery Part - 21 pins*mystery_part_21_sip_100mil.fzp
+Mystery Part - 22 pins*mystery_part_22_dip_300mil.fzp
+Mystery Part - 22 pins*mystery_part_22_sip_100mil.fzp
+Mystery Part - 23 pins*mystery_part_23_sip_100mil.fzp
+Mystery Part - 24 pins*mystery_part_24_dip_300mil.fzp
+Mystery Part - 24 pins*mystery_part_24_sip_100mil.fzp
+Mystery Part - 25 pins*mystery_part_25_sip_100mil.fzp
+Mystery Part - 26 pins*mystery_part_26_dip_300mil.fzp
+Mystery Part - 26 pins*mystery_part_26_sip_100mil.fzp
+Mystery Part - 27 pins*mystery_part_27_sip_100mil.fzp
+Mystery Part - 28 pins*mystery_part_28_dip_300mil.fzp
+Mystery Part - 28 pins*mystery_part_28_sip_100mil.fzp
+Mystery Part - 29 pins*mystery_part_29_sip_100mil.fzp
+Mystery Part - 2 pins*mystery_part_2_sip_100mil.fzp
+Mystery Part - 30 pins*mystery_part_30_dip_300mil.fzp
+Mystery Part - 30 pins*mystery_part_30_sip_100mil.fzp
+Mystery Part - 31 pins*mystery_part_31_sip_100mil.fzp
+Mystery Part - 32 pins*mystery_part_32_dip_300mil.fzp
+Mystery Part - 32 pins*mystery_part_32_sip_100mil.fzp
+Mystery Part - 33 pins*mystery_part_33_sip_100mil.fzp
+Mystery Part - 34 pins*mystery_part_34_dip_300mil.fzp
+Mystery Part - 34 pins*mystery_part_34_sip_100mil.fzp
+Mystery Part - 35 pins*mystery_part_35_sip_100mil.fzp
+Mystery Part - 36 pins*mystery_part_36_dip_300mil.fzp
+Mystery Part - 36 pins*mystery_part_36_sip_100mil.fzp
+Mystery Part - 37 pins*mystery_part_37_sip_100mil.fzp
+Mystery Part - 38 pins*mystery_part_38_dip_300mil.fzp
+Mystery Part - 38 pins*mystery_part_38_sip_100mil.fzp
+Mystery Part - 39 pins*mystery_part_39_sip_100mil.fzp
+Mystery Part - 3 pins*mystery_part_3_sip_100mil.fzp
+Mystery Part - 40 pins*mystery_part_40_dip_300mil.fzp
+Mystery Part - 40 pins*mystery_part_40_sip_100mil.fzp
+Mystery Part - 41 pins*mystery_part_41_sip_100mil.fzp
+Mystery Part - 42 pins*mystery_part_42_dip_300mil.fzp
+Mystery Part - 42 pins*mystery_part_42_sip_100mil.fzp
+Mystery Part - 43 pins*mystery_part_43_sip_100mil.fzp
+Mystery Part - 44 pins*mystery_part_44_dip_300mil.fzp
+Mystery Part - 44 pins*mystery_part_44_sip_100mil.fzp
+Mystery Part - 45 pins*mystery_part_45_sip_100mil.fzp
+Mystery Part - 46 pins*mystery_part_46_dip_300mil.fzp
+Mystery Part - 46 pins*mystery_part_46_sip_100mil.fzp
+Mystery Part - 47 pins*mystery_part_47_sip_100mil.fzp
+Mystery Part - 48 pins*mystery_part_48_dip_300mil.fzp
+Mystery Part - 48 pins*mystery_part_48_sip_100mil.fzp
+Mystery Part - 49 pins*mystery_part_49_sip_100mil.fzp
+Mystery Part - 4 pins*mystery_part_4_dip_300mil.fzp
+Mystery Part - 4 pins*mystery_part_4_sip_100mil.fzp
+Mystery Part - 50 pins*mystery_part_50_dip_300mil.fzp
+Mystery Part - 50 pins*mystery_part_50_sip_100mil.fzp
+Mystery Part - 51 pins*mystery_part_51_sip_100mil.fzp
+Mystery Part - 52 pins*mystery_part_52_dip_300mil.fzp
+Mystery Part - 52 pins*mystery_part_52_sip_100mil.fzp
+Mystery Part - 53 pins*mystery_part_53_sip_100mil.fzp
+Mystery Part - 54 pins*mystery_part_54_dip_300mil.fzp
+Mystery Part - 54 pins*mystery_part_54_sip_100mil.fzp
+Mystery Part - 55 pins*mystery_part_55_sip_100mil.fzp
+Mystery Part - 56 pins*mystery_part_56_dip_300mil.fzp
+Mystery Part - 56 pins*mystery_part_56_sip_100mil.fzp
+Mystery Part - 57 pins*mystery_part_57_sip_100mil.fzp
+Mystery Part - 58 pins*mystery_part_58_dip_300mil.fzp
+Mystery Part - 58 pins*mystery_part_58_sip_100mil.fzp
+Mystery Part - 59 pins*mystery_part_59_sip_100mil.fzp
+Mystery Part - 5 pins*mystery_part_5_sip_100mil.fzp
+Mystery Part - 60 pins*mystery_part_60_dip_300mil.fzp
+Mystery Part - 60 pins*mystery_part_60_sip_100mil.fzp
+Mystery Part - 61 pins*mystery_part_61_sip_100mil.fzp
+Mystery Part - 62 pins*mystery_part_62_dip_300mil.fzp
+Mystery Part - 62 pins*mystery_part_62_sip_100mil.fzp
+Mystery Part - 63 pins*mystery_part_63_sip_100mil.fzp
+Mystery Part - 64 pins*mystery_part_64_dip_300mil.fzp
+Mystery Part - 64 pins*mystery_part_64_sip_100mil.fzp
+Mystery Part - 6 pins*mystery_part_6_dip_300mil.fzp
+Mystery Part - 6 pins*mystery_part_6_sip_100mil.fzp
+Mystery Part - 7 pins*mystery_part_7_sip_100mil.fzp
+Mystery Part - 8 pins*mystery_part_8_dip_300mil.fzp
+Mystery Part - 8 pins*mystery_part_8_sip_100mil.fzp
+Mystery Part - 9 pins*mystery_part_9_sip_100mil.fzp
+Netduino*Netduino.fzp
+Netduino Mini*NetduinoMini.fzp
+Netduino Plus*NetduinoPlus.fzp
+Optocoupler*optocoupler.fzp
+Arduino Shield PCB*pcb-arduino-shield.fzp
+Arduino Shield PCB*pcb-arduino-shield_two_layer.fzp
+Plain PCB - 100 x 160 mm*pcb-plain-100x160.fzp
+Plain PCB - 150 x 200 mm*pcb-plain-150x200.fzp
+Plain PCB - 200 x 300 mm*pcb-plain-200x300.fzp
+Plain PCB - 250 x 250 mm*pcb-plain-250x250.fzp
+Plain PCB - 60 x 100 mm*pcb-plain-60x100.fzp
+Plain PCB - 75 x 100 mm*pcb-plain-75x100.fzp
+Peltier Element*peltier element.fzp
+Peppermill Power Board*Peppermill Power Board.fzp
+PICAXE-08*PICAXE_08.fzp
+PICAXE-08M*PICAXE_08M.fzp
+PICAXE-14M*PICAXE_14M.fzp
+PICAXE-18*PICAXE_18.fzp
+PICAXE-18A*PICAXE_18A.fzp
+PICAXE-18M*PICAXE_18M.fzp
+PICAXE-18X*PICAXE_18X.fzp
+PICAXE-20M*PICAXE_20M.fzp
+PICAXE-20X2*PICAXE_20X2.fzp
+PICAXE-28*PICAXE_28.fzp
+PICAXE-28A*PICAXE_28A.fzp
+PICAXE-28X*PICAXE_28X.fzp
+PICAXE-28X1*PICAXE_28X1.fzp
+PICAXE-28X2*PICAXE_28X2.fzp
+PICAXE-28X2-3V*PICAXE_28X2_3V.fzp
+PICAXE-40X*PICAXE_40X.fzp
+PICAXE-40X1*PICAXE_40X1.fzp
+PICAXE-40X2*PICAXE_40X2.fzp
+PICAXE-40X2-3V*PICAXE_40X2_3V.fzp
+Piezo Speaker*piezo sensor.fzp
+Slide Potentiometer*pot-slider.fzp
+Rotary Potentiometer (Small)*pot-small.fzp
+Trimmer Potentiometer*pot_trimmer_6mm.fzp
+Power plug*Power plug.fzp
+Round Pushbutton*Pushbutton.fzp
+Pushbutton*pushbutton_2_horizontal.fzp
+Pushbutton*pushbutton_4_horizontal.fzp
+Reed switch*reed switch.fzp
 Reed switch*reedSwitch_500mil.fzp
-10 Ω Resistor*resistor_10.fzp
+10Ω Resistor*resistor_10.fzp
+100Ω Resistor*resistor_100.fzp
+100Ω Resistor*resistor_100_mini.fzp
+100kΩ Resistor*resistor_100k.fzp
+100kΩ Resistor*resistor_100k_mini.fzp
+10Ω Resistor*resistor_10_mini.fzp
+10kΩ Resistor*resistor_10k.fzp
+10kΩ Resistor*resistor_10k_mini.fzp
+15Ω Resistor*resistor_15.fzp
+150Ω Resistor*resistor_150.fzp
+150Ω Resistor*resistor_150_mini.fzp
+150kΩ Resistor*resistor_150k.fzp
+150kΩ Resistor*resistor_150k_mini.fzp
+15Ω Resistor*resistor_15_mini.fzp
+15kΩ Resistor*resistor_15k.fzp
+15kΩ Resistor*resistor_15k_mini.fzp
+1.5kΩ Resistor*resistor_1_5k.fzp
+1.5kΩ Resistor*resistor_1_5k_mini.fzp
+1kΩ Resistor*resistor_1k.fzp
+1kΩ Resistor*resistor_1k_mini.fzp
+1MΩ Resistor*resistor_1M.fzp
+1MΩ Resistor*resistor_1M_mini.fzp
+22Ω Resistor*resistor_22.fzp
+220Ω Resistor*resistor_220.fzp
+220Ω Resistor*resistor_220_mini.fzp
+220kΩ Resistor*resistor_220k.fzp
+220kΩ Resistor*resistor_220k_mini.fzp
+22Ω Resistor*resistor_22_mini.fzp
+22kΩ Resistor*resistor_22k.fzp
+22kΩ Resistor*resistor_22k_mini.fzp
+27kΩ Resistor*resistor_27k.fzp
+27kΩ Resistor*resistor_27k_mini.fzp
+2.2kΩ Resistor*resistor_2_2k.fzp
+2.2kΩ Resistor*resistor_2_2k_mini.fzp
+33Ω Resistor*resistor_33.fzp
+330Ω Resistor*resistor_330.fzp
+330Ω Resistor*resistor_330_mini.fzp
+330kΩ Resistor*resistor_330k.fzp
+330kΩ Resistor*resistor_330k_mini.fzp
+33Ω Resistor*resistor_33_mini.fzp
+33kΩ Resistor*resistor_33k.fzp
+33kΩ Resistor*resistor_33k_mini.fzp
+3.3kΩ Resistor*resistor_3_3k.fzp
+3.3kΩ Resistor*resistor_3_3k_mini.fzp
+47Ω Resistor*resistor_47.fzp
+470Ω Resistor*resistor_470.fzp
+470Ω Resistor*resistor_470_mini.fzp
+470kΩ Resistor*resistor_470k.fzp
+470kΩ Resistor*resistor_470k_mini.fzp
+47Ω Resistor*resistor_47_mini.fzp
+47kΩ Resistor*resistor_47k.fzp
+47kΩ Resistor*resistor_47k_mini.fzp
+4.7kΩ Resistor*resistor_4_7k.fzp
+4.7kΩ Resistor*resistor_4_7k_mini.fzp
+68Ω Resistor*resistor_68.fzp
+680Ω Resistor*resistor_680.fzp
+680Ω Resistor*resistor_680_mini.fzp
+680kΩ Resistor*resistor_680k.fzp
+680kΩ Resistor*resistor_680k_mini.fzp
+68Ω Resistor*resistor_68_mini.fzp
+68kΩ Resistor*resistor_68k.fzp
+68kΩ Resistor*resistor_68k_mini.fzp
+6.8kΩ Resistor*resistor_6_8k.fzp
+6.8kΩ Resistor*resistor_6_8k_mini.fzp
+Resonator*resonator-2pin.fzp
+Resonator*resonator-3pin.fzp
+RFID Reader*rfid-reader.fzp
+Square Pushbutton*Round Pushbutton.fzp
+Screw terminal*Screw terminal.fzp
+Screw terminal*Screw terminal_3_5mm.fzp
+Screw terminal - 10 pins*screw_terminal_10_100mil.fzp
+Screw terminal - 10 pins*screw_terminal_10_200mil.fzp
+Screw terminal - 10 pins*screw_terminal_10_3.5mm.fzp
+Screw terminal - 10 pins*screw_terminal_10_300mil.fzp
+Screw terminal - 11 pins*screw_terminal_11_100mil.fzp
+Screw terminal - 11 pins*screw_terminal_11_200mil.fzp
+Screw terminal - 11 pins*screw_terminal_11_3.5mm.fzp
+Screw terminal - 11 pins*screw_terminal_11_300mil.fzp
+Screw terminal - 12 pins*screw_terminal_12_100mil.fzp
+Screw terminal - 12 pins*screw_terminal_12_200mil.fzp
+Screw terminal - 12 pins*screw_terminal_12_3.5mm.fzp
+Screw terminal - 12 pins*screw_terminal_12_300mil.fzp
+Screw terminal - 2 pins*screw_terminal_2_100mil.fzp
+Screw terminal - 2 pins*screw_terminal_2_200mil.fzp
+Screw terminal - 2 pins*screw_terminal_2_3.5mm.fzp
+Screw terminal - 2 pins*screw_terminal_2_300mil.fzp
+Screw terminal - 3 pins*screw_terminal_3_100mil.fzp
+Screw terminal - 3 pins*screw_terminal_3_200mil.fzp
+Screw terminal - 3 pins*screw_terminal_3_3.5mm.fzp
+Screw terminal - 3 pins*screw_terminal_3_300mil.fzp
+Screw terminal - 4 pins*screw_terminal_4_100mil.fzp
+Screw terminal - 4 pins*screw_terminal_4_200mil.fzp
+Screw terminal - 4 pins*screw_terminal_4_3.5mm.fzp
+Screw terminal - 4 pins*screw_terminal_4_300mil.fzp
+Screw terminal - 5 pins*screw_terminal_5_100mil.fzp
+Screw terminal - 5 pins*screw_terminal_5_200mil.fzp
+Screw terminal - 5 pins*screw_terminal_5_3.5mm.fzp
+Screw terminal - 5 pins*screw_terminal_5_300mil.fzp
+Screw terminal - 6 pins*screw_terminal_6_100mil.fzp
+Screw terminal - 6 pins*screw_terminal_6_200mil.fzp
+Screw terminal - 6 pins*screw_terminal_6_3.5mm.fzp
+Screw terminal - 6 pins*screw_terminal_6_300mil.fzp
+Screw terminal - 7 pins*screw_terminal_7_100mil.fzp
+Screw terminal - 7 pins*screw_terminal_7_200mil.fzp
+Screw terminal - 7 pins*screw_terminal_7_3.5mm.fzp
+Screw terminal - 7 pins*screw_terminal_7_300mil.fzp
+Screw terminal - 8 pins*screw_terminal_8_100mil.fzp
+Screw terminal - 8 pins*screw_terminal_8_200mil.fzp
+Screw terminal - 8 pins*screw_terminal_8_3.5mm.fzp
+Screw terminal - 8 pins*screw_terminal_8_300mil.fzp
+Screw terminal - 9 pins*screw_terminal_9_100mil.fzp
+Screw terminal - 9 pins*screw_terminal_9_200mil.fzp
+Screw terminal - 9 pins*screw_terminal_9_3.5mm.fzp
+Screw terminal - 9 pins*screw_terminal_9_300mil.fzp
+SN74LS14N*SN74LS14N.fzp
+SN74LS20N*SN74LS20N.fzp
+SN74LS21N*SN74LS21N.fzp
+SN74LS32N*SN74LS32N.fzp
+Solenoid*solenoid.fzp
+Stepper Motor - Bipolar*stepper_motor_bipolar.fzp
+Stepper Motor - Unipolar*stepper_motor_unipolar.fzp
+Stereo Jack (TRS) 3.5mm*stereo-jack-3_5mm.fzp
+Teensy++ 2.0*Teensy 2.0 ++.fzp
+Teensy 2.0*Teensy 2.0.fzp
+Temperature Sensor (Thermistor)*thermistor_300mil.fzp
+Tilt Switch*Tilt switch.fzp
+Tiny Breadboard*tinyBreadboard.fzp
+NPN-Transistor*transistor_signal_NPN_TO92.fzp
+PNP-Transistor*transistor_signal_PNP_TO92.fzp
+Basic Potentiometer*trimpot_meggitt_pih.fzp
+ULN2003A*ULN2003A.fzp
+ULN2803A*ULN2803A.fzp
+uM-FPUv2*uM_FPUv2.fzp
+uM-FPUv3*uM_FPUv3.fzp
+USB connector*USB connector.fzp
+Wiring USB Adapter*usbadapter_wiring.fzp
+Voltage Regulator - 5V*voltage_regulator_7805.fzp
+Voltage Regulator - 3.3V*voltage_regulator_7833.fzp
+Voltage Regulator - Variable*voltage_regulator_lm317.fzp
+XBee*xbee.fzp
