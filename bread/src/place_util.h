@@ -13,6 +13,13 @@ update_marco_free_icblks(IN int nmarco,
                          IN t_pr_marco* icblks
                          );
 
+boolean
+check_place_over(IN int nblk,
+                 IN t_pr_marco* blks,
+                 IN int nvnet,
+				 IN t_vnet* vnets
+                );
+
 int
 check_all_placed(IN int nblk,
                  IN t_pr_marco* blks,

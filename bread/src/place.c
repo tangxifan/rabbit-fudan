@@ -66,7 +66,7 @@ try_place(IN int nvnet,
     (bb_array->columns+place_info.column)->usedwidth=place_info.cur_width;
     (bb_array->columns+place_info.column)->left=get_left_place_info(place_info);
     (bb_array->columns+place_info.column)->right=get_right_place_info(place_info);
-    if (TRUE==check_all_placed(nblk,icblks,nvnet,vnets))
+    if (TRUE==check_place_over(nblk,icblks,nvnet,vnets))
     {break;}
     place_info.column++;
   }
@@ -90,29 +90,16 @@ climbing_place(IN int nblk,
   int iblk=0;
   int inet=0;
   int widthtmp=0;
-  int minwid=0;
+  int minwid=place_info->bb_pwidth;
   boolean chntype=TRUE;
   t_pr_marco* blkchn=NULL;
   t_vnet* netchn=NULL;
   int wcapacity=bb_array.columns[place_info->column].width_capacity;
-  printf("Current column: %d.\twidth capacity: %d",place_info->column,wcapacity);
+  printf("Current column: %d.\twidth capacity: %d\tbb pwidth: %d.\n",place_info->column,wcapacity,place_info->bb_pwidth);
   
-  if (nblk!=0)
-  {minwid=find_blk_pwidth(blks,wcapacity);}
-  if (nvnet!=0)
-  {widthtmp=find_vnet_pwidth(vnets,wcapacity);}
-  if (minwid>widthtmp)
-  {
-    minwid=widthtmp;
-    blkchn=blks;
-  }
-  else
-  {
-    netchn=vnets;
-  }
- 
   while(1)
   {
+    minwid=place_info->bb_pwidth;
     if (nblk!=0)
 	{
       for(iblk=0;iblk<nblk;++iblk)
@@ -160,6 +147,8 @@ climbing_place(IN int nblk,
         netchn->pcolumn=place_info->column;
         netchn->status=PLACED;
       }
+      if (TRUE==check_place_over(nblk,blks,nvnet,vnets))
+      {break;}
     }
     else
     {break;}
