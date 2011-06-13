@@ -634,7 +634,8 @@ rbt_parse_init(char *docname)
 int
 rbt_gen_arrays()
 {
-	int i;
+	int i, j, k;
+	t_vnet *cur;
 
 	vnets_length = rbt_vnets_length;
 	devices_length = rbt_devices_length;
@@ -654,8 +655,18 @@ rbt_gen_arrays()
 	for (i = 0; i < devices_length; i++)
 		memcpy (&devices[i], rbt_devices[i], sizeof (t_icdev));
 
-	for (i = 0; i < marcos_length; i++)
+	for (i = 0; i < marcos_length; i++){
 		memcpy (&marcos[i], rbt_marcos[i], sizeof (t_pr_marco));
+		
+		/* Change the vnets */
+		for (j = 0; j < marcos[i].pinnum; j++){
+			for (k = 0; k < rbt_vnets_length; k++){
+				if (rbt_vnets[k] == marcos[i].pins[j]->nets){
+					marcos[i].pins[j]->nets = &vnets[k];
+				}
+			}
+		}
+	}
 
 	return 0;
 }

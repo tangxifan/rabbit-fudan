@@ -19,18 +19,26 @@ try_route(IN int nvnet,
   float mincost=0.0;
   t_pr_marco* mchn=NULL;
   t_pr_marco* marco=NULL;
+
+  printf("Start routing...\n");
+
   set_route_vnets_on_bb(nvnet,vnets,bb_array);
   update_bb_array_route_cost(bb_array);
   set_route_icblks_on_bb(nmarco,marcos,bb_array);
   update_bb_array_route_cost(bb_array);
+
   while(1)
   {
+    mincost=0.0;
+	mchn=NULL;
     for (imarco=0;imarco<nmarco;++imarco)
     {
       marco=marcos+imarco;
-      if ((ICBLOCK!=marco->type)&&(VDD!=marco->type)&&(GND!=marco->type))
+      if ((ICBLOCK!=marco->type)&&(VDD!=marco->type)&&(GND!=marco->type)&&(UNROUTE==marco->rstatus))
       {
+	    printf("Try route marco[%d]...",marco-marcos);
         tmpcost=try_route_marco_on_bb(marco,bb_array);
+		printf("route cost: %f\n",tmpcost);
 		if ((NULL==mchn)||(tmpcost<mincost))
         {
           mincost=tmpcost;
@@ -38,9 +46,12 @@ try_route(IN int nvnet,
         }
       }
     }
+	printf("Marco[%d] has been chosen to route...",mchn-marcos);
     finish_route_marco_on_bb(mchn,bb_array);
+	printf("Finish!\n");
     update_bb_array_route_cost(bb_array);
-    if (check_all_routed(nvnet,vnets,nmarco,marcos))
+	printf("Updating bread board route cost...\n");
+    if (TRUE==check_all_routed(nvnet,vnets,nmarco,marcos))
     {break;}
   }
   try_route_bias(nvnet,vnets,nmarco,marcos,bb_array);
