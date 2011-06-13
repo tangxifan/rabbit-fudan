@@ -39,7 +39,7 @@ main(int argc, char** argv)
 		"../../parts/parts/"
 	);	
 
-	printf ("%d\n", vnets->pins[1]->parent->name);
+//	printf ("%d\n", vnets->pins[1]->parent->name);
 
 	setup_rabbit (vnets_length, vnets, marcos_length, marcos, &bb_array);
 

@@ -218,7 +218,7 @@ check_all_routed(IN int nvnet,
   }
   for (imarco=0;imarco<nmarco;++imarco)
   {
-    if (UNROUTE==(marcos+imarco)->rstatus)
+    if ((UNROUTE==marcos[imarco].rstatus)&&(GND!=marcos[imarco].type)&&(VDD!=marcos[imarco].type))
     {return FALSE;}
   }
   return TRUE;

@@ -455,6 +455,7 @@ try_route_marco_on_bb(IN t_pr_marco* marco,
  *bread board and route both pins of the marco. And the update the 
  *route information of the bread board including status and cost.
  */
+
 int
 finish_route_marco_on_bb(IN t_pr_marco* marco,
                          IN t_bb_array* bb_array
@@ -463,48 +464,49 @@ finish_route_marco_on_bb(IN t_pr_marco* marco,
   t_pr_pin* pina=*(marco->pins);
   t_pr_pin* pinb=*(marco->pins+marco->pinnum-1);
   /*Additioanl locations(destination)*/
-  t_location* loca;
-  t_location* locb;
-  t_location* wloc;
-  float rcosta=try_route_marco_pin_on_bb(pina,pinb,loca,bb_array);
-  float rcostb=try_route_marco_pin_on_bb(pinb,pina,locb,bb_array);
+  t_location loca;
+  t_location locb;
+  t_location wloc;
+  float rcosta=try_route_marco_pin_on_bb(pina,pinb,&loca,bb_array);
+  float rcostb=try_route_marco_pin_on_bb(pinb,pina,&locb,bb_array);
   if (rcosta>rcostb)
   {
     /*Remain the pin b. Revise the pin a*/
     pina->exloc=pina->location;
-    pina->location=(*locb);
-    set_bb_node_occupied(locb,bb_array);
-    set_bb_node_occupied(loca,bb_array);
-    if (!check_bb_node_unroutable(locb,bb_array))
+    pina->location=locb;
+    set_bb_node_occupied(&locb,bb_array);
+    set_bb_node_occupied(&loca,bb_array);
+    if (!check_bb_node_unroutable(&locb,bb_array))
     {
-      set_bb_net_unroutable(locb,bb_array);
-      set_bb_node_unroutable(locb,bb_array);
-      find_near_node_on_bb(locb,bb_array,wloc);
-      set_wired_on_bb(wloc,pina->exloc,bb_array);
-      set_wired_on_bb(pina->exloc,wloc,bb_array);
-      set_bb_node_occupied(wloc,bb_array);
+      set_bb_net_unroutable(&locb,bb_array);
+      set_bb_node_unroutable(&locb,bb_array);
+      find_near_node_on_bb(&locb,bb_array,&wloc);
+      set_wired_on_bb(&wloc,&(pina->exloc),bb_array);
+      set_wired_on_bb(&(pina->exloc),&wloc,bb_array);
+      set_bb_node_occupied(&wloc,bb_array);
     }
   } 
   else
   {
     /*Remain the pin a. Revise the pin b*/
     pinb->exloc=pinb->location;
-    pinb->location=(*loca);
-    set_bb_net_unroutable(loca,bb_array);
-    set_bb_node_unroutable(loca,bb_array);
-    if (!check_bb_node_unroutable(loca,bb_array))
+    pinb->location=loca;
+    set_bb_net_unroutable(&loca,bb_array);
+    set_bb_node_unroutable(&loca,bb_array);
+    if (!check_bb_node_unroutable(&loca,bb_array))
     {
-      set_bb_node_occupied(loca,bb_array);
-      set_bb_node_occupied(locb,bb_array);
-      find_near_node_on_bb(loca,bb_array,wloc);
-      set_wired_on_bb(wloc,pinb->exloc,bb_array);
-      set_wired_on_bb(pinb->exloc,wloc,bb_array);
-      set_bb_node_occupied(wloc,bb_array);
+      set_bb_node_occupied(&loca,bb_array);
+      set_bb_node_occupied(&locb,bb_array);
+      find_near_node_on_bb(&loca,bb_array,&wloc);
+      set_wired_on_bb(&wloc,&(pinb->exloc),bb_array);
+      set_wired_on_bb(&(pinb->exloc),&wloc,bb_array);
+      set_bb_node_occupied(&wloc,bb_array);
     }
   }
   marco->rstatus=ROUTED;
   return 1;
 }
+
 
 
 
