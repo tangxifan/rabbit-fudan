@@ -39,7 +39,7 @@ typedef struct s_output_record{
 int
 rbt_output_record_init()
 {
-	int i;
+	int i, j;
 	if (NULL == (output_records = (rbt_output_record*) malloc (marcos_length * sizeof (rbt_output_record))))
 		return -1;
 	
@@ -57,6 +57,13 @@ rbt_output_record_init()
 		output_records[i].pin_num = marcos[i].device->pin_num;
 		if (NULL == (output_records[i].pins = (output_pin*) malloc (output_records[i].pin_num * sizeof (output_pin))))
 			return -1;
+		
+		for (j = 0; j < output_records[i].pin_num; j++){
+			if (NULL == (output_records[i].pins[j].x_str = (char*)malloc (10 * sizeof (char))))
+				return -1;
+			if (NULL == (output_records[i].pins[j].y_str = (char*)malloc (10 * sizeof (char))))
+				return -1;
+		}
 	}
 }
 
