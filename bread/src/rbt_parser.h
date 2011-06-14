@@ -16,9 +16,14 @@ You should have received a copy of the GNU General Public License along with thi
 */
 
 
+#ifndef __RBT_PARSER_H__
+#define __RBT_PARSER_H__
+
 /* Read the device list "device.lst" to find out
    which file is to describe the certain part. */
 char* rbt_find_device_file (char*, char*);
 
 /* Parse the electronic parts in the netlist. */
 int rbt_parse_netlist (char*, char*, char*);
+
+#endif

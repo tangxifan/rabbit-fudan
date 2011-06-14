@@ -86,6 +86,7 @@ struct s_pr_pin
   /*For Route*/
   enum e_pin_location loc;
   int offset;
+  int pin_no;
   t_location location;
   /*For route*/
   t_location exloc;

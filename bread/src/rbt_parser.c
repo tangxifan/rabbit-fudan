@@ -174,6 +174,7 @@ rbt_parse_connector (xmlNodePtr connector, xmlChar *pin_id, int pins_count, t_vn
 				pin_cur->parent->pins[pin_num] = pin_cur;
 				pin_cur->loc = pin_cur->parent->device->pinls[pin_num].loc;
 				pin_cur->offset = pin_cur->parent->device->pinls[pin_num].offset;
+				pin_cur->pin_no = pin_num;
 			}
 
 			vnet_cur->pins[pins_count] = pin_cur;
@@ -635,7 +636,6 @@ int
 rbt_gen_arrays()
 {
 	int i, j, k;
-	t_vnet *cur;
 
 	vnets_length = rbt_vnets_length;
 	devices_length = rbt_devices_length;
