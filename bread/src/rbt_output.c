@@ -9,6 +9,7 @@ rbt_output.c
 #include <rabbit_type.h>
 #include <bb_type.h>
 #include <place_route.h>
+#include <device.h>
 #include <string.h>
 #include <rbt_parser.h>
 #include <stdlib.h>
@@ -23,7 +24,6 @@ extern t_pr_marco *marcos;
 extern int marcos_length;
 
 extern t_bb_array bb_array;
-
 
 typedef struct s_output_pin{
 	int x;
@@ -69,6 +69,7 @@ rbt_output_record_init()
 		for (j = 0; j < output_records[i].pin_num; j++){
 			if (NULL == (output_records[i].pins[j].pin_str = (char*)malloc (10 * sizeof (char))))
 				return -1;
+        }
 	}
 }
 
