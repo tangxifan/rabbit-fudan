@@ -112,8 +112,8 @@ try_right_route_pin_on_bb(IN t_pr_pin* spin,
   float rcost=0.0;
   float tmpcost=0.0;
   t_location* rloc=&(spin->location);
-  t_location tmploc;
-  t_location nearloc;
+  t_location tmploc={0};
+  t_location nearloc={0};
   int ix=spin->location.x;
   int iy=spin->location.y;
   int max_len=spin->parent->device->max_length;
@@ -124,25 +124,35 @@ try_right_route_pin_on_bb(IN t_pr_pin* spin,
   {itop=iend;}
 
   /*Search the right side for a routable bb node*/
+  ix+=spin->parent->device->min_length;
   while(ix<itop)
   {
     tmpcost=0.0;
     set_location_value(&tmploc,ix,iy);
-    if (!check_bb_node_unroutable(&tmploc,bb_array))
+    if (FALSE==check_bb_node_unroutable(&tmploc,bb_array))
     {
       set_location_value(&tmploc,ix,iy);
     }
-    else if (check_bb_node_vnet(&tmploc,spin->nets,bb_array)&&(!check_bb_node_occupied(&tmploc,bb_array)))
+    else if (TRUE==check_bb_node_vnet(&tmploc,spin->nets,bb_array))
     {
-      set_location_value(&tmploc,ix,iy);
-      find_near_node_on_bb(&tmploc,bb_array,&nearloc);
-      if (UNKNOWN==nearloc.y)
-      {ix++;continue;}
+	  if (FALSE==check_bb_node_occupied(&tmploc,bb_array))
+      {
+	    set_location_value(&tmploc,ix,iy);
+        rcost=tmpcost;
+        (*dloc)=tmploc;
+        break;
+	  }
+      else
+	  {
+	    find_near_node_on_bb(&tmploc,bb_array,&nearloc);
+        if (UNKNOWN==nearloc.y)
+        {ix++;continue;}
+	  }
     }
     else
     {ix++;continue;}
-    tmpcost+=find_manhattan_distance(rloc,&tmploc);
-    tmpcost+=find_manhattan_distance(&tmploc,&(dpin->location));
+    tmpcost+=(float)find_manhattan_distance(rloc,&tmploc);
+    tmpcost+=(float)find_manhattan_distance(&tmploc,&(dpin->location));
     tmpcost+=get_bb_node_route_cost(rloc,bb_array);
     tmpcost+=get_bb_node_route_cost(&tmploc,bb_array);
     tmpcost+=get_bb_node_route_cost(&(dpin->location),bb_array);
@@ -158,6 +168,8 @@ try_right_route_pin_on_bb(IN t_pr_pin* spin,
     }
     ix++;
   }
+  if  (1==DEBUG)
+  {printf ("Try Right: Chosen location(%d,%d), Route Cost: %f\n",dloc->x,dloc->y,rcost);}
   return rcost; 
 }
 
@@ -175,8 +187,8 @@ try_left_route_pin_on_bb(IN t_pr_pin* spin,
   float rcost=UNKNOWN;
   float tmpcost=0.0;
   t_location* rloc=&(spin->location);
-  t_location tmploc;
-  t_location nearloc;
+  t_location tmploc={0};
+  t_location nearloc={0};
   int ix=spin->location.x;
   int iy=spin->location.y;
   int max_len=spin->parent->device->max_length;
@@ -185,30 +197,51 @@ try_left_route_pin_on_bb(IN t_pr_pin* spin,
   if (itop<iend)
   {itop=iend;}
  
-//int itop=ix+pin->parent->device->max_length+1;
+  ix-=spin->parent->device->min_length;
   /*Search the left side for a routable bb node*/
   while(ix>itop)
   {
     tmpcost=0.0;
     set_location_value(&tmploc,ix,iy);
-    if (!check_bb_node_unroutable(&tmploc,bb_array))
+    if (FALSE==check_bb_node_unroutable(&tmploc,bb_array))
     {
       set_location_value(&tmploc,ix,iy);
     }
-    else if (check_bb_node_vnet(&tmploc,spin->nets,bb_array)&&(!check_bb_node_occupied(&tmploc,bb_array)))
+    else if (TRUE==check_bb_node_vnet(&tmploc,spin->nets,bb_array))
     {
-      set_location_value(&tmploc,ix,iy);
-      find_near_node_on_bb(&tmploc,bb_array,&nearloc);
-      if (UNKNOWN==nearloc.y)
-      {ix--;continue;}
+	  if (FALSE==check_bb_node_occupied(&tmploc,bb_array))
+	  {
+	    set_location_value(&tmploc,ix,iy);
+        rcost=tmpcost;
+        (*dloc)=tmploc;
+		break;
+	  }
+	  else
+      {
+	    find_near_node_on_bb(&tmploc,bb_array,&nearloc);
+        if (UNKNOWN==nearloc.y)
+        {ix--;continue;}
+      }
     }
     else
     {ix--;continue;}
-    tmpcost+=find_manhattan_distance(rloc,&tmploc);
-    tmpcost+=find_manhattan_distance(&tmploc,&(dpin->location));
-    tmpcost+=get_bb_node_route_cost(rloc,bb_array);
+	if (1==DEBUG)
+	{printf("Current tmpcost is %f\n",tmpcost);}
+    tmpcost+=(float)find_manhattan_distance(rloc,&tmploc);
+	if (1==DEBUG)
+	{printf("Current tmpcost is %f\n",tmpcost);}
+    tmpcost+=(float)find_manhattan_distance(&tmploc,&(dpin->location));
+	if (1==DEBUG)
+	{printf("Current tmpcost is %f\n",tmpcost);}
+    tempcost+=get_bb_node_route_cost(rloc,bb_array);
+	if (1==DEBUG)
+	{printf("Current tmpcost is %f\n",tmpcost);}
     tmpcost+=get_bb_node_route_cost(&tmploc,bb_array);
+	if (1==DEBUG)
+	{printf("Current tmpcost is %f\n",tmpcost);}
     tmpcost+=get_bb_node_route_cost(&(dpin->location),bb_array);
+	if (1==DEBUG)
+	{printf("Current tmpcost is %f\n",tmpcost);}
     if (UNKNOWN==rcost)
     {
       rcost=tmpcost;
@@ -221,6 +254,8 @@ try_left_route_pin_on_bb(IN t_pr_pin* spin,
     }
     ix--;
   }
+  if  (1==DEBUG)
+  {printf ("Try Left: Chosen location(%d,%d), Route Cost: %f\n",dloc->x,dloc->y,rcost);}
   return rcost; 
 }
 
@@ -264,6 +299,7 @@ try_route_marco_pin_on_bb(IN t_pr_pin* src,
       return cright;
     }
   } 
+  return UNKNOWN;
 }
 
 float

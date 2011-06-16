@@ -103,10 +103,10 @@ find_manhattan_distance(IN t_location* src,
 
 float
 get_bb_node_route_cost(IN t_location* src,
-                       IN t_bb_array* bb_array
+                        IN t_bb_array* bb_array
                       )
 {
-  return bb_array->bb_node[src->x][src->y].rcost;
+ return  bb_array->bb_node[src->x][src->y].rcost;
 }
 
 int
@@ -180,7 +180,7 @@ find_near_node_on_bb(IN t_location* src,
    for (iy=0;iy<in;++iy)
    {
      loc=&(bb_array->bb_node[src->x][src->y].inners[iy]->location);
-     if (!check_bb_node_occupied(loc,bb_array))
+     if (FALSE==check_bb_node_occupied(loc,bb_array))
      {     
        if  (UNKNOWN==ymin)
        {ymin=abs(loc->y-src->y);}

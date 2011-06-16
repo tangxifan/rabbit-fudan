@@ -5,7 +5,7 @@ rbt_parser.o:	rbt_parser.c rbt_parser.h
 	gcc -c -g -Wall  `xml2-config --cflags` `xml2-config --libs` -I. rbt_parser.c
 
 .c.o:
-	gcc -c -g -I. $<
+	gcc -c -g -Wall -I. $<
 
 
 clean:

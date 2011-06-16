@@ -46,7 +46,7 @@ try_route(IN int nvnet,
         }
       }
     }
-	printf("Marco[%d] has been chosen to route...",mchn-marcos);
+	printf("Marco[%d] has been chosen to route...\n",mchn-marcos);
     finish_route_marco_on_bb(mchn,bb_array);
 	printf("Finish!\n");
     update_bb_array_route_cost(bb_array);

@@ -13,6 +13,7 @@
  *               INOUT parameterC,
  *			     );
  */
+#include <math.h>
 #define IN 
 #define OUT
 #define INOUT
