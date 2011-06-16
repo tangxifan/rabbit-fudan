@@ -6,7 +6,8 @@
 #include "place_route.h"
 #include "device.h"
 #include "place.h"
-
+#include "place_crit.h"
+#include "place_until.h"
 
 /*
  *Complete the placement of all IC blocks on the 
