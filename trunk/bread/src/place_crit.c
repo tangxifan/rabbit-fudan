@@ -225,7 +225,7 @@ find_vnet_pwidth(IN t_vnet* vnet,
   for (ipin=0;ipin<npin;++ipin)
   {
     if(1==DEBUG)
-	{printf("Checking pin[%d](Net No.%d) for place width...\n",ipin,vnet);}
+	{printf("Checking pin[%d](Net No.%d) for place width...\n",ipin,(int)vnet);}
     vpin=vnet->pins[ipin];
     if ((!check_parent_type(vpin,ICBLOCK))&&(!check_parent_type(vpin,GND))&&(!check_parent_type(vpin,VDD)))
     {
@@ -242,7 +242,7 @@ find_vnet_pwidth(IN t_vnet* vnet,
 //pwidth+=minl;
   vnet->pwidth=pwidth;
   if (1==DEBUG)
-  {printf("Virtual Net(%d) place width is %d.\n",vnet,pwidth);}
+  {printf("Virtual Net(%d) place width is %d.\n",(int)vnet,pwidth);}
   return pwidth;  
 }
 
