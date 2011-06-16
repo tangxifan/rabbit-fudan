@@ -491,12 +491,12 @@ finish_route_marco_on_bb(IN t_pr_marco* marco,
     /*Remain the pin a. Revise the pin b*/
     pinb->exloc=pinb->location;
     pinb->location=loca;
-    set_bb_net_unroutable(&loca,bb_array);
-    set_bb_node_unroutable(&loca,bb_array);
+    set_bb_node_occupied(&loca,bb_array);
+    set_bb_node_occupied(&locb,bb_array);
     if (!check_bb_node_unroutable(&loca,bb_array))
     {
-      set_bb_node_occupied(&loca,bb_array);
-      set_bb_node_occupied(&locb,bb_array);
+      set_bb_net_unroutable(&loca,bb_array);
+      set_bb_node_unroutable(&loca,bb_array);
       find_near_node_on_bb(&loca,bb_array,&wloc);
       set_wired_on_bb(&wloc,&(pinb->exloc),bb_array);
       set_wired_on_bb(&(pinb->exloc),&wloc,bb_array);
