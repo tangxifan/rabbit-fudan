@@ -4,6 +4,7 @@
 #include "rabbit_type.h"
 #include "bb_type.h"
 #include "bb_setup.h"
+#include "route_common.h"
 
 /*Global variant*/
 t_bb_array bb_array;
@@ -87,7 +88,6 @@ initial_inners(INOUT t_bb_array* bb_array);
 int 
 create_columns(INOUT t_bb_array* bb_array)
 {
-  int icol=0;
   /*Determine colnumn number*/
   bb_array->no_column=col_num;
   /*Do mall(oc work*/
@@ -267,7 +267,6 @@ initial_bias_nodes(INOUT t_bb_array* bb_array)
   int y=0;
   int iwcap=0;
   int topx=0;
-  int topy=0;
   
   /*Aware the blank nodes!*/
   for (ibias=0;ibias<bb_array->nbias;++ibias)

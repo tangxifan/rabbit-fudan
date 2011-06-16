@@ -5,7 +5,12 @@
 #include <bb_type.h>
 #include <place_route.h>
 #include <device.h>
-
+#include <route_crit.h>
+#include <route_path.h>
+#include <route_common.h>
+#include <place_common.h>
+#include <place_crit.h>
+#include <place_util.h>
 
 /*
  *After detail placement on bread board,
@@ -97,8 +102,8 @@ determine_pins_of_blk_on_bb(IN t_pr_marco* blk,
     {
       bb_array->bb_node[curpin->location.x][curpin->location.y].pin=curpin;
       bb_array->bb_node[curpin->location.x][curpin->location.y].net=curpin->nets;
-      set_bb_node_occupied(curpin->location,bb_array);
-      set_bb_node_unroutable(curpin->location,bb_array);
+      set_bb_node_occupied(&(curpin->location),bb_array);
+      set_bb_node_unroutable(&(curpin->location),bb_array);
     }
     
   }
@@ -295,8 +300,8 @@ route_normal_vnet_on_bb(IN t_vnet* vnet,
       else if (2==counter)
       {
         despin=curpin;
-        find_top_inner_on_bb(srcpin->location,bb_array,&srcloc);
-        find_top_inner_on_bb(despin->location,bb_array,&desloc);
+        find_top_inner_on_bb(&(srcpin->location),bb_array,&srcloc);
+        find_top_inner_on_bb(&(despin->location),bb_array,&desloc);
         desloc.y=srcloc.y;
         set_wired_on_bb(&srcloc,&desloc,bb_array);
         set_wired_on_bb(&desloc,&srcloc,bb_array);
@@ -305,13 +310,13 @@ route_normal_vnet_on_bb(IN t_vnet* vnet,
       {
         srcpin=despin;
         despin=curpin;
-        find_top_inner_on_bb(srcpin->location,bb_array,&srcloc);
-        find_top_inner_on_bb(despin->location,bb_array,&desloc);
+        find_top_inner_on_bb(&(srcpin->location),bb_array,&srcloc);
+        find_top_inner_on_bb(&(despin->location),bb_array,&desloc);
         desloc.y=srcloc.y;
         set_wired_on_bb(&srcloc,&desloc,bb_array);
         set_wired_on_bb(&desloc,&srcloc,bb_array);
       }
-      set_bb_net_unroutable(curpin->location,bb_array);
+      set_bb_net_unroutable(&(curpin->location),bb_array);
     }
   }
   /*Complete III.*/

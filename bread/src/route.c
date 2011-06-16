@@ -5,6 +5,10 @@
 #include "bb_type.h"
 #include "place_route.h"
 #include "device.h"
+#include <route_crit.h>
+#include <route_path.h>
+#include <route_common.h>
+#include <route_bias.h>
 
 boolean
 try_route(IN int nvnet,

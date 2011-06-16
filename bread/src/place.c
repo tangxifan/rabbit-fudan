@@ -7,7 +7,18 @@
 #include "device.h"
 #include "place.h"
 #include "place_crit.h"
-#include "place_until.h"
+#include "place_util.h"
+
+/***************Subroutines*****************/
+int 
+climbing_place(IN int nblk,
+               INOUT t_pr_marco* blks,
+               IN int nvnet,
+               IN t_vnet* vnets,
+               IN t_bb_array bb_array,
+               IN t_place_info* place_info
+               );
+/*********************End Subroutines************/
 
 /*
  *Complete the placement of all IC blocks on the 
@@ -24,14 +35,9 @@ try_place(IN int nvnet,
          )
 {
   int nblk=0;
-  int iblk=0;
   t_pr_marco* icblks=NULL;
-  t_pr_marco* starter_blk=NULL;
-  t_pr_marco* blkmatch=NULL;
   t_place_info place_info;
 
-  int inet=0;
-  int icolumn=0;
   int ncolumn=bb_array->no_column;
   int wcapacity=0;
   
@@ -108,7 +114,7 @@ climbing_place(IN int nblk,
       {
         if (UNPLACED==(iblk+blks)->status)
         {
-          widthtmp=find_blk_pwidth((blks+iblk),wcapacity);
+          widthtmp=find_blk_pwidth(nblk,blks,blks+iblk,wcapacity);
           if (minwid>widthtmp)
           {
             minwid=widthtmp;

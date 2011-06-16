@@ -5,6 +5,9 @@
 #include <bb_type.h>
 #include <place_route.h>
 #include <device.h>
+#include <route_bias.h>
+#include <route_path.h>
+#include <route_common.h>
 
 int
 route_bias_on_bb(IN t_pr_marco* bias,

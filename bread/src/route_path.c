@@ -5,7 +5,8 @@
 #include <bb_type.h>
 #include <place_route.h>
 #include <device.h>
-
+#include <route_path.h>
+#include <route_common.h>
 
 
 float
@@ -36,7 +37,7 @@ find_vnet_bbs(IN int* nbbs,
   int xend=ix+bb_array->columns[column].width;
   int yend=iy+bb_array->columns[column].height;
   int ibb=0;
-  int icol=0;
+ // int icol=0;
   t_location* bbs=NULL;
 
   (*nbbs)=0;
@@ -156,8 +157,8 @@ try_right_route_pin_on_bb(IN t_pr_pin* spin,
     tmpcost+=get_bb_node_route_cost(rloc,bb_array);
     tmpcost+=get_bb_node_route_cost(&tmploc,bb_array);
     tmpcost+=get_bb_node_route_cost(&(dpin->location),bb_array);
-    if (rcost=0.0)
-    {
+	if (0.0==rcost)
+	{
       rcost=tmpcost;
       (*dloc)=tmploc;
     }
@@ -233,7 +234,7 @@ try_left_route_pin_on_bb(IN t_pr_pin* spin,
     tmpcost+=(float)find_manhattan_distance(&tmploc,&(dpin->location));
 	if (1==DEBUG)
 	{printf("Current tmpcost is %f\n",tmpcost);}
-    tempcost+=get_bb_node_route_cost(rloc,bb_array);
+    tmpcost+=get_bb_node_route_cost(rloc,bb_array);
 	if (1==DEBUG)
 	{printf("Current tmpcost is %f\n",tmpcost);}
     tmpcost+=get_bb_node_route_cost(&tmploc,bb_array);
