@@ -5,6 +5,10 @@
 #include <bb_type.h>
 #include <place_route.h>
 #include <device.h>
+#include <place_common.h>
+#include <place_crit.h>
+#include <place_util.h>
+
 
 /*****************Subroutines***********************/
 
@@ -27,16 +31,7 @@ check_pwidth_status(IN t_pr_marco* marco,
                     IN t_vnet* vnet
                    );
 
-int
-find_vnet_pwidth(IN t_vnet* vnet,
-                 IN int wcapacity);
 
-int
-find_blk_pwidth(IN int nblk,
-                IN t_pr_marco* blks,
-                IN t_pr_marco* blk,
-                IN int wcapacity
-               );
 
 
 
@@ -54,15 +49,7 @@ find_match_vnet(IN int nblk,
                 IN t_vnet* vnets
                 );
 
-int
-determine_net_place_location(IN t_vnet* net,
-                             INOUT t_place_info* place_info
-                            );
 
-int
-determine_blk_place_location(IN t_pr_marco* blk,
-                             INOUT t_place_info* place_info
-                            );
 
 /***************************************************/
 
@@ -591,9 +578,9 @@ find_match(IN int nblk,
           )
 {
   int wcapacity=bb_array.columns[place_info->column].width_capacity; 
-  int pwidth;
-  int iblk=0;
-  int inet=0;
+ // int pwidth;
+ // int iblk=0;
+ // int inet=0;
   int blkpw=0;
   int netpw=0;
 

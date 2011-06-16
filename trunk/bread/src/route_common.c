@@ -59,7 +59,7 @@ check_bb_node_occupied(IN t_location* src,
                        IN t_bb_array* bb_array
                       )
 {
-  if (OCCUPIED==bb_array->bb_node[src->x][src->y].type)
+  if (OCCUPIED==bb_array->bb_node[src->x][src->y].status)
   {return TRUE;}
   else
   {return FALSE;}
@@ -123,7 +123,7 @@ set_bb_net_unroutable(IN t_location* src,
                       IN t_bb_array* bb_array       
                      )
 {
- int column=bb_array->bb_node[src->x][src->y].column;
+// int column=bb_array->bb_node[src->x][src->y].column;
  int iy=0;
  int in=bb_array->bb_node[src->x][src->y].ninner;
  t_location* loc=NULL;
@@ -151,7 +151,7 @@ find_top_inner_on_bb(IN t_location* src,
                      IN t_location* rtloc
                     )
 {
-   int column=bb_array->bb_node[src->x][src->y].column;
+ //  int column=bb_array->bb_node[src->x][src->y].column;
    int iy=0;
    int ymin=src->y;
    int in=bb_array->bb_node[src->x][src->y].ninner;
@@ -172,7 +172,7 @@ find_near_node_on_bb(IN t_location* src,
                      IN t_location* rtloc
                     )
 {
-   int column=bb_array->bb_node[src->x][src->y].column;
+  // int column=bb_array->bb_node[src->x][src->y].column;
    int iy=0;
    int ymin=UNKNOWN;
    int in=bb_array->bb_node[src->x][src->y].ninner;

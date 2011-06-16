@@ -5,6 +5,10 @@
 #include <bb_type.h>
 #include <place_route.h>
 #include <device.h>
+#include <bb_place.h>
+#include <place_crit.h>
+#include <place_common.h>
+#include <place_util.h>
 
 /***************Subroutines****************/
 int
@@ -286,7 +290,7 @@ detail_place_vnet(INOUT t_vnet* vnet,
   t_pr_marco* lftblk=NULL;
   t_vnet* lftvnet=NULL;
 
-  int ipin=0;
+ // int ipin=0;
   int baswidth=0;
   int wcapacity=0;
 

@@ -4,6 +4,8 @@
 #include <rabbit_type.h>
 #include <place_route.h>
 #include <place.h>
+#include <route.h>
+#include <bb_place.h>
 
 int 
 place_route(IN int nvnet,
