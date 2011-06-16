@@ -63,9 +63,10 @@ rbt_output_record_init()
 		if (
 			marcos[i].type == GND ||
 			marcos[i].type == VDD 
-			)
+			){
 			output_records[i].device_name = NULL;
 			continue;
+		}
 
 		if (NULL == (output_records[i].device_name = (char*) malloc (100 * sizeof (char))))
 			return -1;
@@ -144,15 +145,21 @@ rbt_output
 			if (
 				bb_array.bb_node[x][y].type == BLANK ||
 				bb_array.bb_node[x][y].status == FREE
-			)
+			){
 				continue;
+			}
 
 			/* If an drawn wire, continue */
-			if (bb_array.bb_node[x][y].wire_status == 2)
+			if (bb_array.bb_node[x][y].wire_status == 2){
+				// DEBUG
+				printf ("%d %d DRAWN WIRE\n", x, y);
 				continue;
+			}
 
 			/* If an undrawn wire */
 			if (bb_array.bb_node[x][y].wire_status == 1){
+				// DEBUG
+				printf ("%d %d UNDRAWN WIRE\n", x, y);
 				if (NULL == (pin_str0 = (char*) malloc (10 * sizeof (char))))
 					return -1;
 				if (NULL == (pin_str1 = (char*) malloc (10 * sizeof (char))))
@@ -179,6 +186,9 @@ rbt_output
 			}
 
 			/* Record the device and pins */
+			// DEBUG
+			printf ("%d %d DEVICE\n", x, y);
+
 			if (NULL == (record_cur = rbt_find_output_record (bb_array.bb_node[x][y].pin->parent->device->name))){
 				return -2;
 			}
@@ -187,6 +197,8 @@ rbt_output
 			pin_cur->x = x;
 			pin_cur->y = y;
 			rbt_gen_pin_str(pin_cur->pin_str, x, y);
+			printf ("!!!!!%s\n", pin_cur->pin_str);
+			
 
 		}
 
@@ -201,8 +213,10 @@ rbt_output
 			continue;
 
 		fprintf (fp, "%s", output_records[i].device_name);
-		for (j = 0; j < output_records[i].pin_num; j++)
+		for (j = 0; j < output_records[i].pin_num; j++){
+			printf(" %s", output_records[i].pins[j].pin_str);
 			fprintf(fp, " %s", output_records[i].pins[j].pin_str);
+		}
 		fprintf(fp, "\n");
 	}
 	
