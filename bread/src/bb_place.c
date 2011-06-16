@@ -109,6 +109,7 @@ alloc_vnet_place_bb(IN int name,
 	    exit(1);
       }
       vnets[inet].locations->x=(*curloc);
+	  vnets[inet].locations->y=0;
 
       (*curloc)=(*curloc)+blank+(vnets+inet)->pwidth;  
        return 1;
@@ -161,7 +162,7 @@ alloc_bb_place(IN int nblk,
 	{icol++;continue;}
     left=bb_array->columns[icol].left;
     right=bb_array->columns[icol].right;
-    blank=(bb_array->width-bb_array->columns[icol].usedwidth)/(right-left+1);
+    blank=(bb_array->width-bb_array->columns[icol].usedwidth)/(right-left+3);
     curloc=blank;
 	wcapacity=bb_array->columns[icol].width_capacity;
     for (ioff=left;ioff<(right+1);++ioff)
@@ -291,6 +292,7 @@ detail_place_vnet(INOUT t_vnet* vnet,
 
   for (ioff=left;ioff<cur;++ioff)
   {
+    vnetoff=0;
     lftblk=find_blk_with_name(ioff,column,nmarco,pr_marco); 
     lftvnet=find_vnet_with_name(ioff,column,nvnet,vnets);
     if ((NULL==lftblk)&&(NULL==lftvnet))
