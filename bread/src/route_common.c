@@ -199,6 +199,7 @@ set_wired_on_bb(IN t_location* src,
                )
 {
   set_location_value(&(bb_array->bb_node[src->x][src->y].wired),des->x,des->y);
+  bb_array->bb_node[src->x][src->y].wire_status=1;
   return 1;
 }
 

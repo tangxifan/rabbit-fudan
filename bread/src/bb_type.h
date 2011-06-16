@@ -69,6 +69,9 @@ struct s_bb_node
   enum e_bias_type bias_type;
   /*the route cost for this node.*/
   float rcost;
+  /*Mike Zou*/
+  /*For rabbit output*/
+  int wire_status;
 };
 
 /*

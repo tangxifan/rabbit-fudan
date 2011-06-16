@@ -1,3 +1,4 @@
+#include <rbt_output.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <rabbit_type.h>
@@ -6,6 +7,7 @@
 #include <device.h>
 #include <rbt_parser.h>
 #include <setup_rabbit.h>
+
 
 extern t_vnet *vnets;
 extern int vnets_length;
@@ -39,10 +41,10 @@ main(int argc, char** argv)
 		"../../parts/parts/"
 	);	
 
-//	printf ("%d\n", vnets->pins[1]->parent->name);
-
 	setup_rabbit (vnets_length, vnets, marcos_length, marcos, &bb_array);
 
     place_route(vnets_length, vnets, marcos_length, marcos, &bb_array);
+
+	rbt_output ("output.rtd");
     return 0;
 }
