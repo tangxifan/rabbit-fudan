@@ -221,12 +221,13 @@ initial_single_bb_node(INOUT t_bb_array* bb_array,
   bb_array->bb_node[x][y].inners=NULL;
   bb_array->bb_node[x][y].pin=NULL;
   bb_array->bb_node[x][y].net=NULL;
-  //bb_array->bb_node[x][y].wired=NULL;
+  set_location_value(&(bb_array->bb_node[x][y].wired),0,0);
   bb_array->bb_node[x][y].status=FREE;
   bb_array->bb_node[x][y].rstatus=ROUTABLE;
   bb_array->bb_node[x][y].bias_type=BIAS_NONE;
   bb_array->bb_node[x][y].rcost=initial_route_cost;
   set_location_value(&(bb_array->bb_node[x][y].location),x,y);
+  bb_array->bb_node[x][y].wire_status=0;
   return 1;
 }
 
