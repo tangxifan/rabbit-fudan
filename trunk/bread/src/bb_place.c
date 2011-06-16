@@ -104,7 +104,7 @@ alloc_vnet_place_bb(IN int name,
       vnets[inet].locations=(t_location*)malloc(baswidth*sizeof(t_location));
       if (NULL==vnets[inet].locations)
       {
-        printf("Bread Board Placement: Fail to malloc locatons(Width:%d) for vnet[%d].\n",vnets[inet].baswidth,inet);
+        printf("Bread Board Placement: Fail to malloc locatons(Width:%d) for vnet[%d].\n",baswidth,inet);
         abort();
 	    exit(1);
       }
