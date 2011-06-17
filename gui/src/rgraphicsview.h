@@ -51,7 +51,6 @@ protected:
 
 private:
     QList<Unit *> m_unitList;
-    //QList<QGraphicsEllipseItem> m_dots;
     struct Show *m_show;
 };
 

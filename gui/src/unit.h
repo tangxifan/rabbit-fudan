@@ -14,7 +14,9 @@
 #define SLOTGAP 18      //
 #define TOLEFTEDGE 23   //
 #define POWERTOEDGE 8   //
+#define GNDTOEDGE 10    //
 #define TOTOPEDGE 44    //
+#define BOARDWIDTH 190  //
 
 struct Show {
     bool m_showResistor;
@@ -30,6 +32,7 @@ public:
     Unit();
 
     void unitAdd();
+    void unitTypeParser();
     void setUnitType(const QString &type);
     void setUnitName(const QString &name);
     void setUnitValue(const QString &value);

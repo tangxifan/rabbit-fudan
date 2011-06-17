@@ -1,2 +1,12 @@
-capacitor_tantalum C1 20n A20 A24
-ceramic_capacitor C2 33p C40 C41
+Ceramic Capacitor 0B10 0A12
+220Î© Resistor 0B20 0B25
+1kÎ© Resistor 1J30 1J40
+1kÎ© Resistor 0J20 1A25
+1kÎ© Resistor 2J30 2J40
+1kÎ© Resistor 2a40 1J40
+wire 0E43 0F43
+wire 0E27 0F27
+wire 0E12 0F12
+wire 0x12 0y12
+wire 1x22 1v22
+wire 1x32 2x32

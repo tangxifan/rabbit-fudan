@@ -87,6 +87,7 @@ bool RGraphicsView::readFile(const QString &fileName)
     QTextStream stream(&file);
     while (!stream.atEnd()) {
         Unit *unit = new Unit();
+        QString temp;
         QString line = stream.readLine();
 
         QList<QString> data = line.split(" ");
@@ -97,11 +98,19 @@ bool RGraphicsView::readFile(const QString &fileName)
         }
 
         else {
-            unit->setUnitType(data.takeFirst());
-            unit->setUnitName(data.takeFirst());
-            unit->setUnitValue(data.takeFirst());
+            //unit->setUnitType(data.takeFirst());
+            //unit->setUnitName(data.takeFirst());
+            //unit->setUnitValue(data.takeFirst());
+            temp = data.takeFirst();
+            QRegExp rx("^\\d?[a-jA-Jv-zV-Z]?\\d+$");
+            while (rx.indexIn(temp) < 0) {
+                unit->setUnitType(temp);
+                temp = data.takeFirst();
+            }
+            unit->unitTypeParser();
         }
 
+        unit->appendUnitPin(temp);
         while (data.count()) {
             unit->appendUnitPin(data.takeFirst());
         }
