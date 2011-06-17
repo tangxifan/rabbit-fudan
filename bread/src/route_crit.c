@@ -94,7 +94,7 @@ determine_pins_of_blk_on_bb(IN t_pr_marco* blk,
     /*Check whether the location of pin on bread board have been occupied*/
     if (bb_array->bb_node[curpin->location.x][curpin->location.y].status!=FREE)
     {
-      printf("Error:Fail to put the pin on breadboard\n");
+      printf("Error:Fail to put the pin on breadboard!The bread board node[%d][%d] is not free!\n",curpin->location.x,curpin->location.y);
       abort();
       exit(1);
     }
@@ -479,6 +479,8 @@ finish_route_marco_on_bb(IN t_pr_marco* marco,
     /*Remain the pin b. Revise the pin a*/
     pina->exloc=pina->location;
     pina->location=locb;
+	bb_array->bb_node[pina->location.x][pina->location.y].pin=pina;
+	bb_array->bb_node[pinb->location.x][pinb->location.y].pin=pinb;
     set_bb_node_occupied(&locb,bb_array);
     set_bb_node_occupied(&loca,bb_array);
     if (FALSE==check_bb_node_unroutable(&locb,bb_array))
@@ -496,6 +498,8 @@ finish_route_marco_on_bb(IN t_pr_marco* marco,
     /*Remain the pin a. Revise the pin b*/
     pinb->exloc=pinb->location;
     pinb->location=loca;
+	bb_array->bb_node[pina->location.x][pina->location.y].pin=pina;
+	bb_array->bb_node[pinb->location.x][pinb->location.y].pin=pinb;
     set_bb_node_occupied(&loca,bb_array);
     set_bb_node_occupied(&locb,bb_array);
     if (FALSE==check_bb_node_unroutable(&loca,bb_array))

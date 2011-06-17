@@ -226,22 +226,22 @@ try_left_route_pin_on_bb(IN t_pr_pin* spin,
     }
     else
     {ix--;continue;}
-	if (1==DEBUG)
+	if (2==DEBUG)
 	{printf("Current tmpcost is %f\n",tmpcost);}
     tmpcost+=(float)find_manhattan_distance(rloc,&tmploc);
-	if (1==DEBUG)
+	if (2==DEBUG)
 	{printf("Current tmpcost is %f\n",tmpcost);}
     tmpcost+=(float)find_manhattan_distance(&tmploc,&(dpin->location));
-	if (1==DEBUG)
+	if (2==DEBUG)
 	{printf("Current tmpcost is %f\n",tmpcost);}
     tmpcost+=get_bb_node_route_cost(rloc,bb_array);
-	if (1==DEBUG)
+	if (2==DEBUG)
 	{printf("Current tmpcost is %f\n",tmpcost);}
     tmpcost+=get_bb_node_route_cost(&tmploc,bb_array);
-	if (1==DEBUG)
+	if (2==DEBUG)
 	{printf("Current tmpcost is %f\n",tmpcost);}
     tmpcost+=get_bb_node_route_cost(&(dpin->location),bb_array);
-	if (1==DEBUG)
+	if (2==DEBUG)
 	{printf("Current tmpcost is %f\n",tmpcost);}
     if (UNKNOWN==rcost)
     {
