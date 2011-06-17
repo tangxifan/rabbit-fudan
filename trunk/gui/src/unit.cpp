@@ -19,7 +19,7 @@ void Unit::unitAdd()
 {
     m_svg = new QGraphicsSvgItem();
 
-    if (m_unitType == "resistor")
+    if (m_unitType.contains("resistor", Qt::CaseInsensitive))
         addResistor();
     if (m_unitType.contains("capacitor", Qt::CaseInsensitive))
         addCapacitor();
@@ -33,9 +33,59 @@ void Unit::unitAdd()
     setUnitWireVisible(true);
 }
 
+void Unit::unitTypeParser()
+{
+    QList<QString> data = m_unitType.split(" ");
+    m_unitName.clear();
+
+    if (m_unitType.contains("resistor", Qt::CaseInsensitive)) {
+        m_unitName.append("resistor");
+    }
+    else if (m_unitType.contains("wire", Qt::CaseInsensitive)) {
+        m_unitName.append("wire");
+    }
+    else if (m_unitType.contains("capacitor", Qt::CaseInsensitive)) {
+        if (m_unitType.contains("ceramic", Qt::CaseInsensitive)) {
+            m_unitName.append("ceramic_capacitor");
+        }
+        else if (m_unitType.contains("tantalum", Qt::CaseInsensitive)) {
+            m_unitName.append("capacitor_tantalum");
+        }
+        else if (m_unitType.contains("electrolytic", Qt::CaseInsensitive)) {
+            m_unitName.append("electrolytic_capacitor");
+        }
+        else {
+            m_unitName.append("ceramic_capacitor");
+        }
+    }
+    else if (m_unitType.contains("transistor", Qt::CaseInsensitive)) {
+        if (m_unitType.contains("pnp", Qt::CaseInsensitive)) {
+            m_unitName.append("basic_transistor_pnp");
+        }
+        else {
+            m_unitName.append("basic_transistor_npn");
+        }
+    }
+    else {
+        m_unitName = "IC";
+    }
+
+    QRegExp rx("^\\d+(k|M|T|m|u|p|n|f)?");
+    for (; data.count(); data.removeFirst()) {
+        if (rx.indexIn(data.first()) >= 0) {
+            m_unitValue = "_" + data.first().left(rx.matchedLength());
+        }
+    }
+
+    m_unitName.append(m_unitValue);
+}
+
 void Unit::setUnitType(const QString &type)
 {
-    m_unitType = type;//need to judge whether the type exists.
+    if (m_unitType.isEmpty())
+        m_unitType = type;
+    else
+        m_unitType.append(" " + type);
 }
 
 void Unit::setUnitName(const QString &name)
@@ -58,18 +108,27 @@ void Unit::appendUnitPin(QString pin)
 
 QPointF Unit::bbCoordConvert(QString &bbCoord)
 {
-    int x, y;
-    char row = bbCoord[0].toLower().toAscii();
+    int x, y = 0;
+    char row;
     QString column;
     bool ok;
 
+    //Decide which board
+    if (!bbCoord[0].isNumber()) {
+        return QPointF(0, 0);
+    }
+    y += (bbCoord[0].toAscii() - '0') * BOARDWIDTH;
+    bbCoord.remove(0, 1);
+
+    //Decide the position
+    row = bbCoord[0].toLower().toAscii();
     if (!bbCoord[0].isLetter()) {
         //QMessageBox::warning(this, QString("RABBIT"), QString("Routed File Syntax Error."));
         return QPointF(0, 0);
     }
 
     if ((row == 'x') || (row == 'y')) {
-        y = POWERTOEDGE + HOLEGAP * (row - 'x');
+        y += POWERTOEDGE + HOLEGAP * (row - 'x');
         column = bbCoord.remove(0, 1);
         int extra;
         if (column.toInt(&ok, 10) % 5)
@@ -82,14 +141,28 @@ QPointF Unit::bbCoordConvert(QString &bbCoord)
         //x = 24 + 9 * (toY.toInt(&ok, 10));
     }
     else if (((row - 'a') >= 0) && ((row - 'e') <= 0)) {
-        y = TOTOPEDGE + HOLEGAP * (row - 'a');
+        y += TOTOPEDGE + HOLEGAP * (row - 'a');
         column = bbCoord.remove(0, 1);
         x = TOLEFTEDGE + HOLEGAP * (column.toInt(&ok, 10));
     }
     else if (((row - 'f') >= 0) && ((row - 'j') <= 0)) {
-        y = TOTOPEDGE + SLOTGAP + HOLEGAP * (row - 'a');
+        y += TOTOPEDGE + SLOTGAP + HOLEGAP * (row - 'a');
         column = bbCoord.remove(0, 1);
         x = TOLEFTEDGE + HOLEGAP * (column.toInt(&ok, 10));
+    }
+    else if ((row == 'v') || (row == 'w')) {
+        y += BOARDWIDTH - GNDTOEDGE + HOLEGAP * (row - 'w');
+
+        column = bbCoord.remove(0, 1);
+        int extra;
+        if (column.toInt(&ok, 10) % 5)
+            extra = (column.toInt(&ok, 10) / 5);
+        else
+            extra = (column.toInt(&ok, 10) / 5 - 1);
+        if (column.toInt(&ok, 10) > 25)
+            extra += 1;
+        x = TOLEFTEDGE + HOLEGAP * (column.toInt(&ok, 10) + extra);
+        //x = 24 + 9 * (toY.toInt(&ok, 10));
     }
     else {
         //QMessageBox::warning(this, "Rabbit", "File Syntax Error.");
@@ -194,8 +267,8 @@ void Unit::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 
 void Unit::addResistor()
 {
-    QSvgRenderer *renderer = new QSvgRenderer(QString("../parts/svg/breadboard/%1_%2.svg")
-                                              .arg(m_unitType).arg(m_unitValue));
+    QSvgRenderer *renderer = new QSvgRenderer(QString("../parts/svg/breadboard/")
+                                              .append(m_unitName + ".svg"));
 \
     m_svg->setSharedRenderer(renderer);
 
@@ -232,8 +305,8 @@ void Unit::addResistor()
 
 void Unit::addCapacitor()
 {
-    QSvgRenderer *renderer = new QSvgRenderer(QString("../parts/svg/breadboard/%1.svg")
-                                              .arg(m_unitType));
+    QSvgRenderer *renderer = new QSvgRenderer(QString("../parts/svg/breadboard/")
+                                              .append(m_unitName + ".svg"));
     m_svg->setSharedRenderer(renderer);
 
     QPointF point = QPointF((m_unitPin.at(1).x()+m_unitPin.at(0).x()) / 2 - m_svg->boundingRect().width() / 2,
@@ -267,8 +340,8 @@ void Unit::addCapacitor()
 
 void Unit::addTransistor()
 {
-    QSvgRenderer *renderer = new QSvgRenderer(QString("../parts/svg/breadboard/basic_%1.svg")
-                                              .arg(m_unitType));
+    QSvgRenderer *renderer = new QSvgRenderer(QString("../parts/svg/breadboard/")
+                                              .append(m_unitName + ".svg"));
     m_svg->setSharedRenderer(renderer);
 
     QPointF point = QPointF(m_unitPin.at(1).x() - m_svg->boundingRect().width() / 2
@@ -309,8 +382,8 @@ void Unit::addTransistor()
 
 void Unit::addIC()
 {
-    QSvgRenderer *render = new QSvgRenderer(QString("../parts/svg/breadboard/%1.svg")
-                                            .arg(m_unitType));
+    QSvgRenderer *render = new QSvgRenderer(QString("../parts/svg/breadboard/")
+                                            .append(m_unitName + ".svg"));
     m_svg->setSharedRenderer(render);
 
     QPointF point = QPointF(m_unitPin.at(0).x() - m_svg->boundingRect().width() / (m_unitPin.count() + 1)

@@ -28,7 +28,7 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
     m_view = new RGraphicsView();
-    m_view->setSceneRect(0, -20, 600, 800);
+    m_view->setSceneRect(0, -50, 600, 800);
     m_view->setDragMode(QGraphicsView::RubberBandDrag);
     m_view->setRenderHints(QPainter::Antialiasing
                          | QPainter::TextAntialiasing);
