@@ -15,3 +15,5 @@ boolean check_bb_bias_type(IN t_location *src,IN enum e_bias_type bias_type,IN t
 boolean check_bb_node_blank(IN t_location *src,IN t_bb_array *bb_array);
 int set_location_value(INOUT t_location *location,IN int locx,IN int locy);
 int alter_route_cost(IN t_bb_node *bb_node);
+int set_net_on_bb_node(IN t_location* loc, IN t_vnet* net, IN t_bb_array* bb_array);
+int set_bb_node_net_with_pin_extra_loc(IN t_pr_pin* srcpin, IN t_bb_array* bb_array);

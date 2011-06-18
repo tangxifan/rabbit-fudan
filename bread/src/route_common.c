@@ -5,7 +5,7 @@
 #include <bb_type.h>
 #include <place_route.h>
 #include <device.h>
-
+#include <route_common.h>
 
 
 int
@@ -183,9 +183,9 @@ find_near_node_on_bb(IN t_location* src,
      if (FALSE==check_bb_node_occupied(loc,bb_array))
      {     
        if  (UNKNOWN==ymin)
-       {ymin=abs(loc->y-src->y);}
-       else if (abs(loc->y-src->y)<ymin)
-       {ymin=abs(loc->y-src->y);}
+       {ymin=loc->y;}
+       else if (abs(loc->y-src->y)<abs(ymin-src->y))
+       {ymin=loc->y;}
      }
    }
    set_location_value(rtloc,src->x,ymin);
@@ -202,6 +202,36 @@ set_wired_on_bb(IN t_location* src,
   bb_array->bb_node[src->x][src->y].wire_status=1;
   return 1;
 }
+
+int 
+set_net_on_bb_node(IN t_location* loc,
+                   IN t_vnet *net,
+				   IN t_bb_array* bb_array
+				  )
+{
+  bb_array->bb_node[loc->x][loc->y].net=net;
+  return 1;
+}
+                   
+
+int 
+set_bb_node_net_with_pin_extra_loc(IN t_pr_pin* srcpin,
+                                   IN t_bb_array* bb_array
+								  )
+{
+  int in=0;
+  t_location* pinloc=&(srcpin->location);
+  t_location* innerloc=NULL;
+  
+  set_net_on_bb_node(pinloc,srcpin->nets,bb_array);
+  for (in=0;in<bb_array->bb_node[pinloc->x][pinloc->y].ninner;++in)
+  {
+    innerloc=&(bb_array->bb_node[pinloc->x][pinloc->y].inners[in]->location);
+    set_net_on_bb_node(innerloc,srcpin->nets,bb_array);
+  }
+  return 1;
+}
+
 
 boolean
 check_all_routed(IN int nvnet,
