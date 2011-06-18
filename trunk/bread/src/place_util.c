@@ -23,9 +23,8 @@ update_pr_marco(IN int nmarco,
  *First, select these qualified ic blocks,
  *Then put them into the array.
  */
-int
+t_pr_marco** 
 create_icblk_array(INOUT int* nblk,
-                   INOUT t_pr_marco* icblks,
                    IN int nmarco,
                    IN t_pr_marco *marcos
                   )
@@ -33,6 +32,7 @@ create_icblk_array(INOUT int* nblk,
   int imarco=0;
   int iblk=0;
   enum e_pr_type mcotype=0;
+  t_pr_marco** icblks=NULL;
   (*nblk)=0;
   
   printf("Counting IC blocks...");
@@ -44,8 +44,8 @@ create_icblk_array(INOUT int* nblk,
   }
   printf("Result:%d\n",iblk);
   (*nblk)=iblk;
-  icblks=(t_pr_marco*)malloc((*nblk)*sizeof(t_pr_marco));
-  printf("Creating IC blocks...\n");
+  icblks=(t_pr_marco**)malloc((*nblk)*sizeof(t_pr_marco*));
+  printf("Creating IC blocks...");
 
   iblk=0;
   for (imarco=0;imarco<nmarco;++imarco)
@@ -53,11 +53,12 @@ create_icblk_array(INOUT int* nblk,
     mcotype=(marcos+imarco)->type;
     if (ICBLOCK==mcotype)
     {
-      icblks[iblk]=marcos[imarco];
+      icblks[iblk]=marcos+imarco;
       iblk++;
     }
   }
-  return 1;
+  printf("Finish!\n");
+  return icblks;
 }
 
 int
@@ -93,10 +94,10 @@ void
 update_marco_free_icblks(IN int nmarco,
                          INOUT t_pr_marco* pr_marco,
                          IN int nblk,
-                         IN t_pr_marco* icblks
+                         IN t_pr_marco** icblks
                          )
 {
-  update_pr_marco(nmarco,pr_marco,nblk,icblks);
+  //update_pr_marco(nmarco,pr_marco,nblk,icblks);
   free(icblks);
 }
 
@@ -107,7 +108,7 @@ update_marco_free_icblks(IN int nmarco,
  */
 void
 check_start_error(IN int nblk,
-                  IN t_pr_marco* blks,
+                  IN t_pr_marco** blks,
                   IN int nvnet,
                   IN t_vnet* vnets
                  )
@@ -117,7 +118,7 @@ check_start_error(IN int nblk,
   boolean status_err=TRUE;
   for (iblk=0;iblk<nblk;++iblk)
   {
-    if (UNSTART==(blks+iblk)->sstart)
+    if (UNSTART==blks[iblk]->sstart)
     {status_err=FALSE;}
   }
   for(inet=0;inet<nvnet;++inet)
@@ -140,7 +141,7 @@ check_start_error(IN int nblk,
  */
 boolean
 check_place_over(IN int nblk,
-                 IN t_pr_marco* blks,
+                 IN t_pr_marco** blks,
                  IN int nvnet,
 				 IN t_vnet* vnets
                 )
@@ -153,7 +154,7 @@ check_place_over(IN int nblk,
   {
     for (iblk=0;iblk<nblk;++iblk)
     {
-      if (UNPLACED==(blks+iblk)->status)
+      if (UNPLACED==blks[iblk]->status)
       {place_over=FALSE;return place_over;}
     }
   }
@@ -179,7 +180,7 @@ check_place_over(IN int nblk,
  */
 int
 check_all_placed(IN int nblk,
-                 IN t_pr_marco* blks,
+                 IN t_pr_marco** blks,
                  IN int nvnet,
                  IN t_vnet* vnets
                 )

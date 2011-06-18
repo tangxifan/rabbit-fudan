@@ -1,5 +1,7 @@
 /* route_path.c */
 float cal_route_path_cost(t_location *src, t_location *des, t_bb_array *bb_array);
+t_location *find_normal_vnet_bbs(int *nbbs, t_vnet *vnet, t_bb_array *bb_array);
+t_location *find_special_vnet_bbs(int *nbbs, t_vnet *vnet, t_bb_array *bb_array);
 t_location *find_vnet_bbs(int *nbbs, t_vnet *vnet, t_bb_array *bb_array);
 float find_path_cost_vnets(t_location *srcloc, t_location *desloc, t_vnet *src, t_vnet *des, t_bb_array *bb_array);
 float try_right_route_pin_on_bb(t_pr_pin *spin, t_pr_pin *dpin, t_location *dloc, t_bb_array *bb_array);
