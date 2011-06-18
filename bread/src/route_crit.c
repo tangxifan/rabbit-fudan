@@ -485,9 +485,9 @@ finish_route_marco_on_bb(IN t_pr_marco* marco,
     pina->location=locb;
 	bb_array->bb_node[pina->location.x][pina->location.y].pin=pina;
 	bb_array->bb_node[pinb->location.x][pinb->location.y].pin=pinb;
-    set_bb_node_occupied(&(pina->exloc),bb_array);
     set_bb_node_occupied(&(pina->location),bb_array);
     set_bb_node_occupied(&(pinb->location),bb_array);
+
 	/*When the given extra location does not belong to a virtual net,
 	 *that is, extra location is a free virtual net. In this situation,
 	 *the extra location could be set as an additional part for the virtual
@@ -498,8 +498,10 @@ finish_route_marco_on_bb(IN t_pr_marco* marco,
       set_bb_net_unroutable(&locb,bb_array);
       set_bb_node_unroutable(&locb,bb_array);
       find_near_node_on_bb(&locb,bb_array,&wloc);
+	  find_exloc_for_wire(&(pina->exloc),&wloc,bb_array);
       set_wired_on_bb(&wloc,&(pina->exloc),bb_array);
       set_wired_on_bb(&(pina->exloc),&wloc,bb_array);
+      set_bb_node_occupied(&(pina->exloc),bb_array);
       set_bb_node_occupied(&wloc,bb_array);
 	  set_bb_node_net_with_pin_extra_loc(pina,bb_array);
     }
@@ -511,7 +513,6 @@ finish_route_marco_on_bb(IN t_pr_marco* marco,
     pinb->location=loca;
 	bb_array->bb_node[pina->location.x][pina->location.y].pin=pina;
 	bb_array->bb_node[pinb->location.x][pinb->location.y].pin=pinb;
-    set_bb_node_occupied(&(pinb->exloc),bb_array);
     set_bb_node_occupied(&(pina->location),bb_array);
     set_bb_node_occupied(&(pinb->location),bb_array);
     if (FALSE==check_bb_node_unroutable(&loca,bb_array))
@@ -519,8 +520,10 @@ finish_route_marco_on_bb(IN t_pr_marco* marco,
       set_bb_net_unroutable(&loca,bb_array);
       set_bb_node_unroutable(&loca,bb_array);
       find_near_node_on_bb(&loca,bb_array,&wloc);
+	  find_exloc_for_wire(&(pina->exloc),&wloc,bb_array);
       set_wired_on_bb(&wloc,&(pinb->exloc),bb_array);
       set_wired_on_bb(&(pinb->exloc),&wloc,bb_array);
+      set_bb_node_occupied(&(pinb->exloc),bb_array);
       set_bb_node_occupied(&wloc,bb_array);
 	  set_bb_node_net_with_pin_extra_loc(pinb,bb_array);
     }
