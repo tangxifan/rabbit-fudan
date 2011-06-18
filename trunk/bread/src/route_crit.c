@@ -200,6 +200,7 @@ route_special_vnet_on_bb(IN t_vnet* vnet,
   int blankend=0;
   t_location loc;
   t_location des;
+
   for (iloc=0;iloc<vnet->locnum;++iloc)
   {
     /*Complete I.*/
