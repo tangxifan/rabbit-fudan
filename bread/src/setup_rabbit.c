@@ -196,7 +196,7 @@ initial_marco(INOUT t_pr_marco* marco)
   marco->pcolumn=UNKNOWN;
   marco->rstatus=UNROUTE;
   /*Mike Zou*/
-  marco->label=(char*)malloc(MAX_LABEL_LENGTH*sizeof(char));
+  //marco->label=(char*)malloc(MAX_LABEL_LENGTH*sizeof(char));
   return 1;
 }
 
