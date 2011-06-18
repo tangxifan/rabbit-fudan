@@ -520,7 +520,7 @@ finish_route_marco_on_bb(IN t_pr_marco* marco,
       set_bb_net_unroutable(&loca,bb_array);
       set_bb_node_unroutable(&loca,bb_array);
       find_near_node_on_bb(&loca,bb_array,&wloc);
-	  find_exloc_for_wire(&(pina->exloc),&wloc,bb_array);
+	  find_exloc_for_wire(&(pinb->exloc),&wloc,bb_array);
       set_wired_on_bb(&wloc,&(pinb->exloc),bb_array);
       set_wired_on_bb(&(pinb->exloc),&wloc,bb_array);
       set_bb_node_occupied(&(pinb->exloc),bb_array);
