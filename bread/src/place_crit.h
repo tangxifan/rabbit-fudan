@@ -1,7 +1,7 @@
 /*Functions quoted in placement*/
 int
 find_starter(IN int nblk,
-             IN t_pr_marco* blks,
+             IN t_pr_marco** blks,
              IN int nvnet,
              IN t_vnet* vnets,
              IN t_place_info *place_info,
@@ -10,7 +10,7 @@ find_starter(IN int nblk,
 
 boolean
 find_match(IN int nblk,
-           IN t_pr_marco* blks,
+           IN t_pr_marco** blks,
            IN int nvnet,
            IN t_vnet* vnets,
            IN t_bb_array bb_array,
@@ -33,7 +33,7 @@ find_vnet_pwidth(IN t_vnet* vnet,
 
 int
 find_blk_pwidth(IN int nblk,
-                IN t_pr_marco* blks,
+                IN t_pr_marco** blks,
                 IN t_pr_marco* blk,
                 IN int wcapacity
                );

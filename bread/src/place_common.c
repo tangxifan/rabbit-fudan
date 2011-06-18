@@ -267,7 +267,7 @@ find_mnet_basic_width(IN t_vnet* vnet,
   for (ipin=0;ipin<npin;++ipin)
   {
     if (ICBLOCK==(*(vnet->pins+ipin))->parent->type)
-    initw+=(wcapacity-3);
+    {initw+=(wcapacity-3);}
   }
   /*
    *If there is only one pin of a block, the initial
@@ -296,8 +296,8 @@ find_mnet_basic_width(IN t_vnet* vnet,
   }
   else
   {wbasic=1;}
-  vnet->locnum=wbasic;
-  vnet->locations=(t_location*)malloc(vnet->locnum*sizeof(t_location));
+//  vnet->locnum=wbasic;
+//  vnet->locations=(t_location*)malloc(vnet->locnum*sizeof(t_location));
   return wbasic;
 }
 

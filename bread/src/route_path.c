@@ -29,6 +29,96 @@ find_vnet_bbs(IN int* nbbs,
               IN t_bb_array* bb_array
              )
 {
+  t_location* bbs=NULL;
+  if (SPECIAL==vnet->type)
+  {bbs=find_normal_vnet_bbs(nbbs,vnet,bb_array);}
+  else
+  {bbs=find_special_vnet_bbs(nbbs,vnet,bb_array);}
+  return bbs;
+}
+
+
+t_location*
+find_normal_vnet_bbs(IN int* nbbs,
+                      IN t_vnet* vnet,
+                      IN t_bb_array* bb_array
+                     ) 
+{
+  int* net_columns=(int*)malloc(vnet->locnum*sizeof(int));
+  int ix=0;
+  int iy=0;
+  int xstart=0;
+  int ystart=0;
+  int xend=0;
+  int yend=0;
+  int ibb=0;
+  int icol=0;
+  int ipin=0;
+  t_location* bbs=NULL;
+
+  for (ipin=0;ipin<vnet->numpin;++ipin)
+  {
+    if (ICBLOCK==vnet->pins[ipin]->parent->type)
+	{
+	  net_columns[icol]=vnet->pins[ipin]->parent->pcolumn;
+	  icol++;
+	}
+  }
+    
+  for (icol=0;icol<vnet->locnum;++icol)
+  {
+    ix=0;
+	iy=0;
+    xstart=bb_array->columns[net_columns[icol]].base.x;
+    ystart=bb_array->columns[net_columns[icol]].base.y;
+    xend=ix+bb_array->columns[net_columns[icol]].width;
+    yend=iy+bb_array->columns[net_columns[icol]].height;
+    (*nbbs)=0;
+    for (ix=xstart;ix<xend;++ix)
+    {
+      for(iy=ystart;iy<yend;++iy)
+      {
+        if ((vnet==bb_array->bb_node[ix][iy].net)&&(FREE==bb_array->bb_node[ix][iy].status)&&(BLANK!=bb_array->bb_node[ix][iy].type))
+        {(*nbbs)++;}
+      }  
+     }
+   }
+  
+  bbs=(t_location*)malloc((*nbbs)*sizeof(t_location));
+
+  for (icol=0;icol<vnet->locnum;++icol)
+  {
+    ix=0;
+	iy=0;
+    xstart=bb_array->columns[net_columns[icol]].base.x;
+    ystart=bb_array->columns[net_columns[icol]].base.y;
+    xend=ix+bb_array->columns[net_columns[icol]].width;
+    yend=iy+bb_array->columns[net_columns[icol]].height;
+    
+	for (ix=xstart;ix<xend;++ix)
+    {
+      for(iy=ystart;iy<yend;++iy)
+      {
+        if ((vnet==bb_array->bb_node[ix][iy].net)&&(FREE==bb_array->bb_node[ix][iy].status)&&(BLANK!=bb_array->bb_node[ix][iy].type))
+        {
+          set_location_value(bbs+ibb,ix,iy);
+          ibb++;
+        }
+      }
+	}  
+  }
+
+  free(net_columns);
+
+  return bbs;
+}
+
+t_location*
+find_special_vnet_bbs(IN int* nbbs,
+                      IN t_vnet* vnet,
+                      IN t_bb_array* bb_array
+                     ) 
+{
   int column=vnet->pcolumn;
   int ix=0;
   int xstart=bb_array->columns[column].base.x;

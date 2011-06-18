@@ -12,7 +12,7 @@
 /***************Subroutines*****************/
 int 
 climbing_place(IN int nblk,
-               INOUT t_pr_marco* blks,
+               INOUT t_pr_marco** blks,
                IN int nvnet,
                IN t_vnet* vnets,
                IN t_bb_array bb_array,
@@ -35,7 +35,7 @@ try_place(IN int nvnet,
          )
 {
   int nblk=0;
-  t_pr_marco* icblks=NULL;
+  t_pr_marco** icblks=NULL;
   t_place_info place_info;
 
   int ncolumn=bb_array->no_column;
@@ -45,7 +45,7 @@ try_place(IN int nvnet,
   if (1==DEBUG)
   {printf("Column Number: %d.\n",ncolumn);}
 
-  create_icblk_array(&nblk,icblks,nmarco,pr_marco);
+  icblks=create_icblk_array(&nblk,nmarco,pr_marco);
   initial_place_info(&place_info);
   
   while(place_info.column<ncolumn)
@@ -87,7 +87,7 @@ try_place(IN int nvnet,
  */
 int 
 climbing_place(IN int nblk,
-               INOUT t_pr_marco* blks,
+               INOUT t_pr_marco** blks,
                IN int nvnet,
                IN t_vnet* vnets,
                IN t_bb_array bb_array,
@@ -112,13 +112,13 @@ climbing_place(IN int nblk,
 	{
       for(iblk=0;iblk<nblk;++iblk)
       {
-        if (UNPLACED==(iblk+blks)->status)
+        if (UNPLACED==blks[iblk]->status)
         {
-          widthtmp=find_blk_pwidth(nblk,blks,blks+iblk,wcapacity);
+          widthtmp=find_blk_pwidth(nblk,blks,blks[iblk],wcapacity);
           if (minwid>widthtmp)
           {
             minwid=widthtmp;
-            blkchn=blks+iblk;
+            blkchn=blks[iblk];
             chntype=TRUE;
           }
         } 
@@ -128,7 +128,7 @@ climbing_place(IN int nblk,
 	{
       for(inet=0;inet<nvnet;++inet)
       {
-        if (UNPLACED==(inet+vnets)->status)
+        if ((UNPLACED==vnets[inet].status)&&(SPECIAL==vnets[inet].type))
         {
           widthtmp=find_vnet_pwidth((vnets+inet),wcapacity);
           if (minwid>widthtmp)

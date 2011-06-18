@@ -110,8 +110,10 @@ try_route_bias(IN int nvnet,
     {mgnd=marcos+imarco;}
   }
   //determine_vdd_gnd_location_on_bb(mvdd,mgnd,bb_array);
-  route_bias_on_bb(mvdd,bb_array,VDD);
-  route_bias_on_bb(mgnd,bb_array,GND);
+  if (mvdd!=NULL)
+  {route_bias_on_bb(mvdd,bb_array,VDD);}
+  if (mgnd!=NULL)
+  {route_bias_on_bb(mgnd,bb_array,GND);}
   return 1;
 }
 

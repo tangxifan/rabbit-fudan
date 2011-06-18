@@ -26,9 +26,9 @@ try_route(IN int nvnet,
 
   printf("Start routing...\n");
 
-  set_route_vnets_on_bb(nvnet,vnets,bb_array);
-  update_bb_array_route_cost(bb_array);
   set_route_icblks_on_bb(nmarco,marcos,bb_array);
+  update_bb_array_route_cost(bb_array);
+  set_route_vnets_on_bb(nvnet,vnets,bb_array);
   update_bb_array_route_cost(bb_array);
 
   while(1)

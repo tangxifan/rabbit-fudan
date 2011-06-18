@@ -101,9 +101,11 @@ determine_pins_of_blk_on_bb(IN t_pr_marco* blk,
     else
     {
       bb_array->bb_node[curpin->location.x][curpin->location.y].pin=curpin;
-      bb_array->bb_node[curpin->location.x][curpin->location.y].net=curpin->nets;
+    //bb_array->bb_node[curpin->location.x][curpin->location.y].net=curpin->nets;
+	  set_bb_node_net_with_pin_extra_loc(curpin,bb_array);
       set_bb_node_occupied(&(curpin->location),bb_array);
       set_bb_node_unroutable(&(curpin->location),bb_array);
+      set_bb_net_unroutable(&(curpin->location),bb_array);
     }
     
   }
@@ -287,12 +289,36 @@ route_normal_vnet_on_bb(IN t_vnet* vnet,
   t_pr_pin* despin=NULL;
   t_location srcloc;
   t_location desloc;
+  int vnet_loc_num=0;
 
   int westi=find_mnet_basic_width(vnet,bb_array->columns[vnet->pcolumn].width_capacity);
+
+  /*
+   *Determine the number of locations for the normal virtual net.
+   */
+  for (ipin=0;ipin<vnet->numpin;++ipin)
+  {
+    if (ICBLOCK==vnet->pins[ipin]->parent->type)
+    {vnet_loc_num++;}
+  }	
+  
+  vnet->locnum=vnet_loc_num;
+  vnet->locations=(t_location*)malloc(vnet->locnum*sizeof(t_location));
+  /*Give the locations of the normal virtual net.*/
+  vnet_loc_num=0;
+  for (ipin=0;ipin<vnet->numpin;++ipin)
+  {
+    if (ICBLOCK==vnet->pins[ipin]->parent->type)
+	{
+	  set_location_value(&(vnet->locations[vnet_loc_num]),vnet->pins[ipin]->location.x,0);
+	  vnet_loc_num++;
+	}
+  }
+
   /*Complete I. and II.*/
   for (ipin=0;ipin<vnet->numpin;++ipin)
   {
-    curpin=*(vnet->pins+ipin);
+    curpin=vnet->pins[ipin];
     if (check_parent_type(curpin,ICBLOCK))
     {
       counter++;
