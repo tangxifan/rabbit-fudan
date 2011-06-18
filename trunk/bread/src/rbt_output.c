@@ -41,6 +41,7 @@ typedef output_record:
 Record the device and the pins
 */
 typedef struct s_output_record{
+	char* marco_label;
 	char* device_name;
 	int pin_num;
 	t_output_pin_ptr pins;
@@ -64,12 +65,15 @@ rbt_output_record_init()
 			marcos[i].type == GND ||
 			marcos[i].type == VDD 
 			){
-			output_records[i].device_name = NULL;
+			output_records[i].marco_label = NULL;
 			continue;
 		}
 
+		if (NULL == (output_records[i].marco_label = (char*) malloc (100 * sizeof (char))))
+			return -1;
 		if (NULL == (output_records[i].device_name = (char*) malloc (100 * sizeof (char))))
 			return -1;
+		strcpy (output_records[i].marco_label, marcos[i].label);
 		strcpy (output_records[i].device_name, marcos[i].device->name);
 		output_records[i].pin_num = marcos[i].device->pin_num;
 		if (NULL == (output_records[i].pins = (t_output_pin*) malloc (output_records[i].pin_num * sizeof (t_output_pin))))
@@ -96,9 +100,9 @@ rbt_find_output_record
 {
 	int i;
 	for (i = 0; i < marcos_length; i++){
-		if (output_records[i].device_name == NULL)
+		if (output_records[i].marco_label == NULL)
 			continue;
-		if (!strcmp (output_records[i].device_name, device_to_find))
+		if (!strcmp (output_records[i].marco_label, device_to_find))
 			return &output_records[i];
 	}
 	return NULL;
@@ -191,7 +195,7 @@ rbt_output
 			// DEBUG
 			printf ("%d %d DEVICE\n", x, y);
 
-			if (NULL == (record_cur = rbt_find_output_record (bb_array.bb_node[x][y].pin->parent->device->name))){
+			if (NULL == (record_cur = rbt_find_output_record (bb_array.bb_node[x][y].pin->parent->label))){
 				return -2;
 			}
 
@@ -210,7 +214,7 @@ rbt_output
 
 	for (i = 0; i < marcos_length; i++){
 		// If it is GND or POWER, which has no name
-		if (output_records[i].device_name == NULL)
+		if (output_records[i].marco_label == NULL)
 			continue;
 
 		fprintf (fp, "%s", output_records[i].device_name);

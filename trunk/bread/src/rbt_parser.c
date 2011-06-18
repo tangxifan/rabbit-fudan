@@ -166,6 +166,7 @@ rbt_parse_connector (xmlNodePtr connector, xmlChar *pin_id, int pins_count, t_vn
 
 			pin_cur->numnet = 1;
 			pin_cur->nets = vnet_cur;
+			strcpy (pin_cur->parent->label, (char*)label);
 
 			/* Fill loc & offset */
 			pin_num = rbt_convert_pin_to_int ((char*)pin_id);
@@ -223,6 +224,10 @@ rbt_ins_marco (int name)
 
 	rbt_marcos[rbt_marcos_length] = cur;
 	cur->name = name;
+
+	/* Initialize the label */
+	if (NULL == (cur->label = (char*) malloc (sizeof (char) * MAX_LABEL_LENGTH)))
+		return NULL;
 
 	rbt_marcos_length++;
 	return cur;
