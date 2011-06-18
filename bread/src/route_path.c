@@ -366,7 +366,7 @@ find_exloc_for_wire(IN t_location* exloc,
     tmp_cost+=find_manhattan_distance(tmp_loc,wireloc);
     tmp_cost+=get_bb_node_route_cost(tmp_loc,bb_array);
     tmp_cost+=get_bb_node_route_cost(wireloc,bb_array);
-    if (tmp_cost<min_cost)
+    if ((tmp_cost<min_cost)&&(FALSE==check_bb_node_occupied(tmp_loc,bb_array)))
 	{
 	  min_cost=tmp_cost;
 	  exloc=tmp_loc;
