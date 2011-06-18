@@ -15,6 +15,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Rabbit.  If not, see <http://www.gnu.org/licenses/>.
 
+rgraphicsview.cpp
+@Author: Running Teeth <running_teeth@sina.com>
+
 ********************************************************************/
 
 #ifndef RGRAPHICSVIEW_H
@@ -38,6 +41,7 @@ public:
 
     bool readFile(const QString &fileName);
     void updateItemShow();
+    void drawBreadboard();
 
 public slots:
     void setShowResistor(bool showResistor);
@@ -51,6 +55,9 @@ protected:
 
 private:
     QList<Unit *> m_unitList;
+    QGraphicsSvgItem *bread1;
+    QGraphicsSvgItem *bread2;
+    QGraphicsSvgItem *bread3;
     struct Show *m_show;
 };
 

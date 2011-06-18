@@ -15,6 +15,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Rabbit.  If not, see <http://www.gnu.org/licenses/>.
 
+mainwindow.cpp
+@Author: Running Teeth <running_teeth@sina.com>
+
 ********************************************************************/
 
 #include <QtGui>
@@ -28,7 +31,7 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
     m_view = new RGraphicsView();
-    m_view->setSceneRect(0, -50, 600, 800);
+    m_view->setSceneRect(-6, -50, 620, 630);
     m_view->setDragMode(QGraphicsView::RubberBandDrag);
     m_view->setRenderHints(QPainter::Antialiasing
                          | QPainter::TextAntialiasing);
@@ -59,7 +62,10 @@ void MainWindow::openNetlist()
             return;
         }
 
-        autoRoute(fileName);
+        QProcess *cmd = new QProcess();
+        cmd->start("../bread/src/test_main " + fileName);
+
+        m_view->readFile("../bread/src/output.rtd");
         return;
     }
 }

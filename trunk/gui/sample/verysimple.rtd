@@ -1,12 +1,16 @@
-Ceramic Capacitor 0B10 0A12
-220Î© Resistor 0B20 0B25
-1kÎ© Resistor 1J30 1J40
-1kÎ© Resistor 0J20 1A25
-1kÎ© Resistor 2J30 2J40
-1kÎ© Resistor 2a40 1J40
+Ceramic Capacitor C1 0B10 0A12
+220Î© Resistor R1 0B20 0B25
+33kÎ© Resistor R2 1J30 1J40
+1kÎ© Resistor R3 0J20 1A25
+1kÎ© Resistor R4 2J30 2J40
+1kÎ© Resistor R5 2a40 1J40
 wire 0E43 0F43
 wire 0E27 0F27
 wire 0E12 0F12
 wire 0x12 0y12
 wire 1x22 1v22
 wire 1x32 2x32
+NPN Transistor T1 2E12 2F23 2G25
+Tantalum Capacitor C2 1A20 1A25
+LM358_IC 0E4 0E5 0E6 0E7 0F7 0F6 0F5 0F4
+33kÎ© Resistor R6 1e40 1e42

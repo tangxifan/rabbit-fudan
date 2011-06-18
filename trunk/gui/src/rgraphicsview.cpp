@@ -1,7 +1,30 @@
+/*******************************************************************
+
+Part of the RABBIT project
+
+RABBIT is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+RABBIT is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Rabbit.  If not, see <http://www.gnu.org/licenses/>.
+
+rgraphicsview.cpp
+@Author: Running Teeth <running_teeth@sina.com>
+
+********************************************************************/
+
 #include <cmath>
 #include <QtGui>
 #include <QGraphicsSvgItem>
 #include <QGraphicsRectItem>
+#include <QSvgRenderer>
 
 #include "rgraphicsview.h"
 #include "unit.h"
@@ -9,11 +32,13 @@
 RGraphicsView::RGraphicsView(QWidget *parent)
     :QGraphicsView(parent)
 {
+    setCacheMode(QGraphicsView::CacheBackground);
+
     setScene(new QGraphicsScene(this));
     setTransformationAnchor(QGraphicsView::AnchorViewCenter);
     setDragMode(ScrollHandDrag);
     setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
-
+/*
     QPixmap tilePixmap(64, 64);
     tilePixmap.fill(Qt::white);
     QPainter tilePainter(&tilePixmap);
@@ -23,6 +48,8 @@ RGraphicsView::RGraphicsView(QWidget *parent)
     tilePainter.end();
 
     setBackgroundBrush(tilePixmap);
+*/
+    this->drawBreadboard();
 
     Show * show = new Show;
     m_show = show;
@@ -58,57 +85,26 @@ bool RGraphicsView::readFile(const QString &fileName)
 
     //clear screen and old data
     s->clear();
+    drawBreadboard();
     m_unitList.clear();
-
-    //adding the board background
-    QGraphicsItem *bread1 = new QGraphicsSvgItem("../parts/svg/breadboard/breadboard.svg");
-    QGraphicsItem *bread2 = new QGraphicsSvgItem("../parts/svg/breadboard/breadboard.svg");
-    QGraphicsItem *bread3 = new QGraphicsSvgItem("../parts/svg/breadboard/breadboard.svg");
-    bread1->setVisible(true);
-    s->addItem(bread1);
-    bread2->setY(bread2->boundingRect().height());
-    s->addItem(bread2);
-    bread3->setY(bread3->boundingRect().height() * 2);
-    s->addItem(bread3);
-    QPen outline(Qt::black, 2);
-    outline.setCosmetic(true);
-    QGraphicsRectItem *outline1 = new QGraphicsRectItem(bread1->boundingRect());
-    QGraphicsRectItem *outline2 = new QGraphicsRectItem(bread1->boundingRect());
-    QGraphicsRectItem *outline3 = new QGraphicsRectItem(bread1->boundingRect());
-    outline1->setPen(outline);
-    outline2->setPen(outline);
-    outline2->setPos(bread2->pos());
-    outline3->setPen(outline);
-    outline3->setPos(bread3->pos());
-    s->addItem(outline1);
-    s->addItem(outline2);
-    s->addItem(outline3);
 
     QTextStream stream(&file);
     while (!stream.atEnd()) {
         Unit *unit = new Unit();
-        QString temp;
+        QString temp, type;
         QString line = stream.readLine();
-
         QList<QString> data = line.split(" ");
-        if (data.count() < 3) {
-            QMessageBox::critical(this, tr("RABBIT"),
-                                  tr("File Syntax Error"));
-            return false;
-        }
+        QRegExp rx("^\\d[a-jA-Jv-zV-Z]?\\d+$");
 
-        else {
-            //unit->setUnitType(data.takeFirst());
-            //unit->setUnitName(data.takeFirst());
-            //unit->setUnitValue(data.takeFirst());
+        temp = data.takeFirst();
+        int i = rx.indexIn(temp);
+        type.clear();
+        while (i < 0) {
+            type.append(temp).append(" ");
             temp = data.takeFirst();
-            QRegExp rx("^\\d?[a-jA-Jv-zV-Z]?\\d+$");
-            while (rx.indexIn(temp) < 0) {
-                unit->setUnitType(temp);
-                temp = data.takeFirst();
-            }
-            unit->unitTypeParser();
+            i = rx.indexIn(temp);
         }
+        unit->setUnitType(type);
 
         unit->appendUnitPin(temp);
         while (data.count()) {
@@ -148,6 +144,39 @@ void RGraphicsView::updateItemShow()
             }
         }
     }
+}
+
+void RGraphicsView::drawBreadboard()
+{
+    QSvgRenderer *renderer = new QSvgRenderer(QString("../parts/svg/breadboard/breadboard.svg"));
+
+    bread1 = new QGraphicsSvgItem;
+    bread2 = new QGraphicsSvgItem;
+    bread3 = new QGraphicsSvgItem;
+
+    bread1->setSharedRenderer(renderer);
+    bread2->setSharedRenderer(renderer);
+    bread3->setSharedRenderer(renderer);
+
+    scene()->addItem(bread1);
+    scene()->addItem(bread2);
+    bread2->setY(bread1->boundingRect().height());
+    scene()->addItem(bread3);
+    bread3->setY(bread1->boundingRect().height() * 2);
+
+    QPen outline(Qt::black, 2);
+    outline.setCosmetic(true);
+    QGraphicsRectItem *outline1 = new QGraphicsRectItem(bread1->boundingRect());
+    QGraphicsRectItem *outline2 = new QGraphicsRectItem(bread1->boundingRect());
+    QGraphicsRectItem *outline3 = new QGraphicsRectItem(bread1->boundingRect());
+    outline1->setPen(outline);
+    outline2->setPen(outline);
+    outline2->setPos(bread2->pos());
+    outline3->setPen(outline);
+    outline3->setPos(bread3->pos());
+    scene()->addItem(outline1);
+    scene()->addItem(outline2);
+    scene()->addItem(outline3);
 }
 
 void RGraphicsView::setShowResistor(bool showResistor)
