@@ -157,15 +157,11 @@ rbt_output
 
 			/* If an drawn wire, continue */
 			if (bb_array.bb_node[x][y].wire_status == 2){
-				// DEBUG
-				printf ("%d %d DRAWN WIRE\n", x, y);
 				continue;
 			}
 
 			/* If an undrawn wire */
 			if (bb_array.bb_node[x][y].wire_status == 1){
-				// DEBUG
-				printf ("%d %d UNDRAWN WIRE\n", x, y);
 				if (NULL == (pin_str0 = (char*) malloc (10 * sizeof (char))))
 					return -1;
 				if (NULL == (pin_str1 = (char*) malloc (10 * sizeof (char))))
@@ -192,17 +188,19 @@ rbt_output
 			}
 
 			/* Record the device and pins */
-			// DEBUG
-			printf ("%d %d DEVICE\n", x, y);
 
 			if (NULL == (record_cur = rbt_find_output_record (bb_array.bb_node[x][y].pin->parent->label))){
 				return -2;
 			}
+			//DEBUG
+			printf ("LABEL: %s\n", bb_array.bb_node[x][y].pin->parent->label);
 
 			pin_cur = &record_cur->pins[bb_array.bb_node[x][y].pin->pin_no];
 			pin_cur->x = x;
 			pin_cur->y = y;
 			rbt_gen_pin_str(pin_cur->pin_str, x, y);
+			//DEBUG
+			printf ("x = %d, y = %d, str = %s\n", x, y, pin_cur->pin_str);
 			
 
 		}
