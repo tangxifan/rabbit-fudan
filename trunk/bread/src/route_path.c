@@ -31,9 +31,9 @@ find_vnet_bbs(IN int* nbbs,
 {
   t_location* bbs=NULL;
   if (SPECIAL==vnet->type)
-  {bbs=find_normal_vnet_bbs(nbbs,vnet,bb_array);}
-  else
   {bbs=find_special_vnet_bbs(nbbs,vnet,bb_array);}
+  else
+  {bbs=find_normal_vnet_bbs(nbbs,vnet,bb_array);}
   return bbs;
 }
 
@@ -209,8 +209,9 @@ try_right_route_pin_on_bb(IN t_pr_pin* spin,
   int iy=spin->location.y;
   int max_len=spin->parent->device->max_length;
   int itop=max_len+ix;
-  int iend=bb_array->columns[spin->nets->pcolumn].base.x
-          +bb_array->columns[spin->nets->pcolumn].width;
+  int col_num=bb_array->bb_node[ix][iy].column;
+  int iend=bb_array->columns[col_num].base.x
+          +bb_array->columns[col_num].width;
   if (itop>iend)
   {itop=iend;}
 
@@ -284,7 +285,9 @@ try_left_route_pin_on_bb(IN t_pr_pin* spin,
   int iy=spin->location.y;
   int max_len=spin->parent->device->max_length;
   int itop=ix-max_len;
-  int iend=bb_array->columns[spin->nets->pcolumn].base.x;
+  int col_num=bb_array->bb_node[ix][iy].column;
+  int iend=bb_array->columns[col_num].base.x;
+
   if (itop<iend)
   {itop=iend;}
  
