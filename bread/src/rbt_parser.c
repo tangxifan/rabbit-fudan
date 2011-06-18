@@ -390,7 +390,10 @@ rbt_config_device (t_icdev* cur, char *device_name)
 		nodeset = result->nodesetval;
 		for (i=0; i < nodeset->nodeNr; i++) {
 			keyword = xmlNodeListGetString(doc, nodeset->nodeTab[i]->xmlChildrenNode, 1);
-			if (!strcmp ((char*)keyword, "IC")){
+			if (
+				!strcmp ((char*)keyword, "IC") ||
+				!strcmp ((char*)keyword, "transistor")
+			){
 			/* IC Blocks */
 				rbt_config_ic (cur, doc);
 				xmlFree (keyword);
