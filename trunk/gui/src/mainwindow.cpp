@@ -38,7 +38,7 @@ MainWindow::MainWindow(QWidget *parent)
     createActions();
     createMenus();
     createToolBars();
-    createDockWindows();
+    //createDockWindows();
 
     setWindowIcon(QIcon(":/images/logo.png"));
     setWindowTitle(tr("RABBIT"));
@@ -106,6 +106,7 @@ void MainWindow::createActions()
             this, SLOT(openNetlist()));
 
     importRoutedAction = new QAction(tr("I&mport"), this);
+    importRoutedAction->setIcon(QIcon(":/images/document-import.svg"));
     importRoutedAction->setShortcut(tr("Ctrl+I"));
     connect(importRoutedAction, SIGNAL(triggered()),
             this, SLOT(importRouted()));
@@ -128,30 +129,35 @@ void MainWindow::createActions()
             this, SLOT(zoomOut()));
 
     showResistorAction = new QAction(tr("Show Resistors"), this);
+    showResistorAction->setIcon(QIcon(":/images/show-resistor.svg"));
     showResistorAction->setCheckable(true);
     showResistorAction->setChecked(true);
     connect(showResistorAction, SIGNAL(toggled(bool)),
             m_view, SLOT(setShowResistor(bool)));
 
     showCapacitorAction = new QAction(tr("Show Capacitors"), this);
+    showCapacitorAction->setIcon(QIcon(":/images/show-capacitor.svg"));
     showCapacitorAction->setCheckable(true);
     showCapacitorAction->setChecked(true);
     connect(showCapacitorAction, SIGNAL(toggled(bool)),
             m_view, SLOT(setShowCapacitor(bool)));
 
     showTransistorAction = new QAction(tr("Show Transistors"), this);
+    showTransistorAction->setIcon(QIcon(":/images/show-transistor.svg"));
     showTransistorAction->setCheckable(true);
     showTransistorAction->setChecked(true);
     connect(showTransistorAction, SIGNAL(toggled(bool)),
             m_view, SLOT(setShowTransistor(bool)));
 
     showICAction = new QAction(tr("Show ICs"), this);
+    showICAction->setIcon(QIcon(":/images/show-IC.svg"));
     showICAction->setCheckable(true);
     showICAction->setChecked(true);
     connect(showICAction, SIGNAL(toggled(bool)),
             m_view, SLOT(setShowIC(bool)));
 
     hideSelectedAction = new QAction(tr("Hide Selected Items"), this);
+    hideSelectedAction->setIcon(QIcon(":/images/hide.svg"));
     hideSelectedAction->setCheckable(true);
     hideSelectedAction->setChecked(false);
     connect(hideSelectedAction, SIGNAL(toggled(bool)),
