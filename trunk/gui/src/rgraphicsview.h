@@ -48,6 +48,7 @@ public slots:
     void setShowCapacitor(bool showCapacitor);
     void setShowTransistor(bool showTransistor);
     void setShowIC(bool showIC);
+    void setShowLabel(bool showLabel);
     void setHideSelected(bool hideSelected);
 
 protected:

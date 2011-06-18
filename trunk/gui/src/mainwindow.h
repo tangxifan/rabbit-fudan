@@ -64,6 +64,7 @@ private:
     QAction *showCapacitorAction;
     QAction *showTransistorAction;
     QAction *showICAction;
+    QAction *showLabelAction;
     QAction *hideSelectedAction;
 
     RGraphicsView *m_view;

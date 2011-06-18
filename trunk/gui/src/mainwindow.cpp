@@ -162,6 +162,13 @@ void MainWindow::createActions()
     connect(showICAction, SIGNAL(toggled(bool)),
             m_view, SLOT(setShowIC(bool)));
 
+    showLabelAction = new QAction(tr("Show Labels"), this);
+    showLabelAction->setIcon(QIcon(":/images/show-label.svg"));
+    showLabelAction->setCheckable(true);
+    showLabelAction->setChecked(true);
+    connect(showLabelAction, SIGNAL(toggled(bool)),
+            m_view, SLOT(setShowLabel(bool)));
+
     hideSelectedAction = new QAction(tr("Hide Selected Items"), this);
     hideSelectedAction->setIcon(QIcon(":/images/hide.svg"));
     hideSelectedAction->setCheckable(true);
@@ -172,7 +179,6 @@ void MainWindow::createActions()
 
 void MainWindow::createMenus()
 {
-
     fileMenu = menuBar()->addMenu(tr("&File"));
     fileMenu->addAction(openNetlistAction);
     fileMenu->addAction(importRoutedAction);
@@ -187,6 +193,7 @@ void MainWindow::createMenus()
     viewMenu->addAction(showCapacitorAction);
     viewMenu->addAction(showTransistorAction);
     viewMenu->addAction(showICAction);
+    viewMenu->addAction(showLabelAction);
     viewMenu->addAction(hideSelectedAction);
 }
 
@@ -204,6 +211,7 @@ void MainWindow::createToolBars()
     viewToolBar->addAction(showCapacitorAction);
     viewToolBar->addAction(showTransistorAction);
     viewToolBar->addAction(showICAction);
+    viewToolBar->addAction(showLabelAction);
     viewToolBar->addAction(hideSelectedAction);
 }
 

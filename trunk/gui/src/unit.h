@@ -45,6 +45,7 @@ struct Show {
     bool m_showCapacitor;
     bool m_showTransistor;
     bool m_showIC;
+    bool m_showLabel;
     bool m_hideSelected;
 };
 
@@ -60,6 +61,7 @@ public:
     void appendUnitPin(QString pin);
     void drawPins();
     void setUnitWireVisible(bool visible);
+    void setLabelVisible(bool visible);
     void setTypeVisible(struct Show *show);
     void setSelectVisible(struct Show *show);
     void setWasSelected(bool wasSelected);

@@ -10,5 +10,6 @@
         <file>images/show-IC.svg</file>
         <file>images/show-capacitor.svg</file>
         <file>images/hide.svg</file>
+        <file>images/show-label.svg</file>
     </qresource>
 </RCC>
