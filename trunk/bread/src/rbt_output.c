@@ -197,7 +197,6 @@ rbt_output
 			pin_cur->x = x;
 			pin_cur->y = y;
 			rbt_gen_pin_str(pin_cur->pin_str, x, y);
-			printf ("!!!!!%s\n", pin_cur->pin_str);
 			
 
 		}
@@ -224,7 +223,7 @@ rbt_output
 		fprintf (fp, "%s\n", output_wire_cur->def);
 	}
 
-	close (fp);
+	fclose (fp);
 	return 0;
 }
 

@@ -42,7 +42,7 @@ typedef enum e_boolean{
 #define BUF_SIZE 500
 
 #define RESISTOR_MAX_LENGTH 10
-#define RESISTOR_MIN_LENGTH 2
+#define RESISTOR_MIN_LENGTH 4
 #define CAPASITOR_MAX_LENGTH 5
 #define CAPASITOR_MIN_LENGTH 2
 
