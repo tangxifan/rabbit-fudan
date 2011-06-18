@@ -369,7 +369,7 @@ find_exloc_for_wire(IN t_location* exloc,
     if ((tmp_cost<min_cost)&&(FALSE==check_bb_node_occupied(tmp_loc,bb_array)))
 	{
 	  min_cost=tmp_cost;
-	  exloc=tmp_loc;
+	  *(exloc)=*(tmp_loc);
 	}
   }
 
