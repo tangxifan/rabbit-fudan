@@ -96,6 +96,8 @@ rbt_find_output_record
 {
 	int i;
 	for (i = 0; i < marcos_length; i++){
+		if (output_records[i].device_name == NULL)
+			continue;
 		if (!strcmp (output_records[i].device_name, device_to_find))
 			return &output_records[i];
 	}

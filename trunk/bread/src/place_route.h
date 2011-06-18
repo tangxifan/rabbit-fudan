@@ -120,6 +120,8 @@ struct s_pr_marco
   enum e_route_status rstatus;
   /*For struct*/
   struct s_pr_node *next;
+  /* zxhmike: to store its name */
+  char* label;
 };
 
 /*
