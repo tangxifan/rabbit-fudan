@@ -1,3 +1,25 @@
+/*******************************************************************
+
+Part of the RABBIT project
+
+RABBIT is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+RABBIT is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Rabbit.  If not, see <http://www.gnu.org/licenses/>.
+
+unit.h
+@Author: Running Teeth <running_teeth@sina.com>
+
+********************************************************************/
+
 #ifndef UNIT_H
 #define UNIT_H
 
@@ -32,7 +54,6 @@ public:
     Unit();
 
     void unitAdd();
-    void unitTypeParser();
     void setUnitType(const QString &type);
     void setUnitName(const QString &name);
     void setUnitValue(const QString &value);
@@ -55,12 +76,15 @@ private:
     void addTransistor();
     void addIC();
     void addWire();
+    void addLabel();
 
     QGraphicsSvgItem *m_svg;
     QList<QGraphicsLineItem *> m_wire;
+    QGraphicsTextItem *m_label;
     QString m_unitType;
     QString m_unitName;
     QString m_unitValue;
+    QString m_unitLabel;
     QVector<QPointF> m_unitPin;
     qreal m_minPinY;
     double m_angle;
