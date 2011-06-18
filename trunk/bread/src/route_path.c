@@ -45,7 +45,7 @@ find_vnet_bbs(IN int* nbbs,
   {
     for(iy=ystart;iy<yend;++iy)
     {
-      if ((vnet==bb_array->bb_node[ix][iy].net)&&(FREE==bb_array->bb_node[ix][iy].status))
+      if ((vnet==bb_array->bb_node[ix][iy].net)&&(FREE==bb_array->bb_node[ix][iy].status)&&(BLANK!=bb_array->bb_node[ix][iy].type))
       {(*nbbs)++;}
     }
   }
@@ -56,7 +56,7 @@ find_vnet_bbs(IN int* nbbs,
   {
     for(iy=ystart;iy<yend;++iy)
     {
-      if ((vnet==bb_array->bb_node[ix][iy].net)&&(FREE==bb_array->bb_node[ix][iy].status))
+      if ((vnet==bb_array->bb_node[ix][iy].net)&&(FREE==bb_array->bb_node[ix][iy].status)&&(BLANK!=bb_array->bb_node[ix][iy].type))
       {
         set_location_value(bbs+ibb,ix,iy);
         ibb++;
@@ -81,16 +81,14 @@ find_path_cost_vnets(IN t_location* srcloc,
   int ndesbb=0;
   t_location* srcbbs=find_vnet_bbs(&nsrcbb,src,bb_array);
   t_location* desbbs=find_vnet_bbs(&ndesbb,des,bb_array);
-  float rcost=cal_route_path_cost(srcbbs+ibb,desbbs+jbb,bb_array);
-  set_location_value(srcloc,(srcbbs+ibb)->x,(srcbbs+ibb)->y);
-  set_location_value(desloc,(desbbs+jbb)->x,(desbbs+jbb)->y);
+  float rcost=UNKNOWN;
 
   for (ibb=0;ibb<nsrcbb;++ibb)  
   {
     for (jbb=0;jbb<ndesbb;++jbb)
     {
       tmpcost=cal_route_path_cost(srcbbs+ibb,desbbs+jbb,bb_array);
-      if (tmpcost<rcost)
+      if ((tmpcost<rcost)||(UNKNOWN==rcost))
       {
         rcost=tmpcost;
         set_location_value(srcloc,(srcbbs+ibb)->x,(srcbbs+ibb)->y);
@@ -98,6 +96,8 @@ find_path_cost_vnets(IN t_location* srcloc,
       }
     }
   }
+  free(srcbbs);
+  free(desbbs);
   return rcost;
 }
 
@@ -226,23 +226,11 @@ try_left_route_pin_on_bb(IN t_pr_pin* spin,
     }
     else
     {ix--;continue;}
-	if (2==DEBUG)
-	{printf("Current tmpcost is %f\n",tmpcost);}
     tmpcost+=(float)find_manhattan_distance(rloc,&tmploc);
-	if (2==DEBUG)
-	{printf("Current tmpcost is %f\n",tmpcost);}
     tmpcost+=(float)find_manhattan_distance(&tmploc,&(dpin->location));
-	if (2==DEBUG)
-	{printf("Current tmpcost is %f\n",tmpcost);}
     tmpcost+=get_bb_node_route_cost(rloc,bb_array);
-	if (2==DEBUG)
-	{printf("Current tmpcost is %f\n",tmpcost);}
     tmpcost+=get_bb_node_route_cost(&tmploc,bb_array);
-	if (2==DEBUG)
-	{printf("Current tmpcost is %f\n",tmpcost);}
     tmpcost+=get_bb_node_route_cost(&(dpin->location),bb_array);
-	if (2==DEBUG)
-	{printf("Current tmpcost is %f\n",tmpcost);}
     if (UNKNOWN==rcost)
     {
       rcost=tmpcost;

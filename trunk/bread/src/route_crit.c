@@ -482,7 +482,8 @@ finish_route_marco_on_bb(IN t_pr_marco* marco,
 	bb_array->bb_node[pina->location.x][pina->location.y].pin=pina;
 	bb_array->bb_node[pinb->location.x][pinb->location.y].pin=pinb;
     set_bb_node_occupied(&locb,bb_array);
-    set_bb_node_occupied(&loca,bb_array);
+    set_bb_node_occupied(&(pina->location),bb_array);
+    set_bb_node_occupied(&(pinb->location),bb_array);
     if (FALSE==check_bb_node_unroutable(&locb,bb_array))
     {
       set_bb_net_unroutable(&locb,bb_array);
@@ -501,7 +502,8 @@ finish_route_marco_on_bb(IN t_pr_marco* marco,
 	bb_array->bb_node[pina->location.x][pina->location.y].pin=pina;
 	bb_array->bb_node[pinb->location.x][pinb->location.y].pin=pinb;
     set_bb_node_occupied(&loca,bb_array);
-    set_bb_node_occupied(&locb,bb_array);
+    set_bb_node_occupied(&(pina->location),bb_array);
+    set_bb_node_occupied(&(pinb->location),bb_array);
     if (FALSE==check_bb_node_unroutable(&loca,bb_array))
     {
       set_bb_net_unroutable(&loca,bb_array);
