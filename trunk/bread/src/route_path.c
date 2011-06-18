@@ -342,3 +342,36 @@ try_right_find_node(IN t_pr_pin* pin,
   }
   return cost;
 }
+
+int 
+find_exloc_for_wire(IN t_location* exloc,
+                    IN t_location* wireloc,
+					IN t_bb_array* bb_array
+				   )
+{
+  int in=0;
+  float min_cost=0.0;
+  float tmp_cost=0.0;
+  t_location* tmp_loc=NULL;
+  int ninner=bb_array->bb_node[exloc->x][exloc->y].ninner;
+  
+  min_cost+=find_manhattan_distance(exloc,wireloc);
+  min_cost+=get_bb_node_route_cost(exloc,bb_array);
+  min_cost+=get_bb_node_route_cost(wireloc,bb_array);
+
+  for (in=0;in<ninner;++in)
+  {
+    tmp_cost=0.0;
+	tmp_loc=&(bb_array->bb_node[exloc->x][exloc->y].inners[in]->location);
+    tmp_cost+=find_manhattan_distance(tmp_loc,wireloc);
+    tmp_cost+=get_bb_node_route_cost(tmp_loc,bb_array);
+    tmp_cost+=get_bb_node_route_cost(wireloc,bb_array);
+    if (tmp_cost<min_cost)
+	{
+	  min_cost=tmp_cost;
+	  exloc=tmp_loc;
+	}
+  }
+
+  return 1;
+}
