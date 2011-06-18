@@ -94,6 +94,19 @@ getnodeset (xmlDocPtr doc, xmlChar *xpath)
 	return result;
 }
 
+/**
+ * connector10 => 10
+ */
+int
+rbt_convert_connector_to_int
+(char* connector_id)
+{
+	//DEBUG
+	printf ("convert0: %s\n", &connector_id[0]);
+	printf ("convert1: %s\n", &connector_id[9]);
+	printf ("convert2: %d\n", atoi(&connector_id[9]));
+	return atoi(&connector_id[9]);
+}
 /*
  * function rbt_convert_pin_to_int
  * remove string "pin" of a pin_id and convert the pin number to int
@@ -146,9 +159,22 @@ rbt_parse_connector (xmlNodePtr connector, xmlChar *pin_id, int pins_count, t_vn
 	xmlNodePtr cur;
 	xmlChar *label;
 	xmlChar	*title;
+	xmlChar *name;
 	xmlChar *id;
+	xmlChar *connector_id;
 	t_pr_pin *pin_cur;
 	int pin_num;
+	char *docname;
+	xmlXPathObjectPtr result;
+	xmlDocPtr doc;
+	xmlNodeSetPtr nodeset;
+	int i;
+	char *filename;
+	if (NULL == (filename = (char*) malloc (MAX_FILENAME_LENGTH * sizeof(char))))
+		return -1;
+
+	if (NULL == (docname = (char*)malloc (sizeof (char) * MAX_FILENAME_LENGTH)))
+		return -1;
 	
 	if (NULL == (pin_cur = (t_pr_pin*)malloc (sizeof (t_pr_pin))))
 		return -1;
@@ -169,13 +195,40 @@ rbt_parse_connector (xmlNodePtr connector, xmlChar *pin_id, int pins_count, t_vn
 			strcpy (pin_cur->parent->label, (char*)label);
 
 			/* Fill loc & offset */
-			pin_num = rbt_convert_pin_to_int ((char*)pin_id);
+			/* If marco, do extra convert work */
+			if (pin_cur->parent->type == ICBLOCK){
+				if (NULL == (filename = rbt_find_device_file (part_list, pin_cur->parent->device->name)))
+					return -2;
+				strcpy (docname, part_dir);
+				strcat (docname, filename);
+
+				/* Open the fzp file and parse, fill in struct icdev */
+				if (NULL == (doc = getdoc(docname)))
+					return -1;
+
+				result = getnodeset (doc, (xmlChar*) "//connector");
+				if (result) {
+					nodeset = result->nodesetval;
+					for (i=0; i < nodeset->nodeNr; i++) {
+						connector_id = xmlGetProp (nodeset->nodeTab[i], (const xmlChar*) "id");
+						name = xmlGetProp (nodeset->nodeTab[i], (const xmlChar*) "name");
+						printf ("connector_id = %s name = %s\n", connector_id, name);
+						if (!strcmp ((char*)pin_id,(char*) name))
+							pin_num = rbt_convert_connector_to_int ((char*)connector_id);
+					}
+				}
+			}else{
+				pin_num = rbt_convert_pin_to_int ((char*)pin_id);
+			}
 
 			if (pin_num != -1){
+			printf ("%s pin no %d added.\n", pin_cur->parent->device->name, pin_num);
 				pin_cur->parent->pins[pin_num] = pin_cur;
+
 				pin_cur->loc = pin_cur->parent->device->pinls[pin_num].loc;
 				pin_cur->offset = pin_cur->parent->device->pinls[pin_num].offset;
 				pin_cur->pin_no = pin_num;
+			}else{
 			}
 
 			vnet_cur->pins[pins_count] = pin_cur;
@@ -186,6 +239,10 @@ rbt_parse_connector (xmlNodePtr connector, xmlChar *pin_id, int pins_count, t_vn
 		}
 	}
 	return 0;
+
+	xmlXPathFreeObject (result);
+	xmlFreeDoc(doc);
+	xmlCleanupParser();
 
 }
 
@@ -481,19 +538,19 @@ rbt_set_marco_type (t_pr_marco *marco_cur, char *device_name)
 		nodeset = result->nodesetval;
 		for (i=0; i < nodeset->nodeNr; i++) {
 			keyword = xmlNodeListGetString(doc, nodeset->nodeTab[i]->xmlChildrenNode, 1);
-			if (!strcmp ((char*)keyword, "IC")){
-			/* IC Blocks */
-				marco_cur->type = ICBLOCK;
-				break;
-			}else if (!strcmp ((char*)keyword, "Resistor") ||
+			if (!strcmp ((char*)keyword, "Resistor") ||
 					  !strcmp ((char*)keyword, "Capacitor")){
 			/* Resistors and Capacitors */
 				marco_cur->type = RCD;
-				break;
+				free (docname);
+				xmlFreeDoc(doc);
+				xmlCleanupParser();
+				return 0;
 			}
 		}
 		xmlXPathFreeObject (result);
 	}
+	marco_cur->type = ICBLOCK;
 
 	free (docname);
 	xmlFreeDoc(doc);
