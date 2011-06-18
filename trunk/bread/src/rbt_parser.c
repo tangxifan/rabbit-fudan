@@ -395,18 +395,14 @@ rbt_config_device (t_icdev* cur, char *device_name)
 		nodeset = result->nodesetval;
 		for (i=0; i < nodeset->nodeNr; i++) {
 			keyword = xmlNodeListGetString(doc, nodeset->nodeTab[i]->xmlChildrenNode, 1);
-			if (
-				!strcmp ((char*)keyword, "IC") ||
-				!strcmp ((char*)keyword, "transistor")
-			){
-			/* IC Blocks */
-				rbt_config_ic (cur, doc);
-				xmlFree (keyword);
-				break;
-			}else if (!strcmp ((char*)keyword, "Resistor") ||
-					  !strcmp ((char*)keyword, "Capacitor")){
+			if (!strcmp ((char*)keyword, "Resistor") ||
+				!strcmp ((char*)keyword, "Capacitor")){
 			/* Resistors and Capacitors */
 				rbt_config_scalable (cur, (char*) keyword);
+				xmlFree (keyword);
+				break;
+			}else{
+				rbt_config_ic (cur, doc);
 				xmlFree (keyword);
 				break;
 			}
@@ -613,14 +609,19 @@ rbt_parse_init(char *docname)
 			if ((dev_cur = rbt_find_device (temp_string2)) == NULL)
 				return -5;
 			marco_cur->pinnum = dev_cur->pin_num;
+
 			marco_cur->device = dev_cur;
 
 			rbt_set_marco_type (marco_cur, (char*) temp_string2);
 
+			/* Initialize marco pins to NULL */
 			if (marco_cur->pinnum > 0){
 				if (NULL == (marco_cur->pins = (t_pr_pin**) malloc (sizeof(t_pr_pin*) * marco_cur->pinnum)))
 					return -1;
 			}
+			int j;
+			for (j = 0; j < marco_cur->pinnum; j++)
+				marco_cur->pins[j] = NULL;
 		}
 		xmlFree (temp_string);
 		xmlFree (temp_string2);
@@ -669,6 +670,7 @@ rbt_gen_arrays()
 		/* Change the vnets */
 		for (j = 0; j < marcos[i].pinnum; j++){
 			for (k = 0; k < rbt_vnets_length; k++){
+				if (marcos[i].pins[j] == NULL) continue;
 				if (rbt_vnets[k] == marcos[i].pins[j]->nets){
 					marcos[i].pins[j]->nets = &vnets[k];
 				}
