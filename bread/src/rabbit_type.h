@@ -40,6 +40,7 @@ typedef enum e_boolean{
 
 #define MAX_FILENAME_LENGTH 500
 #define BUF_SIZE 500
+#define MAX_LABEL_LENGTH 20
 
 #define RESISTOR_MAX_LENGTH 10
 #define RESISTOR_MIN_LENGTH 4
