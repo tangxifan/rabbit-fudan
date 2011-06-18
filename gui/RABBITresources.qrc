@@ -4,5 +4,11 @@
         <file>images/document-open.svg</file>
         <file>images/logo.png</file>
         <file>images/zoomin.png</file>
+        <file>images/document-import.svg</file>
+        <file>images/show-resistor.svg</file>
+        <file>images/show-transistor.svg</file>
+        <file>images/show-IC.svg</file>
+        <file>images/show-capacitor.svg</file>
+        <file>images/hide.svg</file>
     </qresource>
 </RCC>
