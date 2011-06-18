@@ -47,15 +47,15 @@ Unit::Unit()
 
 void Unit::unitAdd()
 {
-    if (m_unitName.contains("resistor", Qt::CaseInsensitive))
+    if (m_unitType.contains("resistor", Qt::CaseInsensitive))
         addResistor();
-    if (m_unitName.contains("capacitor", Qt::CaseInsensitive))
+    if (m_unitType.contains("capacitor", Qt::CaseInsensitive))
         addCapacitor();
-    if (m_unitName.contains("transistor", Qt::CaseInsensitive))
+    if (m_unitType.contains("transistor", Qt::CaseInsensitive))
         addTransistor();
-    if (m_unitName.contains("IC", Qt::CaseSensitive))
+    if (m_unitType.contains("IC", Qt::CaseSensitive))
         addIC();
-    if (m_unitName.contains("wire", Qt::CaseInsensitive))
+    if (m_unitType.contains("wire", Qt::CaseInsensitive))
         addWire();
     m_svg->setVisible(true);
     setUnitWireVisible(true);
@@ -101,7 +101,10 @@ void Unit::setUnitType(const QString &type)
         }
     }
     else {
-        m_unitName = "IC";
+        for (; data.count() > 1;) {
+            m_unitName.append(data.takeFirst()).append("_");
+        }
+        m_unitName.chop(1);
         m_unitType = "IC";
     }
 
@@ -228,24 +231,28 @@ void Unit::setTypeVisible(Show *show)
         m_svg->setVisible(show->m_showResistor);
         m_label->setVisible(show->m_showResistor);
         setUnitWireVisible(show->m_showResistor);
+        this->setEnabled(show->m_showResistor);
         return;
     }
     if (m_unitType.contains("capacitor", Qt::CaseInsensitive)) {
         m_svg->setVisible(show->m_showCapacitor);
         m_label->setVisible(show->m_showCapacitor);
         setUnitWireVisible(show->m_showCapacitor);
+        this->setEnabled(show->m_showCapacitor);
         return;
     }
     if (m_unitType.contains("transistor", Qt::CaseInsensitive)) {
         m_svg->setVisible(show->m_showTransistor);
         m_label->setVisible(show->m_showTransistor);
         setUnitWireVisible(show->m_showTransistor);
+        this->setEnabled(show->m_showTransistor);
         return;
     }
     if (m_unitType.contains("IC", Qt::CaseInsensitive)) {
         m_svg->setVisible(show->m_showIC);
         m_label->setVisible(show->m_showIC);
         setUnitWireVisible(show->m_showIC);
+        this->setEnabled(show->m_showIC);
         return;
     }
 }
@@ -255,6 +262,7 @@ void Unit::setSelectVisible(Show *show)
     setUnitWireVisible(!(show->m_hideSelected));
     m_svg->setVisible(!(show->m_hideSelected));
     m_label->setVisible(!(show->m_hideSelected));
+    setEnabled(!(show->m_hideSelected));
 }
 
 void Unit::setWasSelected(bool wasSelected)
@@ -427,8 +435,17 @@ void Unit::addTransistor()
 
 void Unit::addIC()
 {
-    QSvgRenderer *render = new QSvgRenderer(QString("../parts/svg/breadboard/")
-                                            .append(m_unitName + ".svg"));
+    QString fileName = QString("../parts/svg/breadboard/").append(m_unitName);
+    QFile file(fileName + "_breadboard.svg");
+
+    if (!file.exists()) {
+        file.setFileName(fileName + "_bread.svg");
+    }
+    if (!file.exists()) {
+        return;
+    }
+    QSvgRenderer *render = new QSvgRenderer(file.fileName());
+
     m_svg->setSharedRenderer(render);
 
     QPointF point = QPointF(m_unitPin.at(0).x() - m_svg->boundingRect().width() / (m_unitPin.count() + 1)
