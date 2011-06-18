@@ -20,14 +20,22 @@ main.cpp
 ********************************************************************/
 
 #include <QtGui/QApplication>
+#include <QMessageBox>
 
 #include "mainwindow.h"
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
-    MainWindow w;
-    w.show();
+    try {
+        QApplication a(argc, argv);
+        MainWindow w;
+        w.show();
 
-    return a.exec();
+        return a.exec();
+    }
+    catch (char *exception) {
+            QMessageBox msgBox;
+            msgBox.setText("Some errors occurred!");
+            return msgBox.exec();
+    }
 }

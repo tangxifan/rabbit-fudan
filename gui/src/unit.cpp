@@ -30,6 +30,7 @@ unit.cpp
 #include <cmath>
 
 #include "unit.h"
+#include "mainwindow.h"
 
 Unit::Unit()
 {
@@ -166,15 +167,18 @@ QPointF Unit::bbCoordConvert(QString &bbCoord)
     if ((row == 'x') || (row == 'y')) {
         y += POWERTOEDGE + HOLEGAP * (row - 'x');
         column = bbCoord.remove(0, 1);
-        int extra;
+        /*int extra;
         if (column.toInt(&ok, 10) % 5)
             extra = (column.toInt(&ok, 10) / 5);
         else
             extra = (column.toInt(&ok, 10) / 5 - 1);
         if (column.toInt(&ok, 10) > 25)
             extra += 1;
+
         x = TOLEFTEDGE + HOLEGAP * (column.toInt(&ok, 10) + extra);
-        //x = 24 + 9 * (toY.toInt(&ok, 10));
+        */
+        //not considering the gaps in the power line
+        x = TOLEFTEDGE + HOLEGAP * (column.toInt(&ok, 10));
     }
     else if (((row - 'a') >= 0) && ((row - 'e') <= 0)) {
         y += TOTOPEDGE + HOLEGAP * (row - 'a');
@@ -190,7 +194,7 @@ QPointF Unit::bbCoordConvert(QString &bbCoord)
         y += BOARDWIDTH - GNDTOEDGE + HOLEGAP * (row - 'w');
 
         column = bbCoord.remove(0, 1);
-        int extra;
+        /*int extra;
         if (column.toInt(&ok, 10) % 5)
             extra = (column.toInt(&ok, 10) / 5);
         else
@@ -198,15 +202,16 @@ QPointF Unit::bbCoordConvert(QString &bbCoord)
         if (column.toInt(&ok, 10) > 25)
             extra += 1;
         x = TOLEFTEDGE + HOLEGAP * (column.toInt(&ok, 10) + extra);
-        //x = 24 + 9 * (toY.toInt(&ok, 10));
+        */
+        x = TOLEFTEDGE + HOLEGAP * (column.toInt(&ok, 10));
     }
     else {
-        //QMessageBox::warning(this, "Rabbit", "File Syntax Error.");
+        //QMessageBox::critical(this, QObject::tr("Rabbit"), QString("File Syntax Error."));
         return QPointF(0, 0);
     }
 
     if (ok == false) {
-        //QMessageBox::warning(this, "Rabbit", "File Syntax Error.");
+        //QMessageBox::critical(this, QObject::tr("Rabbit"), QString("File Syntax Error."));
         return QPointF(0, 0);
     }
 
@@ -223,6 +228,11 @@ void Unit::setUnitWireVisible(bool visible)
     QGraphicsLineItem *wires = new QGraphicsLineItem();
     foreach(wires, m_wire)
         wires->setVisible(visible);
+}
+
+void Unit::setLabelVisible(bool visible)
+{
+    m_label->setVisible(visible);
 }
 
 void Unit::setTypeVisible(Show *show)

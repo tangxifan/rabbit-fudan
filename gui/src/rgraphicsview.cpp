@@ -127,6 +127,7 @@ void RGraphicsView::updateItemShow()
     Unit *unit = new Unit();
     foreach (unit, m_unitList) {
         unit->setTypeVisible(m_show);
+        unit->setLabelVisible(m_show->m_showLabel);
         if (m_show->m_hideSelected) {
             if (unit->isSelected()) {
                 unit->setWasSelected(true);
@@ -200,6 +201,12 @@ void RGraphicsView::setShowTransistor(bool showTransistor)
 void RGraphicsView::setShowIC(bool showIC)
 {
     m_show->m_showIC = showIC;
+    updateItemShow();
+}
+
+void RGraphicsView::setShowLabel(bool showLabel)
+{
+    m_show->m_showLabel = showLabel;
     updateItemShow();
 }
 
