@@ -628,6 +628,7 @@ find_match(IN int nblk,
       determine_net_place_location(netmatch,place_info);
       netmatch->pcolumn=place_info->column;
       netmatch->status=PLACED;
+	  place_info->cur_width+=netmatch->pwidth;
     }
     else if (nblk!=0)
     {
@@ -635,6 +636,7 @@ find_match(IN int nblk,
       determine_blk_place_location(blkmatch,place_info);
       blkmatch->pcolumn=place_info->column;
       blkmatch->status=PLACED;
+	  place_info->cur_width+=blkmatch->pwidth;
     }
   }  
   else
@@ -645,6 +647,7 @@ find_match(IN int nblk,
       determine_blk_place_location(blkmatch,place_info);
       blkmatch->pcolumn=place_info->column;
       blkmatch->status=PLACED;
+	  place_info->cur_width+=blkmatch->pwidth;
     }
     else
     {
@@ -652,6 +655,7 @@ find_match(IN int nblk,
       determine_net_place_location(netmatch,place_info);
       netmatch->pcolumn=place_info->column;
       netmatch->status=PLACED;
+	  place_info->cur_width+=netmatch->pwidth;
     }
   }
   return TRUE;
