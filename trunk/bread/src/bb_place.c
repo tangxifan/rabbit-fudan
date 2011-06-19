@@ -436,7 +436,7 @@ detail_place(IN int nvnet,
     {
       if ((NULL==blk)&&(NULL==vnet))
       {
-        printf("Error: Fail to find the blk or vnet with given name(name:%d)\n",ioff);
+        printf("Error: Fail to find the blk or vnet with given name(name:%d),column(%d)\n",ioff,icol);
         return FALSE;
       }
       else if ((NULL!=blk)&&(NULL!=vnet)) 
