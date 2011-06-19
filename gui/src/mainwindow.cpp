@@ -21,6 +21,7 @@ mainwindow.cpp
 ********************************************************************/
 
 #include <QtGui>
+#include <string>
 
 #include "mainwindow.h"
 #include "rgraphicsscene.h"
@@ -65,7 +66,7 @@ void MainWindow::openNetlist()
         //QProcess *cmd = new QProcess();
         //cmd->start("../bread/src/test_main " + fileName);
 
-        //m_view->readFile("../bread/src/output.rtd");
+        m_view->readFile("../bread/src/output.rtd");
         return;
     }
 }
@@ -141,6 +142,13 @@ void MainWindow::createActions()
     connect(showResistorAction, SIGNAL(toggled(bool)),
             m_view, SLOT(setShowResistor(bool)));
 
+    showDiodeAction = new QAction(tr("Show Diodes"), this);
+    showDiodeAction->setIcon(QIcon(":/images/show-diode.svg"));
+    showDiodeAction->setCheckable(true);
+    showDiodeAction->setChezcked(true);
+    connect(showDiodeAction, SIGNAL(toggled(bool)),
+            m_view, SLOT(setShowDiode(bool)));
+
     showCapacitorAction = new QAction(tr("Show Capacitors"), this);
     showCapacitorAction->setIcon(QIcon(":/images/show-capacitor.svg"));
     showCapacitorAction->setCheckable(true);
@@ -190,6 +198,7 @@ void MainWindow::createMenus()
     viewMenu->addAction(zoomOutAction);
     viewMenu->addSeparator();
     viewMenu->addAction(showResistorAction);
+    viewMenu->addAction(showDiodeAction);
     viewMenu->addAction(showCapacitorAction);
     viewMenu->addAction(showTransistorAction);
     viewMenu->addAction(showICAction);
@@ -208,6 +217,7 @@ void MainWindow::createToolBars()
     viewToolBar->addAction(zoomOutAction);
     viewToolBar->addSeparator();
     viewToolBar->addAction(showResistorAction);
+    viewToolBar->addAction(showDiodeAction);
     viewToolBar->addAction(showCapacitorAction);
     viewToolBar->addAction(showTransistorAction);
     viewToolBar->addAction(showICAction);

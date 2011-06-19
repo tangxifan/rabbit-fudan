@@ -11,5 +11,6 @@
         <file>images/show-capacitor.svg</file>
         <file>images/hide.svg</file>
         <file>images/show-label.svg</file>
+        <file>images/show_diode.svg</file>
     </qresource>
 </RCC>

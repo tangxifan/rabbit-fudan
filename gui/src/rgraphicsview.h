@@ -45,6 +45,7 @@ public:
 
 public slots:
     void setShowResistor(bool showResistor);
+    void setShowDiode(bool showDiode);
     void setShowCapacitor(bool showCapacitor);
     void setShowTransistor(bool showTransistor);
     void setShowIC(bool showIC);
