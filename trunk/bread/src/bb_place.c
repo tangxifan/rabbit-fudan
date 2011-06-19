@@ -412,9 +412,10 @@ detail_place(IN int nvnet,
   t_pr_marco* blk=NULL;
   t_vnet* vnet=NULL;
   
+  printf("Start detail placement on bread board...\n");
+  
   alloc_bb_place(nmarco,pr_marco,nvnet,vnets,bb_array);
 
-  printf("Start detail placement on bread board...\n");
 
   while (icol<bb_array->no_column)
   {
