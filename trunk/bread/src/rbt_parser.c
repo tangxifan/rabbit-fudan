@@ -403,11 +403,24 @@ rbt_config_scalable (t_icdev* cur, char* type)
 	for (i = 0; i < 2; i++)
 			cur->pinls[i].index = i;
 
-	if (!strcmp (type, "Resistor")){
+	if (
+			!strcmp (type, "Resistor") ||
+			!strcmp (type, "resistor") 
+	   ){
 		cur->max_length = RESISTOR_MAX_LENGTH;
 		cur->min_length = RESISTOR_MIN_LENGTH;
 
-	}else if (!strcmp (type, "Capacitor")){
+	}else if (
+		!strcmp (type, "Capacitor") ||
+		!strcmp (type, "capacitor")
+	){
+		cur->max_length = CAPASITOR_MAX_LENGTH;
+		cur->min_length = CAPASITOR_MIN_LENGTH;
+
+	}else if (
+		!strcmp (type, "diode") ||
+		!strcmp (type, "Diode")
+	){
 		cur->max_length = CAPASITOR_MAX_LENGTH;
 		cur->min_length = CAPASITOR_MIN_LENGTH;
 	}
@@ -453,6 +466,10 @@ rbt_config_device (t_icdev* cur, char *device_name)
 		for (i=0; i < nodeset->nodeNr; i++) {
 			keyword = xmlNodeListGetString(doc, nodeset->nodeTab[i]->xmlChildrenNode, 1);
 			if (!strcmp ((char*)keyword, "Resistor") ||
+				!strcmp ((char*)keyword, "resistor") ||
+				!strcmp ((char*)keyword, "Diode") ||
+				!strcmp ((char*)keyword, "diode") ||
+				!strcmp ((char*)keyword, "capacitor") ||
 				!strcmp ((char*)keyword, "Capacitor")){
 			/* Resistors and Capacitors */
 				rbt_config_scalable (cur, (char*) keyword);
@@ -539,7 +556,11 @@ rbt_set_marco_type (t_pr_marco *marco_cur, char *device_name)
 		for (i=0; i < nodeset->nodeNr; i++) {
 			keyword = xmlNodeListGetString(doc, nodeset->nodeTab[i]->xmlChildrenNode, 1);
 			if (!strcmp ((char*)keyword, "Resistor") ||
-					  !strcmp ((char*)keyword, "Capacitor")){
+			!strcmp ((char*)keyword, "resistor") ||
+			!strcmp ((char*)keyword, "capasitor") ||
+			!strcmp ((char*)keyword, "Diode") ||
+			!strcmp ((char*)keyword, "diode") ||
+			!strcmp ((char*)keyword, "Capacitor")){
 			/* Resistors and Capacitors */
 				marco_cur->type = RCD;
 				free (docname);
