@@ -145,7 +145,7 @@ void MainWindow::createActions()
     showDiodeAction = new QAction(tr("Show Diodes"), this);
     showDiodeAction->setIcon(QIcon(":/images/show-diode.svg"));
     showDiodeAction->setCheckable(true);
-    showDiodeAction->setChezcked(true);
+    showDiodeAction->setChecked(true);
     connect(showDiodeAction, SIGNAL(toggled(bool)),
             m_view, SLOT(setShowDiode(bool)));
 
