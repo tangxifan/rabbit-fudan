@@ -206,7 +206,7 @@ try_right_route_pin_on_bb(IN t_pr_pin* spin,
                           IN t_bb_array* bb_array
                          )
 {
-  float rcost=0.0;
+  float rcost=UNKNOWN;
   float tmpcost=0.0;
   t_location* rloc=&(spin->location);
   t_location tmploc={0};
@@ -254,7 +254,7 @@ try_right_route_pin_on_bb(IN t_pr_pin* spin,
     tmpcost+=get_bb_node_route_cost(rloc,bb_array);
     tmpcost+=get_bb_node_route_cost(&tmploc,bb_array);
     tmpcost+=get_bb_node_route_cost(&(dpin->location),bb_array);
-	if (0.0==rcost)
+	if (UNKNOWN==rcost)
 	{
       rcost=tmpcost;
       (*dloc)=tmploc;
