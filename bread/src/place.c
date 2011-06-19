@@ -149,6 +149,7 @@ climbing_place(IN int nblk,
         determine_blk_place_location(blkchn,place_info);
         blkchn->pcolumn=place_info->column;
         blkchn->status=PLACED;
+		printf("Find qualified block[%d]!\n",blkchn->name);
       }
       else
       {
@@ -156,6 +157,7 @@ climbing_place(IN int nblk,
         determine_net_place_location(netchn,place_info);
         netchn->pcolumn=place_info->column;
         netchn->status=PLACED;
+		printf("Find qualified vnet[%d]!\n",netchn->name);
       }
       if (TRUE==check_place_over(nblk,blks,nvnet,vnets))
       {break;}

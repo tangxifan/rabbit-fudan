@@ -258,6 +258,7 @@ find_blk_pwidth(IN int nblk,
     if (blk!=blks[iblk])
     {pwidth+=cal_mm_close_in_vv(blk,blks[iblk]);}
   }
+  blk->pwidth=pwidth;
   return pwidth;
 }
 
@@ -327,8 +328,15 @@ find_starter(IN int nblk,
     }
     else
     {
+	  if(1==DEBUG)
+	  {printf("The Start Block is block[%x].\n",(int)blkcd);}
+
       pwidth=find_blk_pwidth(nblk,blks,blkcd,wcapacity);
-      if (bb_pwidth<pwidth)
+	  
+	  if(1==DEBUG)
+	  {printf("The Start Block place width is %d.\n",pwidth);}
+      
+	  if (bb_pwidth<pwidth)
       {blkcd->sstart=STARTED;}
       else
       {
@@ -471,26 +479,30 @@ determine_net_place_location(IN t_vnet* net,
   {
     blklft=place_info->left->mnext;
     leftn=blklft->name;
-    leftcl=find_mv_close(blklft,net);
+	if (blklft!=NULL)
+    {leftcl=find_mv_close(blklft,net);}
   }
   else
   {
     netlft=place_info->left->vnext;
     leftn=netlft->name;
-    leftcl=cal_vv_close(netlft,net);
+	if (netlft!=NULL)
+    {leftcl=cal_vv_close(netlft,net);}
   }
 
   if (TRUE==place_info->right->flag)
   {
     blkrgt=place_info->right->mnext;
     rightn=blkrgt->name;
-    rightcl=find_mv_close(blkrgt,net);
+	if (blkrgt!=NULL)
+    {rightcl=find_mv_close(blkrgt,net);}
   }
   else
   {
     netrgt=place_info->right->vnext;
     rightn=netrgt->name;
-    rightcl=cal_vv_close(netrgt,net);
+	if (netrgt!=NULL)
+    {rightcl=cal_vv_close(netrgt,net);}
   }
   
   if (rightcl<leftcl)
@@ -620,43 +632,78 @@ find_match(IN int nblk,
 
   if ((NULL==blkmatch)&&(NULL==netmatch))
   {return FALSE;}
-  if ((net_pcost*netpw)>(blk_pcost*blkpw))
+
+  if (NULL==blkmatch)
   {
-    if (!((place_info->cur_width+netpw)>place_info->bb_pwidth))
+    if (((place_info->cur_width+netpw)<place_info->bb_pwidth))
     {
-      printf("Find net[%d]!\n",netmatch-vnets); 
       determine_net_place_location(netmatch,place_info);
       netmatch->pcolumn=place_info->column;
       netmatch->status=PLACED;
 	  place_info->cur_width+=netmatch->pwidth;
+      printf("Find net[%d]:place width(%d)!\n",netmatch-vnets,netmatch->pwidth); 
+      return TRUE;
     }
-    else if (nblk!=0)
+	else {return FALSE;}
+  }
+
+  if (NULL==netmatch)
+  {
+    if (((place_info->cur_width+blkpw)<place_info->bb_pwidth))
     {
-      printf("Find block[%s]!\n",blkmatch->device->name); 
       determine_blk_place_location(blkmatch,place_info);
       blkmatch->pcolumn=place_info->column;
       blkmatch->status=PLACED;
 	  place_info->cur_width+=blkmatch->pwidth;
+      printf("Find block[%s]:place width(%d)!\n",blkmatch->device->name,blkmatch->pwidth); 
+    return TRUE;
     }
+	else {return FALSE;}
+  }
+
+
+
+  if ((net_pcost*netpw)>(blk_pcost*blkpw))
+  {
+    if (((place_info->cur_width+netpw)<place_info->bb_pwidth))
+    {
+      determine_net_place_location(netmatch,place_info);
+      netmatch->pcolumn=place_info->column;
+      netmatch->status=PLACED;
+	  place_info->cur_width+=netmatch->pwidth;
+      printf("Find net[%d]:place width(%d)!\n",netmatch-vnets,netmatch->pwidth); 
+    }
+    else if ((nblk!=0)&&(((place_info->cur_width+blkpw)<place_info->bb_pwidth)))
+    {
+      determine_blk_place_location(blkmatch,place_info);
+      blkmatch->pcolumn=place_info->column;
+      blkmatch->status=PLACED;
+	  place_info->cur_width+=blkmatch->pwidth;
+      printf("Find block[%s]:place width(%d)!\n",blkmatch->device->name,blkmatch->pwidth); 
+    }
+	else
+	{return FALSE;}
   }  
   else
   {
-    if (!((place_info->cur_width+netpw)>place_info->bb_pwidth))
+    if ((nblk!=0)&&(((place_info->cur_width+blkpw)<place_info->bb_pwidth)))
     {
-      printf("Find block[%s]!\n",blkmatch->device->name); 
       determine_blk_place_location(blkmatch,place_info);
       blkmatch->pcolumn=place_info->column;
       blkmatch->status=PLACED;
 	  place_info->cur_width+=blkmatch->pwidth;
+      printf("Find block[%s]:place width(%d)!\n",blkmatch->device->name,blkmatch->pwidth); 
     }
-    else
+	else if (((place_info->cur_width+netpw)<place_info->bb_pwidth))
     {
-      printf("Find net[%d]!\n",netmatch-vnets); 
       determine_net_place_location(netmatch,place_info);
       netmatch->pcolumn=place_info->column;
       netmatch->status=PLACED;
 	  place_info->cur_width+=netmatch->pwidth;
+      printf("Find net[%d]:place width(%d)!\n",netmatch-vnets,netmatch->pwidth); 
     }
+	else
+	{return FALSE;}
   }
   return TRUE;
 }

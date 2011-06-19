@@ -36,7 +36,7 @@ determine_block_base_on_bb(IN t_pr_marco* blk,
   int bbheight=bb_array->columns[column].height;
  
   blk->location.y=bb_array->columns[column].base.y
-                 +(int)((bbheight-blk->device->height)/2);
+                 +(int)((bbheight-blk->device->height)/2+1);
 
   if (blk->location.y>bb_array->columns[column].blank_start)
   {blk->location.y=bb_array->columns[column].blank_start;}
@@ -47,6 +47,7 @@ determine_block_base_on_bb(IN t_pr_marco* blk,
     abort();
     exit(1);
   }
+  printf("block[%d] route base is (%d,%d)\n",blk->name,blk->location.x,blk->location.y);
   return 1;
 }
 
@@ -79,7 +80,7 @@ determine_pins_of_blk_on_bb(IN t_pr_marco* blk,
     if (BOTTOM==curpin->loc)
     {
       curpin->location.x=blk->location.x+curpin->offset;
-      curpin->location.y=blk->location.y+blk->device->height+1;
+      curpin->location.y=blk->location.y+blk->device->height;
     }
     if (LEFT==curpin->loc)
     {
@@ -94,7 +95,7 @@ determine_pins_of_blk_on_bb(IN t_pr_marco* blk,
     /*Check whether the location of pin on bread board have been occupied*/
     if (bb_array->bb_node[curpin->location.x][curpin->location.y].status!=FREE)
     {
-      printf("Error:Fail to put the pin on breadboard!The bread board node[%d][%d] is not free!\n",curpin->location.x,curpin->location.y);
+      printf("Error:Fail to put the block[%d] pin on breadboard!\nThe bread board node[%d][%d] is not free!\n",blk->name,curpin->location.x,curpin->location.y);
       abort();
       exit(1);
     }
