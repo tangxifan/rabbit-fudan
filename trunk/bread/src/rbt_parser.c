@@ -184,6 +184,7 @@ rbt_parse_connector (xmlNodePtr connector, xmlChar *pin_id, int pins_count, t_vn
 			label = xmlGetProp (cur, (const xmlChar*) "label");
 			title = xmlGetProp (cur, (const xmlChar*) "title");
 			id = xmlGetProp (cur, (const xmlChar*) "id");
+			printf ("Now parsing label: %s id:%s\n", label, id);
 
 			/* Main Parse: fill in other data */
 			if (NULL == (pin_cur->parent = rbt_find_marco (atoi ((char*)id)))){
@@ -194,9 +195,17 @@ rbt_parse_connector (xmlNodePtr connector, xmlChar *pin_id, int pins_count, t_vn
 			pin_cur->nets = vnet_cur;
 			strcpy (pin_cur->parent->label, (char*)label);
 
+			printf ("TITLE = %s pin_num = %d\n", (char*)title, pin_num);
+			if (
+				!strcmp ((char*)title, "Ground") ||
+				!strcmp ((char*)title, "Battery") ||
+				!strcmp ((char*)title, "Power") 
+			){
+				pin_num = -1;
+			}else{
+
 			/* Fill loc & offset */
 			/* If marco, do extra convert work */
-			if (pin_cur->parent->type == ICBLOCK){
 				if (NULL == (filename = rbt_find_device_file (part_list, pin_cur->parent->device->name)))
 					return -2;
 				strcpy (docname, part_dir);
@@ -217,8 +226,6 @@ rbt_parse_connector (xmlNodePtr connector, xmlChar *pin_id, int pins_count, t_vn
 							pin_num = rbt_convert_connector_to_int ((char*)connector_id);
 					}
 				}
-			}else{
-				pin_num = rbt_convert_pin_to_int ((char*)pin_id);
 			}
 
 			if (pin_num != -1){
@@ -403,17 +410,11 @@ rbt_config_scalable (t_icdev* cur, char* type)
 	for (i = 0; i < 2; i++)
 			cur->pinls[i].index = i;
 
-	if (
-			!strcmp (type, "Resistor") ||
-			!strcmp (type, "resistor") 
-	   ){
+	if (!strcmp (type, "Resistor")){
 		cur->max_length = RESISTOR_MAX_LENGTH;
 		cur->min_length = RESISTOR_MIN_LENGTH;
 
-	}else if (
-		!strcmp (type, "Capacitor") ||
-		!strcmp (type, "capacitor")
-	){
+	}else if (!strcmp (type, "Capacitor")){
 		cur->max_length = CAPASITOR_MAX_LENGTH;
 		cur->min_length = CAPASITOR_MIN_LENGTH;
 
@@ -466,10 +467,7 @@ rbt_config_device (t_icdev* cur, char *device_name)
 		for (i=0; i < nodeset->nodeNr; i++) {
 			keyword = xmlNodeListGetString(doc, nodeset->nodeTab[i]->xmlChildrenNode, 1);
 			if (!strcmp ((char*)keyword, "Resistor") ||
-				!strcmp ((char*)keyword, "resistor") ||
-				!strcmp ((char*)keyword, "Diode") ||
 				!strcmp ((char*)keyword, "diode") ||
-				!strcmp ((char*)keyword, "capacitor") ||
 				!strcmp ((char*)keyword, "Capacitor")){
 			/* Resistors and Capacitors */
 				rbt_config_scalable (cur, (char*) keyword);
@@ -556,11 +554,9 @@ rbt_set_marco_type (t_pr_marco *marco_cur, char *device_name)
 		for (i=0; i < nodeset->nodeNr; i++) {
 			keyword = xmlNodeListGetString(doc, nodeset->nodeTab[i]->xmlChildrenNode, 1);
 			if (!strcmp ((char*)keyword, "Resistor") ||
-			!strcmp ((char*)keyword, "resistor") ||
-			!strcmp ((char*)keyword, "capasitor") ||
-			!strcmp ((char*)keyword, "Diode") ||
-			!strcmp ((char*)keyword, "diode") ||
-			!strcmp ((char*)keyword, "Capacitor")){
+				!strcmp ((char*)keyword, "diode") ||
+				!strcmp ((char*)keyword, "Diode") ||
+					  !strcmp ((char*)keyword, "Capacitor")){
 			/* Resistors and Capacitors */
 				marco_cur->type = RCD;
 				free (docname);
