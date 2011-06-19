@@ -186,6 +186,12 @@ void RGraphicsView::setShowResistor(bool showResistor)
     updateItemShow();
 }
 
+void RGraphicsView::setShowDiode(bool showDiode)
+{
+    m_show->m_showDiode = showDiode;
+    updateItemShow();
+}
+
 void RGraphicsView::setShowCapacitor(bool showCapacitor)
 {
     m_show->m_showCapacitor = showCapacitor;

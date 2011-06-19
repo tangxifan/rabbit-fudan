@@ -61,6 +61,7 @@ private:
     QAction *zoomInAction;
     QAction *zoomOutAction;
     QAction *showResistorAction;
+    QAction *showDiodeAction;
     QAction *showCapacitorAction;
     QAction *showTransistorAction;
     QAction *showICAction;

@@ -50,6 +50,8 @@ void Unit::unitAdd()
 {
     if (m_unitType.contains("resistor", Qt::CaseInsensitive))
         addResistor();
+    if (m_unitType.contains("diode", Qt::CaseInsensitive))
+        addResistor();  //same as resistor
     if (m_unitType.contains("capacitor", Qt::CaseInsensitive))
         addCapacitor();
     if (m_unitType.contains("transistor", Qt::CaseInsensitive))
@@ -77,6 +79,10 @@ void Unit::setUnitType(const QString &type)
     else if (type.contains("wire", Qt::CaseInsensitive)) {
         m_unitName.append("wire");
         m_unitType = "wire";
+    }
+    else if (type.contains("diode", Qt::CaseInsensitive)) {
+        m_unitName.append("basic_diode");
+        m_unitType = "diode";
     }
     else if (type.contains("capacitor", Qt::CaseInsensitive)) {
         m_unitType = "capacitor";
@@ -250,6 +256,15 @@ void Unit::setTypeVisible(Show *show)
         this->setEnabled(show->m_showResistor);
         return;
     }
+
+    if (m_unitType.contains("diode", Qt::CaseInsensitive)) {
+        m_svg->setVisible(show->m_showDiode);
+        m_label->setVisible(show->m_showDiode);
+        setUnitWireVisible(show->m_showDiode);
+        this->setEnabled(show->m_showDiode);
+        return;
+    }
+
     if (m_unitType.contains("capacitor", Qt::CaseInsensitive)) {
         m_svg->setVisible(show->m_showCapacitor);
         m_label->setVisible(show->m_showCapacitor);

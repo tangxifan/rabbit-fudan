@@ -42,6 +42,7 @@ unit.h
 
 struct Show {
     bool m_showResistor;
+    bool m_showDiode;
     bool m_showCapacitor;
     bool m_showTransistor;
     bool m_showIC;
