@@ -85,6 +85,12 @@ find_normal_vnet_bbs(IN int* nbbs,
    }
   
   bbs=(t_location*)malloc((*nbbs)*sizeof(t_location));
+  if (NULL==bbs)
+  {
+    printf("Fail to malloc bb locations for vnets!\n");
+	abort();
+	exit(1);
+  }
 
   for (icol=0;icol<vnet->locnum;++icol)
   {
@@ -392,17 +398,17 @@ try_left_find_node(IN t_pr_pin* pin,
 {
   int ix=pin->parent->location.x;
   int itop=bb_array->columns[pin->parent->pcolumn].base.x;
-  t_location* loc=NULL;
+  t_location loc={0};
   float cost=0.0;
   while (ix>itop)
   {
-    set_location_value(loc,ix,pin->location.y);
-    if (FALSE==check_bb_node_unroutable(loc,bb_array))
+    set_location_value(&loc,ix,pin->location.y);
+    if (FALSE==check_bb_node_unroutable(&loc,bb_array))
     {
       set_location_value(leftloc,ix,pin->location.y);
-      cost=find_manhattan_distance(leftloc,loc)
+      cost=find_manhattan_distance(leftloc,&loc)
           +get_bb_node_route_cost(leftloc,bb_array)
-          +get_bb_node_route_cost(loc,bb_array);
+          +get_bb_node_route_cost(&loc,bb_array);
     }
     ix--;
   }
@@ -419,17 +425,17 @@ try_right_find_node(IN t_pr_pin* pin,
         +pin->parent->device->width;
   int itop=bb_array->columns[pin->parent->pcolumn].base.x
           +bb_array->columns[pin->parent->pcolumn].width;
-  t_location* loc=NULL;
+  t_location loc={0};
   float cost=0.0;
   while (ix<itop)
   {
-    set_location_value(loc,ix,pin->location.y);
-    if (FALSE==check_bb_node_unroutable(loc,bb_array))
+    set_location_value(&loc,ix,pin->location.y);
+    if (FALSE==check_bb_node_unroutable(&loc,bb_array))
     {
       set_location_value(rightloc,ix,pin->location.y);
-      cost=find_manhattan_distance(rightloc,loc)
+      cost=find_manhattan_distance(rightloc,&loc)
           +get_bb_node_route_cost(rightloc,bb_array)
-          +get_bb_node_route_cost(loc,bb_array);
+          +get_bb_node_route_cost(&loc,bb_array);
     }
     ix++;
   }
