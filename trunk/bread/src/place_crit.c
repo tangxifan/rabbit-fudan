@@ -117,7 +117,7 @@ find_starterblk_cost(IN t_pr_marco* blk)
   pinnoi=blk->pinnum;
   for(ipin=0;ipin<pinnoi;++ipin)
   {
-    pintmpi=(*(blk->pins+ipin));
+    pintmpi=blk->pins[ipin];
     pinnoj=pintmpi->nets->numpin;
     for(jpin=0;jpin<pinnoj;++jpin)
     {
@@ -126,7 +126,7 @@ find_starterblk_cost(IN t_pr_marco* blk)
       {conn++;}
     }
   }
-  cost=conn/pinnoi;
+  cost=(float)conn/(float)pinnoi;
   return cost;
 }
 
@@ -288,12 +288,14 @@ find_starter(IN int nblk,
     if (nblk!=0)
     {
 	  blkcd=find_starter_block(nblk,blks);
-      blk_pcost=blkcd->pcost;	  
+	  if (blkcd!=NULL)
+      {blk_pcost=blkcd->pcost;}	  
     }
     if (nvnet!=0)
     {
 	  netcd=find_start_vnet(nvnet,vnets,wcapacity);
-      vnet_pcost=netcd->pcost;
+	  if (netcd!=NULL)
+      {vnet_pcost=netcd->pcost;}
 	}
 	if (blk_pcost<vnet_pcost)
     {
