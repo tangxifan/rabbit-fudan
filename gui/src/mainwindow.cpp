@@ -62,10 +62,10 @@ void MainWindow::openNetlist()
             return;
         }
 
-        QProcess *cmd = new QProcess();
-        cmd->start("../bread/src/test_main " + fileName);
+        //QProcess *cmd = new QProcess();
+        //cmd->start("../bread/src/test_main " + fileName);
 
-        m_view->readFile("../bread/src/output.rtd");
+        //m_view->readFile("../bread/src/output.rtd");
         return;
     }
 }
