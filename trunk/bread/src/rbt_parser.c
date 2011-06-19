@@ -380,7 +380,7 @@ rbt_config_ic (t_icdev* cur, xmlDocPtr doc)
 			cur->pinls[i].index = i;
 		}else{ /* upper level */
 			cur->pinls[i].loc = TOP;
-			cur->pinls[i].offset = i - (cur->pin_num / 2 + 1);
+			cur->pinls[i].offset = i - (cur->pin_num / 2);
 			cur->pinls[i].index = i;
 		}
 	}
