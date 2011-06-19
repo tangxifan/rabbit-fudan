@@ -291,7 +291,7 @@ route_normal_vnet_on_bb(IN t_vnet* vnet,
   t_location desloc;
   int vnet_loc_num=0;
 
-  int westi=find_mnet_basic_width(vnet,bb_array->columns[vnet->pcolumn].width_capacity);
+  //int westi=0;
 
   /*
    *Determine the number of locations for the normal virtual net.
@@ -347,7 +347,7 @@ route_normal_vnet_on_bb(IN t_vnet* vnet,
     }
   }
   /*Complete III.*/
-  if (westi>1)
+  if (vnet->locnum > 1)
   {alloc_additional_space_for_normal_vnet(vnet,bb_array);}
   vnet->rstatus=ROUTED;  
   return 1;
@@ -358,15 +358,15 @@ alloc_additional_space_for_normal_vnet(IN t_vnet* vnet,
                                        IN t_bb_array* bb_array
                                       )
 {
-  int westi=find_mnet_basic_width(vnet,bb_array->columns[vnet->pcolumn].width_capacity);
+  int westi=vnet->locnum;
   int ipin=0;
   t_pr_pin* curpin=NULL;
-  t_location* loclft=NULL;
-  t_location* locrgt=NULL;
-  t_location* locchn=NULL;
-  t_location* loccur=NULL;
-  t_location* locsrc=NULL;
-  t_location* locdes=NULL;
+  t_location loclft={0};
+  t_location locrgt={0};
+  t_location locchn={0};
+  t_location loccur={0};
+  t_location locsrc={0};
+  t_location locdes={0};
   float lftcost=0.0;
   float rgtcost=0.0;
   float mincost=UNKNOWN;
@@ -379,8 +379,8 @@ alloc_additional_space_for_normal_vnet(IN t_vnet* vnet,
       curpin=*(vnet->pins+ipin);
       if (check_parent_type(curpin,ICBLOCK))
       {
-        lftcost=try_left_find_node(curpin,loclft,bb_array);
-        rgtcost=try_right_find_node(curpin,locrgt,bb_array);
+        lftcost=try_left_find_node(curpin,&loclft,bb_array);
+        rgtcost=try_right_find_node(curpin,&locrgt,bb_array);
         if (UNKNOWN==mincost)
         {
           if (lftcost<rgtcost)
@@ -389,24 +389,24 @@ alloc_additional_space_for_normal_vnet(IN t_vnet* vnet,
           {mincost=rgtcost;}
         }        
         if (lftcost<mincost)
-        {mincost=lftcost;locchn=loclft;loccur=&(curpin->location);}
+        {mincost=lftcost;locchn=loclft;loccur=(curpin->location);}
         if (rgtcost<mincost)
-        {mincost=rgtcost;locchn=locrgt;loccur=&(curpin->location);}
+        {mincost=rgtcost;locchn=locrgt;loccur=(curpin->location);}
       }
       ipin++;
     } 
     /*Alloc the addtional space*/
-    set_bb_node_occupied(loccur,bb_array);
-    set_bb_node_occupied(locchn,bb_array);
-    find_top_inner_on_bb(loccur,bb_array,locsrc);
-    find_top_inner_on_bb(locchn,bb_array,locdes);
-    locdes->y=locsrc->y;
-    set_bb_node_unroutable(loccur,bb_array);
-    set_bb_node_unroutable(locchn,bb_array);
-    set_wired_on_bb(locsrc,locdes,bb_array);
-    set_wired_on_bb(locdes,locsrc,bb_array);
-    set_bb_node_occupied(locsrc,bb_array);
-    set_bb_node_occupied(locdes,bb_array);
+    set_bb_node_occupied(&loccur,bb_array);
+    set_bb_node_occupied(&locchn,bb_array);
+    find_top_inner_on_bb(&loccur,bb_array,&locsrc);
+    find_top_inner_on_bb(&locchn,bb_array,&locdes);
+    locdes.y=locsrc.y;
+    set_bb_node_unroutable(&loccur,bb_array);
+    set_bb_node_unroutable(&locchn,bb_array);
+    set_wired_on_bb(&locsrc,&locdes,bb_array);
+    set_wired_on_bb(&locdes,&locsrc,bb_array);
+    set_bb_node_occupied(&locsrc,bb_array);
+    set_bb_node_occupied(&locdes,bb_array);
     westi--;
   }
   return 1;
