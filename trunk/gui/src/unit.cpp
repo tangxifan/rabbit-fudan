@@ -66,8 +66,9 @@ void Unit::setUnitType(const QString &type)
 {
     QList<QString> data = type.split(" ");
 
-    data.removeLast();
-
+    if (data.last().isEmpty()) {
+        data.removeLast();
+    }
     //set the filename(almostly)
     if (type.contains("resistor", Qt::CaseInsensitive)) {
         m_unitName.append("resistor");
@@ -102,10 +103,15 @@ void Unit::setUnitType(const QString &type)
         }
     }
     else {
-        for (; data.count() > 1;) {
-            m_unitName.append(data.takeFirst()).append("_");
+        if (data.count() == 1) {
+            m_unitName.append(data.first());
         }
-        m_unitName.chop(1);
+        else {
+            for (; data.count() > 1;) { // if adding label, then data.count() > 1
+                m_unitName.append(data.takeFirst()).append("_");
+            }
+            m_unitName.chop(1);
+        }
         m_unitType = "IC";
     }
 
@@ -458,8 +464,8 @@ void Unit::addIC()
 
     m_svg->setSharedRenderer(render);
 
-    QPointF point = QPointF(m_unitPin.at(0).x() - m_svg->boundingRect().width() / (m_unitPin.count() + 1)
-                            , m_unitPin.at(0).y());
+    QPointF point = QPointF(m_unitPin.at(m_unitPin.count() / 2) .x() - m_svg->boundingRect().width() / (m_unitPin.count() + 1)
+                            , m_unitPin.at(m_unitPin.count() / 2).y());
     m_svg->setPos(point);
     m_z = 0;
 
