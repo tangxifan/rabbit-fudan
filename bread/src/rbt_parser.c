@@ -724,14 +724,19 @@ rbt_gen_arrays()
 	for (i = 0; i < marcos_length; i++){
 		memcpy (&marcos[i], rbt_marcos[i], sizeof (t_pr_marco));
 		
-		/* Change the vnets */
+		/* Change the vnets and parents */
 		for (j = 0; j < marcos[i].pinnum; j++){
+			/* Change marcos */
+			marcos[i].pins[j]->parent = &marcos[i];
+
+			/* Change vnets */
 			for (k = 0; k < rbt_vnets_length; k++){
 				if (marcos[i].pins[j] == NULL) continue;
 				if (rbt_vnets[k] == marcos[i].pins[j]->nets){
 					marcos[i].pins[j]->nets = &vnets[k];
 				}
 			}
+			
 		}
 	}
 
