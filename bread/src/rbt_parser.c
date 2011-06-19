@@ -371,7 +371,7 @@ rbt_config_ic (t_icdev* cur, xmlDocPtr doc)
 	
 	nodeset = result->nodesetval;
 
-	cur->height = 2;
+	cur->height = 1;
 	cur->width = nodeset->nodeNr / 2;
 	cur->area = cur->height * cur->width;
 	cur->pin_num = nodeset->nodeNr;
@@ -468,6 +468,7 @@ rbt_config_device (t_icdev* cur, char *device_name)
 			keyword = xmlNodeListGetString(doc, nodeset->nodeTab[i]->xmlChildrenNode, 1);
 			if (!strcmp ((char*)keyword, "Resistor") ||
 				!strcmp ((char*)keyword, "diode") ||
+				!strcmp ((char*)keyword, "Diode") ||
 				!strcmp ((char*)keyword, "Capacitor")){
 			/* Resistors and Capacitors */
 				rbt_config_scalable (cur, (char*) keyword);
