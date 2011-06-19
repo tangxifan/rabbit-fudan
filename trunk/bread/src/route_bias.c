@@ -43,15 +43,15 @@ try_route_bias_vnet_on_bb(IN t_location* srcloc,
 {
   int ix=0;
   int iy=0;
-  t_location* srctmp=NULL;
-  t_location* destmp=NULL;
+  t_location srctmp={0};
+  t_location destmp={0};
   for (ix=0;ix<bb_array->width;++ix)
   {
     for (iy=0;iy<bb_array->height;++iy)
     {
-      set_location_value(srctmp,ix,iy);
-      if (check_bb_node_vnet(srctmp,vnet,bb_array)&&(!check_bb_node_occupied(srctmp,bb_array)))
-      {try_find_bias_on_bb(srctmp,destmp,bias_type,bb_array);}
+      set_location_value(&srctmp,ix,iy);
+      if (check_bb_node_vnet(&srctmp,vnet,bb_array)&&(!check_bb_node_occupied(&srctmp,bb_array)))
+      {try_find_bias_on_bb(&srctmp,&destmp,bias_type,bb_array);}
     }
   }
   return 1;
@@ -68,19 +68,19 @@ try_find_bias_on_bb(IN t_location* src,
   int iy=0;
   float mincost=UNKNOWN;
   float tmpcost=0.0;
-  t_location* destmp=NULL;
+  t_location destmp={0};
   for (ix=0;ix<bb_array->width;++ix)
   {
     for (iy=0;iy<bb_array->height;++iy)
     {
-      set_location_value(destmp,ix,iy);
-      if (check_bb_bias_type(destmp,bias_type,bb_array)&&(!check_bb_node_occupied(src,bb_array)))
+      set_location_value(&destmp,ix,iy);
+      if (check_bb_bias_type(&destmp,bias_type,bb_array)&&(!check_bb_node_occupied(src,bb_array)))
       {
-        tmpcost=find_manhattan_distance(src,destmp)
+        tmpcost=find_manhattan_distance(src,&destmp)
                +get_bb_node_route_cost(src,bb_array)
-               +get_bb_node_route_cost(destmp,bb_array);
+               +get_bb_node_route_cost(&destmp,bb_array);
         if ((UNKNOWN==mincost)||(mincost>tmpcost))
-        {mincost=tmpcost;des=destmp;}
+        {mincost=tmpcost;des=&destmp;}
       }
     }
   }
