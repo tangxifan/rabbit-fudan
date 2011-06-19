@@ -371,7 +371,7 @@ rbt_config_ic (t_icdev* cur, xmlDocPtr doc)
 	
 	nodeset = result->nodesetval;
 
-	cur->height = 1;
+	cur->height = 2;
 	cur->width = nodeset->nodeNr / 2;
 	cur->area = cur->height * cur->width;
 	cur->pin_num = nodeset->nodeNr;
