@@ -127,7 +127,7 @@ void Unit::setUnitType(const QString &type)
     }
 
     //set the value
-    QRegExp rx("^\\d+(k|M|T|m|u|p|n|f)?");
+    QRegExp rx("^\\d+\\.?\\d(k|M|T|m|u|p|n|f)?");
     for (; data.count(); data.removeFirst()) {
         if (rx.indexIn(data.first()) >= 0) {
             m_unitValue = "_" + data.first().left(rx.matchedLength());
