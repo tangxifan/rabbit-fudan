@@ -71,8 +71,8 @@ find_normal_vnet_bbs(IN int* nbbs,
 	iy=0;
     xstart=bb_array->columns[net_columns[icol]].base.x;
     ystart=bb_array->columns[net_columns[icol]].base.y;
-    xend=ix+bb_array->columns[net_columns[icol]].width;
-    yend=iy+bb_array->columns[net_columns[icol]].height;
+    xend=xstart+bb_array->columns[net_columns[icol]].width;
+    yend=ystart+bb_array->columns[net_columns[icol]].height;
     (*nbbs)=0;
     for (ix=xstart;ix<xend;++ix)
     {
@@ -98,8 +98,8 @@ find_normal_vnet_bbs(IN int* nbbs,
 	iy=0;
     xstart=bb_array->columns[net_columns[icol]].base.x;
     ystart=bb_array->columns[net_columns[icol]].base.y;
-    xend=ix+bb_array->columns[net_columns[icol]].width;
-    yend=iy+bb_array->columns[net_columns[icol]].height;
+    xend=xstart+bb_array->columns[net_columns[icol]].width;
+    yend=ystart+bb_array->columns[net_columns[icol]].height;
     
 	for (ix=xstart;ix<xend;++ix)
     {
@@ -127,11 +127,11 @@ find_special_vnet_bbs(IN int* nbbs,
 {
   int column=vnet->pcolumn;
   int ix=0;
-  int xstart=bb_array->columns[column].base.x;
   int iy=0;
+  int xstart=bb_array->columns[column].base.x;
   int ystart=bb_array->columns[column].base.y;
-  int xend=ix+bb_array->columns[column].width;
-  int yend=iy+bb_array->columns[column].height;
+  int xend=xstart+bb_array->columns[column].width;
+  int yend=ystart+bb_array->columns[column].height;
   int ibb=0;
  // int icol=0;
   t_location* bbs=NULL;
