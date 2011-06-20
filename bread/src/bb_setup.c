@@ -6,6 +6,7 @@
 #include "bb_setup.h"
 #include "route_common.h"
 
+#define  RESERVED_RATIO 0.3
 /*Global variant*/
 t_bb_array bb_array;
 
@@ -451,7 +452,7 @@ setup_breadboard(t_bb_array* bb_array)
   int ibias=0;  
   enum e_bias_type given_type;
   
-  bb_array->reserve_ratio=0.0;
+  bb_array->reserve_ratio=RESERVED_RATIO;
   /*Create Columns and Biases.*/
   create_columns(bb_array);
   printf("Create the Columns for bread board...\n");

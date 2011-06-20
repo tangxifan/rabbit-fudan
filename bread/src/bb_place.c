@@ -138,6 +138,7 @@ alloc_blk_place_bb(IN int name,
     {
       (blks+iblk)->location.x=(*curloc);
       (*curloc)=(*curloc)+blank+(blks+iblk)->pwidth;  
+	  printf("Block[%d] location: (%d,%d) column: %d \n",iblk,blks[iblk].location.x,blks[iblk].location.y,column);
        return 1;
     }
   }
