@@ -43,7 +43,7 @@ typedef enum e_boolean{
 #define MAX_LABEL_LENGTH 20
 
 #define RESISTOR_MAX_LENGTH 10
-#define RESISTOR_MIN_LENGTH 4
+#define RESISTOR_MIN_LENGTH 2
 #define CAPASITOR_MAX_LENGTH 5
 #define CAPASITOR_MIN_LENGTH 2
 
