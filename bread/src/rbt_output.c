@@ -215,7 +215,7 @@ rbt_output
 		if (output_records[i].marco_label == NULL)
 			continue;
 
-		fprintf (fp, "%s", output_records[i].device_name);
+		fprintf (fp, "%s %s", output_records[i].device_name, output_records[i].marco_label);
 		for (j = 0; j < output_records[i].pin_num; j++){
 			printf(" %s", output_records[i].pins[j].pin_str);
 			fprintf(fp, " %s", output_records[i].pins[j].pin_str);

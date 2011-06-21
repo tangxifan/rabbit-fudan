@@ -1,0 +1,654 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Created with Fritzing (http://www.fritzing.org/) -->
+<netlist sketch="many_ic_blks.fz" date="Sun Jun 19 20:57:45 2011">
+ <net>
+  <connector id="connector1" name="Pin 1">
+   <part title="220Ω Resistor" id="205420" label="R1"/>
+  </connector>
+  <connector id="connector5" name="3Y">
+   <part title="SN74LS14N" id="203910" label="IC1"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector0" name="Pin 0">
+   <part title="220Ω Resistor" id="205420" label="R1"/>
+  </connector>
+  <connector id="connector1" name="1Y">
+   <part title="SN74LS14N" id="203910" label="IC1"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector1" name="Pin 1">
+   <part title="220Ω Resistor" id="204920" label="R2"/>
+  </connector>
+  <connector id="connector5" name="3Y">
+   <part title="SN74LS14N" id="203770" label="IC2"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector0" name="Pin 0">
+   <part title="220Ω Resistor" id="204920" label="R2"/>
+  </connector>
+  <connector id="connector1" name="1Y">
+   <part title="SN74LS14N" id="203770" label="IC2"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector1" name="Pin 1">
+   <part title="220Ω Resistor" id="204900" label="R3"/>
+  </connector>
+  <connector id="connector5" name="3Y">
+   <part title="SN74LS14N" id="203790" label="IC3"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector0" name="Pin 0">
+   <part title="220Ω Resistor" id="204900" label="R3"/>
+  </connector>
+  <connector id="connector1" name="1Y">
+   <part title="SN74LS14N" id="203790" label="IC3"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector1" name="Pin 1">
+   <part title="220Ω Resistor" id="204880" label="R4"/>
+  </connector>
+  <connector id="connector5" name="3Y">
+   <part title="SN74LS14N" id="203810" label="IC4"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector0" name="Pin 0">
+   <part title="220Ω Resistor" id="204880" label="R4"/>
+  </connector>
+  <connector id="connector1" name="1Y">
+   <part title="SN74LS14N" id="203810" label="IC4"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector1" name="Pin 1">
+   <part title="220Ω Resistor" id="204860" label="R5"/>
+  </connector>
+  <connector id="connector5" name="3Y">
+   <part title="SN74LS14N" id="203850" label="IC5"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector0" name="Pin 0">
+   <part title="220Ω Resistor" id="204860" label="R5"/>
+  </connector>
+  <connector id="connector1" name="1Y">
+   <part title="SN74LS14N" id="203850" label="IC5"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector1" name="Pin 1">
+   <part title="220Ω Resistor" id="204840" label="R6"/>
+  </connector>
+  <connector id="connector5" name="3Y">
+   <part title="SN74LS14N" id="203870" label="IC6"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector0" name="Pin 0">
+   <part title="220Ω Resistor" id="204840" label="R6"/>
+  </connector>
+  <connector id="connector1" name="1Y">
+   <part title="SN74LS14N" id="203870" label="IC6"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector1" name="Pin 1">
+   <part title="220Ω Resistor" id="204820" label="R7"/>
+  </connector>
+  <connector id="connector5" name="3Y">
+   <part title="SN74LS14N" id="203890" label="IC7"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector0" name="Pin 0">
+   <part title="220Ω Resistor" id="204820" label="R7"/>
+  </connector>
+  <connector id="connector1" name="1Y">
+   <part title="SN74LS14N" id="203890" label="IC7"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector1" name="Pin 1">
+   <part title="220Ω Resistor" id="204640" label="R8"/>
+  </connector>
+  <connector id="connector5" name="3Y">
+   <part title="SN74LS14N" id="203730" label="IC8"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector0" name="Pin 0">
+   <part title="220Ω Resistor" id="204640" label="R8"/>
+  </connector>
+  <connector id="connector1" name="1Y">
+   <part title="SN74LS14N" id="203730" label="IC8"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector1" name="Pin 1">
+   <part title="220Ω Resistor" id="204530" label="R9"/>
+  </connector>
+  <connector id="connector11" name="6Y">
+   <part title="SN74LS14N" id="203910" label="IC1"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector0" name="Pin 0">
+   <part title="220Ω Resistor" id="204530" label="R9"/>
+  </connector>
+  <connector id="connector7" name="4Y">
+   <part title="SN74LS14N" id="203890" label="IC7"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector1" name="Pin 1">
+   <part title="220Ω Resistor" id="204430" label="R10"/>
+  </connector>
+  <connector id="connector11" name="6Y">
+   <part title="SN74LS14N" id="203890" label="IC7"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector0" name="Pin 0">
+   <part title="220Ω Resistor" id="204430" label="R10"/>
+  </connector>
+  <connector id="connector7" name="4Y">
+   <part title="SN74LS14N" id="203870" label="IC6"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector1" name="Pin 1">
+   <part title="220Ω Resistor" id="204330" label="R11"/>
+  </connector>
+  <connector id="connector11" name="6Y">
+   <part title="SN74LS14N" id="203870" label="IC6"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector0" name="Pin 0">
+   <part title="220Ω Resistor" id="204330" label="R11"/>
+  </connector>
+  <connector id="connector7" name="4Y">
+   <part title="SN74LS14N" id="203850" label="IC5"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector1" name="Pin 1">
+   <part title="220Ω Resistor" id="204230" label="R12"/>
+  </connector>
+  <connector id="connector11" name="6Y">
+   <part title="SN74LS14N" id="203850" label="IC5"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector0" name="Pin 0">
+   <part title="220Ω Resistor" id="204230" label="R12"/>
+  </connector>
+  <connector id="connector7" name="4Y">
+   <part title="SN74LS14N" id="203810" label="IC4"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector1" name="Pin 1">
+   <part title="220Ω Resistor" id="204130" label="R13"/>
+  </connector>
+  <connector id="connector11" name="6Y">
+   <part title="SN74LS14N" id="203810" label="IC4"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector0" name="Pin 0">
+   <part title="220Ω Resistor" id="204130" label="R13"/>
+  </connector>
+  <connector id="connector7" name="4Y">
+   <part title="SN74LS14N" id="203790" label="IC3"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector1" name="Pin 1">
+   <part title="220Ω Resistor" id="204030" label="R14"/>
+  </connector>
+  <connector id="connector11" name="6Y">
+   <part title="SN74LS14N" id="203790" label="IC3"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector0" name="Pin 0">
+   <part title="220Ω Resistor" id="204030" label="R14"/>
+  </connector>
+  <connector id="connector7" name="4Y">
+   <part title="SN74LS14N" id="203770" label="IC2"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector1" name="Pin 1">
+   <part title="220Ω Resistor" id="203930" label="R15"/>
+  </connector>
+  <connector id="connector11" name="6Y">
+   <part title="SN74LS14N" id="203770" label="IC2"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector0" name="Pin 0">
+   <part title="220Ω Resistor" id="203930" label="R15"/>
+  </connector>
+  <connector id="connector7" name="4Y">
+   <part title="SN74LS14N" id="203730" label="IC8"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector2" name="2A">
+   <part title="SN74LS14N" id="203910" label="IC1"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector13" name="VCC">
+   <part title="SN74LS14N" id="203910" label="IC1"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector12" name="6A">
+   <part title="SN74LS14N" id="203910" label="IC1"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector0" name="1A">
+   <part title="SN74LS14N" id="203910" label="IC1"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector10" name="5A">
+   <part title="SN74LS14N" id="203910" label="IC1"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector9" name="5Y">
+   <part title="SN74LS14N" id="203910" label="IC1"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector8" name="4A">
+   <part title="SN74LS14N" id="203910" label="IC1"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector7" name="4Y">
+   <part title="SN74LS14N" id="203910" label="IC1"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector6" name="GND">
+   <part title="SN74LS14N" id="203910" label="IC1"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector4" name="3A">
+   <part title="SN74LS14N" id="203910" label="IC1"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector3" name="2Y">
+   <part title="SN74LS14N" id="203910" label="IC1"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector2" name="2A">
+   <part title="SN74LS14N" id="203890" label="IC7"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector13" name="VCC">
+   <part title="SN74LS14N" id="203890" label="IC7"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector12" name="6A">
+   <part title="SN74LS14N" id="203890" label="IC7"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector0" name="1A">
+   <part title="SN74LS14N" id="203890" label="IC7"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector10" name="5A">
+   <part title="SN74LS14N" id="203890" label="IC7"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector9" name="5Y">
+   <part title="SN74LS14N" id="203890" label="IC7"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector8" name="4A">
+   <part title="SN74LS14N" id="203890" label="IC7"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector6" name="GND">
+   <part title="SN74LS14N" id="203890" label="IC7"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector4" name="3A">
+   <part title="SN74LS14N" id="203890" label="IC7"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector3" name="2Y">
+   <part title="SN74LS14N" id="203890" label="IC7"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector2" name="2A">
+   <part title="SN74LS14N" id="203870" label="IC6"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector13" name="VCC">
+   <part title="SN74LS14N" id="203870" label="IC6"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector12" name="6A">
+   <part title="SN74LS14N" id="203870" label="IC6"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector0" name="1A">
+   <part title="SN74LS14N" id="203870" label="IC6"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector10" name="5A">
+   <part title="SN74LS14N" id="203870" label="IC6"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector9" name="5Y">
+   <part title="SN74LS14N" id="203870" label="IC6"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector8" name="4A">
+   <part title="SN74LS14N" id="203870" label="IC6"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector6" name="GND">
+   <part title="SN74LS14N" id="203870" label="IC6"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector4" name="3A">
+   <part title="SN74LS14N" id="203870" label="IC6"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector3" name="2Y">
+   <part title="SN74LS14N" id="203870" label="IC6"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector2" name="2A">
+   <part title="SN74LS14N" id="203850" label="IC5"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector13" name="VCC">
+   <part title="SN74LS14N" id="203850" label="IC5"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector12" name="6A">
+   <part title="SN74LS14N" id="203850" label="IC5"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector0" name="1A">
+   <part title="SN74LS14N" id="203850" label="IC5"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector10" name="5A">
+   <part title="SN74LS14N" id="203850" label="IC5"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector9" name="5Y">
+   <part title="SN74LS14N" id="203850" label="IC5"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector8" name="4A">
+   <part title="SN74LS14N" id="203850" label="IC5"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector6" name="GND">
+   <part title="SN74LS14N" id="203850" label="IC5"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector4" name="3A">
+   <part title="SN74LS14N" id="203850" label="IC5"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector3" name="2Y">
+   <part title="SN74LS14N" id="203850" label="IC5"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector2" name="2A">
+   <part title="SN74LS14N" id="203810" label="IC4"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector13" name="VCC">
+   <part title="SN74LS14N" id="203810" label="IC4"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector12" name="6A">
+   <part title="SN74LS14N" id="203810" label="IC4"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector0" name="1A">
+   <part title="SN74LS14N" id="203810" label="IC4"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector10" name="5A">
+   <part title="SN74LS14N" id="203810" label="IC4"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector9" name="5Y">
+   <part title="SN74LS14N" id="203810" label="IC4"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector8" name="4A">
+   <part title="SN74LS14N" id="203810" label="IC4"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector6" name="GND">
+   <part title="SN74LS14N" id="203810" label="IC4"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector4" name="3A">
+   <part title="SN74LS14N" id="203810" label="IC4"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector3" name="2Y">
+   <part title="SN74LS14N" id="203810" label="IC4"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector2" name="2A">
+   <part title="SN74LS14N" id="203790" label="IC3"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector13" name="VCC">
+   <part title="SN74LS14N" id="203790" label="IC3"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector12" name="6A">
+   <part title="SN74LS14N" id="203790" label="IC3"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector0" name="1A">
+   <part title="SN74LS14N" id="203790" label="IC3"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector10" name="5A">
+   <part title="SN74LS14N" id="203790" label="IC3"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector9" name="5Y">
+   <part title="SN74LS14N" id="203790" label="IC3"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector8" name="4A">
+   <part title="SN74LS14N" id="203790" label="IC3"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector6" name="GND">
+   <part title="SN74LS14N" id="203790" label="IC3"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector4" name="3A">
+   <part title="SN74LS14N" id="203790" label="IC3"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector3" name="2Y">
+   <part title="SN74LS14N" id="203790" label="IC3"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector2" name="2A">
+   <part title="SN74LS14N" id="203770" label="IC2"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector13" name="VCC">
+   <part title="SN74LS14N" id="203770" label="IC2"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector12" name="6A">
+   <part title="SN74LS14N" id="203770" label="IC2"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector0" name="1A">
+   <part title="SN74LS14N" id="203770" label="IC2"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector10" name="5A">
+   <part title="SN74LS14N" id="203770" label="IC2"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector9" name="5Y">
+   <part title="SN74LS14N" id="203770" label="IC2"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector8" name="4A">
+   <part title="SN74LS14N" id="203770" label="IC2"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector6" name="GND">
+   <part title="SN74LS14N" id="203770" label="IC2"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector4" name="3A">
+   <part title="SN74LS14N" id="203770" label="IC2"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector3" name="2Y">
+   <part title="SN74LS14N" id="203770" label="IC2"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector2" name="2A">
+   <part title="SN74LS14N" id="203730" label="IC8"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector13" name="VCC">
+   <part title="SN74LS14N" id="203730" label="IC8"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector12" name="6A">
+   <part title="SN74LS14N" id="203730" label="IC8"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector0" name="1A">
+   <part title="SN74LS14N" id="203730" label="IC8"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector11" name="6Y">
+   <part title="SN74LS14N" id="203730" label="IC8"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector10" name="5A">
+   <part title="SN74LS14N" id="203730" label="IC8"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector9" name="5Y">
+   <part title="SN74LS14N" id="203730" label="IC8"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector8" name="4A">
+   <part title="SN74LS14N" id="203730" label="IC8"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector6" name="GND">
+   <part title="SN74LS14N" id="203730" label="IC8"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector4" name="3A">
+   <part title="SN74LS14N" id="203730" label="IC8"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector3" name="2Y">
+   <part title="SN74LS14N" id="203730" label="IC8"/>
+  </connector>
+ </net>
+</netlist>
