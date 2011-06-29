@@ -281,8 +281,8 @@ find_starter(IN int nblk,
   t_pr_marco* blkcd=NULL;
   t_vnet* netcd=NULL;
   
-  float vnet_pcost=0.0;
-  float blk_pcost=0.0;
+  float vnet_pcost=UNKNOWN;
+  float blk_pcost=UNKNOWN;
 
   while(1)
   {

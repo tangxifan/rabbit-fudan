@@ -752,6 +752,7 @@ rbt_gen_arrays()
 				if (marcos[i].pins[j] == NULL) continue;
 				if (rbt_vnets[k] == marcos[i].pins[j]->nets){
 					marcos[i].pins[j]->nets = &vnets[k];
+        break;
 				}
 			}
 			

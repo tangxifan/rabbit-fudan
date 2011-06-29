@@ -1,0 +1,179 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Created with Fritzing (http://www.fritzing.org/) -->
+<netlist sketch="Untitled Sketch 2.fz" date="周六 六月 11 21:30:09 2011">
+ <net>
+  <connector id="connector1" name="pin 1">
+   <part title="Ceramic Capacitor" id="255970" label="C7"/>
+  </connector>
+  <connector id="connector2" name="C">
+   <part title="NPN-Transistor" id="255850" label="Q2"/>
+  </connector>
+  <connector id="connector0" name="Pin 0">
+   <part title="220Ω Resistor" id="255890" label="R6"/>
+  </connector>
+  <connector id="connector1" name="2">
+   <part title="Tantalum Capacitor" id="255990" label="C8"/>
+  </connector>
+  <connector id="connector0" name="Pin 0">
+   <part title="220Ω Resistor" id="255710" label="R4"/>
+  </connector>
+  <connector id="connector1" name="+">
+   <part title="Battery" id="257480" label="VCC1"/>
+   <erc etype="VCC">
+    <current valueMax="0.1" flow="source"/>
+    <voltage value="3"/>
+   </erc>
+  </connector>
+  <connector id="connector0" name="Pin 0">
+   <part title="220Ω Resistor" id="255570" label="R1"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector0" name="GND">
+   <part title="Ground" id="257060" label="Ground2"/>
+   <erc etype="ground">
+    <current valueMax="0.1" flow="sink"/>
+   </erc>
+  </connector>
+  <connector id="connector0" name="GND">
+   <part title="Ground" id="257180" label="Ground4"/>
+   <erc etype="ground">
+    <current valueMax="0.1" flow="sink"/>
+   </erc>
+  </connector>
+  <connector id="connector0" name="GND">
+   <part title="Ground" id="257110" label="Ground3"/>
+   <erc etype="ground">
+    <current valueMax="0.1" flow="sink"/>
+   </erc>
+  </connector>
+  <connector id="connector0" name="GND">
+   <part title="Ground" id="257030" label="Ground1"/>
+   <erc etype="ground">
+    <current valueMax="0.1" flow="sink"/>
+   </erc>
+  </connector>
+  <connector id="connector1" name="Pin 1">
+   <part title="220Ω Resistor" id="255670" label="R2"/>
+  </connector>
+  <connector id="connector1" name="Pin 1">
+   <part title="220Ω Resistor" id="255950" label="R8"/>
+  </connector>
+  <connector id="connector1" name="Pin 1">
+   <part title="220Ω Resistor" id="255910" label="R7"/>
+  </connector>
+  <connector id="connector1" name="Pin 1">
+   <part title="220Ω Resistor" id="255870" label="R5"/>
+  </connector>
+  <connector id="connector0" name="pin 0">
+   <part title="Ceramic Capacitor" id="255730" label="C1"/>
+  </connector>
+  <connector id="connector1" name="Pin 1">
+   <part title="220Ω Resistor" id="255690" label="R3"/>
+  </connector>
+  <connector id="connector0" name="-">
+   <part title="VCC" id="257480" label="VCC1"/>
+   <erc etype="ground">
+    <current valueMax="0.1" flow="sink"/>
+   </erc>
+  </connector>
+  <connector id="connector0" name="1">
+   <part title="Tantalum Capacitor" id="255990" label="C8"/>
+  </connector>
+  <connector id="connector0" name="pin 0">
+   <part title="Ceramic Capacitor" id="255970" label="C7"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector0" name="Pin 0">
+   <part title="220Ω Resistor" id="255950" label="R8"/>
+  </connector>
+  <connector id="connector1" name="pin 1">
+   <part title="Ceramic Capacitor" id="255930" label="C6"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector0" name="Pin 0">
+   <part title="220Ω Resistor" id="255910" label="R7"/>
+  </connector>
+  <connector id="connector0" name="pin 0">
+   <part title="Ceramic Capacitor" id="255930" label="C6"/>
+  </connector>
+  <connector id="connector0" name="E">
+   <part title="NPN-Transistor" id="255850" label="Q2"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector1" name="B">
+   <part title="NPN-Transistor" id="255850" label="Q2"/>
+  </connector>
+  <connector id="connector0" name="Pin 0">
+   <part title="220Ω Resistor" id="255870" label="R5"/>
+  </connector>
+  <connector id="connector1" name="pin 1">
+   <part title="Ceramic Capacitor" id="255830" label="C5"/>
+  </connector>
+  <connector id="connector1" name="Pin 1">
+   <part title="220Ω Resistor" id="255890" label="R6"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector0" name="pin 0">
+   <part title="Inductor" id="255810" label="L1"/>
+  </connector>
+  <connector id="connector0" name="pin 0">
+   <part title="Ceramic Capacitor" id="255830" label="C5"/>
+  </connector>
+  <connector id="connector1" name="Pin 1">
+   <part title="220Ω Resistor" id="255710" label="R4"/>
+  </connector>
+  <connector id="connector2" name="C">
+   <part title="NPN-Transistor" id="255650" label="Q1"/>
+  </connector>
+  <connector id="connector1" name="pin 1">
+   <part title="Ceramic Capacitor" id="255770" label="C3"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector1" name="B">
+   <part title="NPN-Transistor" id="255650" label="Q1"/>
+  </connector>
+  <connector id="connector1" name="Pin 1">
+   <part title="220Ω Resistor" id="255570" label="R1"/>
+  </connector>
+  <connector id="connector0" name="Pin 0">
+   <part title="220Ω Resistor" id="255670" label="R2"/>
+  </connector>
+  <connector id="connector0" name="pin 0">
+   <part title="Ceramic Capacitor" id="255750" label="C2"/>
+  </connector>
+  <connector id="connector0" name="pin 0">
+   <part title="Ceramic Capacitor" id="255790" label="C4"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector1" name="pin 1">
+   <part title="Ceramic Capacitor" id="255790" label="C4"/>
+  </connector>
+  <connector id="connector1" name="pin 1">
+   <part title="Inductor" id="255810" label="L1"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector1" name="pin 1">
+   <part title="Ceramic Capacitor" id="255750" label="C2"/>
+  </connector>
+  <connector id="connector0" name="pin 0">
+   <part title="Ceramic Capacitor" id="255770" label="C3"/>
+  </connector>
+  <connector id="connector0" name="E">
+   <part title="NPN-Transistor" id="255650" label="Q1"/>
+  </connector>
+  <connector id="connector0" name="Pin 0">
+   <part title="220Ω Resistor" id="255690" label="R3"/>
+  </connector>
+  <connector id="connector1" name="pin 1">
+   <part title="Ceramic Capacitor" id="255730" label="C1"/>
+  </connector>
+ </net>
+</netlist>
