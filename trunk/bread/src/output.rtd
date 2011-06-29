@@ -1,22 +1,18 @@
-47kΩ Resistor R3 0A19 0A26
-47kΩ Resistor R2 0G19 0G23
-Ceramic Capacitor C1 0E14 0E16
-47kΩ Resistor R5 0A18 0A14
-Ceramic Capacitor C2 0G18 0G20
-47kΩ Resistor R4 0H18 0H22
-1.5kΩ Resistor R1 0A42 0A33
-Rectifier Diode D2 0G42 0G40
-Rectifier Diode D1 0H40 0H42
-wire 0E51 0F51
-wire 0E42 0F42
-wire 0G33 0F40
+LM 358 Dual Op-Amp U1 0F21 0F22 0F23 0F24 0E21 0E22 0E23 0E24
+Battery VCC2 0G24 0G20
+220Ω Resistor R3 0I18 0I22
+Battery VCC1 0D20 0D24
+Ceramic Capacitor C1 0H23 0H20
+220Ω Resistor R2 0G33 0G23
+Ceramic Capacitor C 0H33 0H31
+220Ω Resistor R1 0A45 0A41
+220Ω Resistor R4 0G21 0G25
+wire 0E45 0F45
 wire 0E33 0F33
-wire 0E26 0F26
-wire 0F23 0D42
-wire 0G22 0H33
-wire 0F20 0G51
-wire 0E19 0F19
-wire 0E18 0F18
-wire 0D16 0G26
-wire 0E4 0F4
-wire 0B4 0B14
+wire 0B33 0B41
+wire 0G22 0F25
+wire 0H21 0G31
+wire 0H18 0I20
+wire 0F18 0C20
+wire 0G8 0F20
+wire 0E8 0F8
