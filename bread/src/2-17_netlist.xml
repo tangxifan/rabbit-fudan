@@ -1,0 +1,84 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Created with Fritzing (http://www.fritzing.org/) -->
+<netlist sketch="2-17.fz" date="Sun Jun 19 21:10:41 2011">
+ <net>
+  <connector id="connector0" name="Pin 0">
+   <part title="47kΩ Resistor" id="198800" label="R3"/>
+  </connector>
+  <connector id="connector0" name="Pin 0">
+   <part title="47kΩ Resistor" id="198780" label="R2"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector1" name="Pin 1">
+   <part title="47kΩ Resistor" id="198800" label="R3"/>
+  </connector>
+  <connector id="connector1" name="pin 1">
+   <part title="Ceramic Capacitor" id="198880" label="C1"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector0" name="pin 0">
+   <part title="Ceramic Capacitor" id="198880" label="C1"/>
+  </connector>
+  <connector id="connector1" name="Pin 1">
+   <part title="47kΩ Resistor" id="198820" label="R5"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector0" name="GND">
+   <part title="Ground" id="198970" label="Ground2"/>
+   <erc etype="ground">
+    <current valueMax="0.1" flow="sink"/>
+   </erc>
+  </connector>
+  <connector id="connector0" name="Pin 0">
+   <part title="47kΩ Resistor" id="198820" label="R5"/>
+  </connector>
+  <connector id="connector0" name="GND">
+   <part title="Ground" id="198940" label="Ground1"/>
+   <erc etype="ground">
+    <current valueMax="0.1" flow="sink"/>
+   </erc>
+  </connector>
+  <connector id="connector0" name="pin 0">
+   <part title="Ceramic Capacitor" id="198860" label="C2"/>
+  </connector>
+  <connector id="connector0" name="Pin 0">
+   <part title="47kΩ Resistor" id="198840" label="R4"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector0" name="Pin 0">
+   <part title="1.5kΩ Resistor" id="198760" label="R1"/>
+  </connector>
+  <connector id="connector1" name="Pin 1">
+   <part title="47kΩ Resistor" id="198780" label="R2"/>
+  </connector>
+  <connector id="connector0" name="cathode">
+   <part title="Rectifier Diode" id="184190" label="D2"/>
+  </connector>
+  <connector id="connector1" name="anode">
+   <part title="Rectifier Diode" id="199800" label="D1"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector1" name="Pin 1">
+   <part title="1.5kΩ Resistor" id="198760" label="R1"/>
+  </connector>
+  <connector id="connector1" name="Pin 1">
+   <part title="47kΩ Resistor" id="198840" label="R4"/>
+  </connector>
+  <connector id="connector1" name="anode">
+   <part title="Rectifier Diode" id="184190" label="D2"/>
+  </connector>
+  <connector id="connector0" name="cathode">
+   <part title="Rectifier Diode" id="199800" label="D1"/>
+  </connector>
+ </net>
+ <net>
+  <connector id="connector1" name="pin 1">
+   <part title="Ceramic Capacitor" id="198860" label="C2"/>
+  </connector>
+ </net>
+</netlist>
