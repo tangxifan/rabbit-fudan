@@ -198,7 +198,6 @@ rbt_parse_connector (xmlNodePtr connector, xmlChar *pin_id, int pins_count, t_vn
 			printf ("TITLE = %s pin_num = %d\n", (char*)title, pin_num);
 			if (
 				!strcmp ((char*)title, "Ground") ||
-				!strcmp ((char*)title, "Battery") ||
 				!strcmp ((char*)title, "Power") 
 			){
 				pin_num = -1;
@@ -418,6 +417,10 @@ rbt_config_scalable (t_icdev* cur, char* type)
 		cur->max_length = CAPASITOR_MAX_LENGTH;
 		cur->min_length = CAPASITOR_MIN_LENGTH;
 
+	}else if (!strcmp (type, "Battery")){
+		cur->max_length = CAPASITOR_MAX_LENGTH;
+		cur->min_length = CAPASITOR_MIN_LENGTH;
+
 	}else if (
 		!strcmp (type, "diode") ||
 		!strcmp (type, "Diode")
@@ -469,6 +472,7 @@ rbt_config_device (t_icdev* cur, char *device_name)
 			if (!strcmp ((char*)keyword, "Resistor") ||
 				!strcmp ((char*)keyword, "diode") ||
 				!strcmp ((char*)keyword, "Diode") ||
+				!strcmp ((char*)keyword, "Battery") ||
 				!strcmp ((char*)keyword, "Capacitor")){
 			/* Resistors and Capacitors */
 				rbt_config_scalable (cur, (char*) keyword);
@@ -557,6 +561,7 @@ rbt_set_marco_type (t_pr_marco *marco_cur, char *device_name)
 			if (!strcmp ((char*)keyword, "Resistor") ||
 				!strcmp ((char*)keyword, "diode") ||
 				!strcmp ((char*)keyword, "Diode") ||
+				!strcmp ((char*)keyword, "Battery") ||
 					  !strcmp ((char*)keyword, "Capacitor")){
 			/* Resistors and Capacitors */
 				marco_cur->type = RCD;
