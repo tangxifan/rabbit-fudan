@@ -1,0 +1,3 @@
+# Introduction to Rabbit #
+
+Routing Automation of Breadboard Integreated Tool, or **Rabbit**, is an open source tool for PCB developers to implement their design easily on a breadboard for before-PCB test and design. Its goal is to read schematic from design tools such as gEDA and then automatically place and route the design on a given breadboard. It was first developed by students from Fudan University Shanghai China. It is a project under the school's Science Innovation Program. Other kind donations are warmly welcomed.
